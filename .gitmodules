@@ -1,9 +1,4 @@
-[submodule "lib/googletest"]
-	path = lib/googletest
+
+[submodule "third_party/googletest"]
+	path = third_party/googletest
 	url = https://github.com/google/googletest.git
-[submodule "lib/lcov"]
-	path = lib/lcov
-	url = https://github.com/linux-test-project/lcov.git
-[submodule "lib/benchmark"]
-	path = lib/benchmark
-	url = https://github.com/google/benchmark.git

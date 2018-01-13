@@ -9,7 +9,7 @@ else()
 endif ()
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/distribution)
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 install(TARGETS ${CMAKE_PROJECT_NAME}
         LIBRARY DESTINATION lib)

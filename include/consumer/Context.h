@@ -9,9 +9,9 @@ namespace io {
                 ~Context() {
                 }
 
-                boost::shared_ptr<KeyValue> properties() = 0;
+                boost::shared_ptr <KeyValue> properties() = 0;
 
-                void ack(boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+                void ack(boost::shared_ptr <KeyValue> properties = kv_nullptr) = 0;
             };
         }
     }

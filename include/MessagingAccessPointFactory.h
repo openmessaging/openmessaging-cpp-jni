@@ -10,23 +10,23 @@
 
 
 namespace io {
-namespace openmessaging {
+    namespace openmessaging {
 
-extern boost::shared_ptr<KeyValue> kv_nullptr;
+        extern boost::shared_ptr<KeyValue> kv_nullptr;
 
-class MessagingAccessPointFactory {
-public:
+        class MessagingAccessPointFactory {
+        public:
 
-    static boost::shared_ptr<MessagingAccessPoint> getMessagingAccessPoint(std::string &url,
-                                                                           boost::shared_ptr<KeyValue> properties = kv_nullptr) {
+            static boost::shared_ptr<MessagingAccessPoint> getMessagingAccessPoint(std::string &url,
+                                                                                   boost::shared_ptr<KeyValue> properties = kv_nullptr) {
 
 
-        return NULL;
+                return NULL;
+            }
+
+        };
+
     }
-
-};
-
-}
 
 }
 

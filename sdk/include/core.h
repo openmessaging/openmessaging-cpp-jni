@@ -6,7 +6,7 @@
 namespace io {
     namespace openmessaging {
         namespace core {
-            void Initialize(const JavaOption& javaOption);
+            void Initialize(const JavaOption &javaOption);
 
             void Shutdown();
         }

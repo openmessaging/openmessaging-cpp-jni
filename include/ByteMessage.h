@@ -11,11 +11,11 @@ namespace io {
     namespace openmessaging {
         class ByteMessage : public Message {
         public:
-            std::vector<char>& getBody() {
+            std::vector<char> &getBody() {
                 return _body;
             }
 
-            ByteMessage& setBody(const std::vector<char>& body) {
+            ByteMessage &setBody(const std::vector<char> &body) {
                 _body = boost::move(body);
             }
 

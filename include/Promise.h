@@ -14,7 +14,7 @@ namespace io {
 
             bool set(boost::shared_mutex<producer::SendResult> &value) = 0;
 
-            bool setFailure(std::exception& e) = 0;
+            bool setFailure(std::exception &e) = 0;
 
         protected:
             virtual ~Promise() {

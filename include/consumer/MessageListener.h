@@ -10,8 +10,8 @@ namespace io {
 
                 }
 
-                virtual void onMessage(boost::shared_ptr<Message> message,
-                               boost::shared_ptr<Context> context) = 0;
+                virtual void onMessage(boost::shared_ptr <Message> message,
+                                       boost::shared_ptr <Context> context) = 0;
             };
         }
     }

@@ -25,11 +25,11 @@ namespace io {
 
                 virtual bool isSuspended() = 0;
 
-                virtual PushConsumer& attachQueue(std::string &queueName,
-                                          boost::shared_ptr<MessageListener> listener,
-                                          boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+                virtual PushConsumer &attachQueue(std::string &queueName,
+                                                  boost::shared_ptr<MessageListener> listener,
+                                                  boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
 
-                virtual PushConsumer& detachQueue(std::string &queueName) = 0;
+                virtual PushConsumer &detachQueue(std::string &queueName) = 0;
 
                 virtual void addInterceptor(boost::shared_ptr<PushConsumerInterceptor> interceptor) = 0;
 

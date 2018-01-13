@@ -9,19 +9,21 @@
 #include "message.h"
 
 namespace io {
-namespace openmessaging {
+    namespace openmessaging {
 
-class MessageFactory {
-public:
-    virtual ~MessageFactory() {
+        class MessageFactory {
+        public:
+            virtual ~MessageFactory() {
+            }
+
+            virtual boost::shared_ptr<ByteMessage>
+            createByteMessageToTopic(std::string &topic, std::vector<char> &body) = 0;
+
+            virtual boost::shared_ptr<ByteMessage>
+            createByteMessageToQueue(std::string &topic, std::vector<char> &body) = 0;
+        };
+
     }
-
-    virtual boost::shared_ptr<ByteMessage> createByteMessageToTopic(std::string &topic, std::vector<char> &body) = 0;
-
-    virtual boost::shared_ptr<ByteMessage> createByteMessageToQueue(std::string &topic, std::vector<char> &body) = 0;
-};
-
-}
 
 }
 

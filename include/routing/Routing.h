@@ -16,7 +16,7 @@ namespace io {
 
                 }
 
-                virtual boost::shared_ptr<KeyValue> properties() = 0;
+                virtual boost::shared_ptr <KeyValue> properties() = 0;
 
                 virtual std::string source() = 0;
 

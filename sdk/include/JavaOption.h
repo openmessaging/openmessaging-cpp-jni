@@ -13,7 +13,7 @@ namespace io {
             public:
                 JavaOption(const jint version);
 
-                void addOption(const std::string& option);
+                void addOption(const std::string &option);
 
                 const jint _version;
 

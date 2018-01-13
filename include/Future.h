@@ -22,9 +22,9 @@ namespace io {
 
             boost::shared_ptr<producer::SendResult> get(long timeout) = 0;
 
-            Future& addListener(boost::function<void(Future&)> f) = 0;
+            Future &addListener(boost::function<void(Future &)> f) = 0;
 
-            std::exception& getThrowable() = 0;
+            std::exception &getThrowable() = 0;
 
         };
     }

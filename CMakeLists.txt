@@ -23,7 +23,11 @@ include_directories(
 
 add_subdirectory(sdk)
 
-add_subdirectory(example)
+option(BUILD_EXAMPLE "Build examples flag" ON)
+
+if (BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif ()
 
 option(TEST "Build test cases" ON)
 if(TEST)

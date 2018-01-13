@@ -6,7 +6,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "message.h"
+#include "ByteMessage.h"
 
 namespace io {
     namespace openmessaging {

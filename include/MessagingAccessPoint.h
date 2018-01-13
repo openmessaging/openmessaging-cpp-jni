@@ -17,15 +17,13 @@ namespace io {
 
     namespace openmessaging {
 
-        extern boost::shared_ptr<KeyValue> kv_nullptr;
-
         class MessagingAccessPoint : public virtual ServiceLifecycle {
         public:
             virtual ~MessagingAccessPoint() {
 
             }
 
-            virtual boost::shared_ptr<KeyValue> properties();
+            virtual boost::shared_ptr<KeyValue> properties() = 0;
 
             virtual std::string implVersion() = 0;
 
@@ -45,7 +43,7 @@ namespace io {
 
             virtual void addObserver(boost::shared_ptr<observer::Observer> observer) = 0;
 
-            virtual void removeObserver(boost::shared_ptr<observer::Observer> observer) =;
+            virtual void removeObserver(boost::shared_ptr<observer::Observer> observer) = 0;
 
             virtual std::vector<boost::shared_ptr<producer::Producer> > producers() = 0;
 

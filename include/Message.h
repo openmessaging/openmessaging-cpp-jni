@@ -11,9 +11,8 @@ namespace io {
     namespace openmessaging {
         class Message {
         public:
-            Message() {
-                _headers = boost::make_shared<KeyValue>();
-                _properties = boost::make_shared<KeyValue>();
+            Message() : _headers(new KeyValue()),
+                        _properties(new KeyValue()) {
             }
 
             virtual ~Message() {

@@ -6,6 +6,7 @@
 
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
+#include "MessageIterator.h"
 
 namespace io {
     namespace openmessaging {

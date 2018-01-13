@@ -7,13 +7,15 @@
 
 #include "ServiceLifecycle.h"
 #include "PushConsumerInterceptor.h"
+#include "MessageListener.h"
 
 namespace io {
     namespace openmessaging {
+        extern boost::shared_ptr<KeyValue> kv_nullptr;
         namespace consumer {
-            class PushConsumer : public virtual io::openmessaging::ServiceLifecycle {
+            class PushConsumer : public virtual ServiceLifecycle {
             public:
-                virtual PushConsumer() {
+                virtual ~PushConsumer() {
 
                 }
 

@@ -11,7 +11,7 @@
 namespace io {
     namespace openmessaging {
         namespace consumer {
-            class PullConsumer : public virtual io::openmessaging::ServiceLifecycle {
+            class PullConsumer : public virtual ServiceLifecycle {
             public:
                 virtual ~PullConsumer() {
 

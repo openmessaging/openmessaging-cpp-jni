@@ -7,6 +7,7 @@
 
 #include "ServiceLifecycle.h"
 #include "KeyValue.h"
+#include "routing/Routing.h"
 
 namespace io {
     namespace openmessaging {
@@ -51,15 +52,15 @@ namespace io {
 
             virtual std::vector<std::string> listQueues(std::string &ns) = 0;
 
-            virtual void createRouting(const std::string &ns, boost::shared_ptr<Routing> route) = 0;
+            virtual void createRouting(const std::string &ns, boost::shared_ptr<routing::Routing> route) = 0;
 
-            virtual void updateRouting(const std::string &ns, boost::shared_ptr<Routing> route) = 0;
+            virtual void updateRouting(const std::string &ns, boost::shared_ptr<routing::Routing> route) = 0;
 
-            virtual boost::shared_ptr<Routing> getRouting(const std::string &ns, const std::string &route) = 0;
+            virtual boost::shared_ptr<routing::Routing> getRouting(const std::string &ns, const std::string &route) = 0;
 
             virtual void deleteRouting(const std::string &ns, const std::string &route) = 0;
 
-            virtual std::vector<boost::shared_ptr<Routing> > listRoutings(const std::string &ns) = 0;
+            virtual std::vector<boost::shared_ptr<routing::Routing> > listRoutings(const std::string &ns) = 0;
 
             virtual void updateMessage(const std::string &messageId, boost::shared_ptr<KeyValue> headers) = 0;
         };

@@ -14,7 +14,6 @@ namespace io {
 
         class KeyValue {
         public:
-
             template<typename T>
             KeyValue &put(const string &key, T value) {
                 m[key] = to_string(value);

@@ -1,4 +1,8 @@
-add_library(${CMAKE_PROJECT_NAME} SHARED core.cpp)
+add_library(${CMAKE_PROJECT_NAME} SHARED
+        core.cpp
+        MessagingAccessPointImpl.cpp
+        MessagingAccessPointFactory.cpp
+        )
 target_link_libraries(${CMAKE_PROJECT_NAME}
         ${JNI_LIBRARIES})
 

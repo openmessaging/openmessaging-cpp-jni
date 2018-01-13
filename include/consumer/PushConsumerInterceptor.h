@@ -6,12 +6,12 @@ namespace io {
         namespace consumer {
             class PushConsumerInterceptor {
             public:
-                ~PushConsumerInterceptor() {
+               virtual ~PushConsumerInterceptor() {
                 }
 
-                void preHandle(boost::shared_ptr<void> context) = 0;
+                virtual void preHandle(boost::shared_ptr<void> context) = 0;
 
-                void postHandle(boost::shared_ptr<void> context) = 0;
+                virtual void postHandle(boost::shared_ptr<void> context) = 0;
             };
         }
     }

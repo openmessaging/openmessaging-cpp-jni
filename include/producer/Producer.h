@@ -6,9 +6,11 @@
 #include "MessageFactory.h"
 #include "ServiceLifecycle.h"
 #include "Message.h"
+#include "SendResult.h"
 
 namespace io {
     namespace openmessaging {
+        extern boost::shared_ptr<KeyValue> kv_nullptr;
         namespace producer {
             class Producer : public virtual MessageFactory, public virtual ServiceLifecycle {
             public:

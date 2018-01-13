@@ -1,6 +1,8 @@
 #ifndef OMS_MESSAGELISTENER_H
 #define OMS_MESSAGELISTENER_H
 
+#include "Context.h"
+
 namespace io {
     namespace openmessaging {
         namespace consumer {

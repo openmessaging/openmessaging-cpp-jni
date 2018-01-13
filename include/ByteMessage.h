@@ -17,6 +17,7 @@ namespace io {
 
             ByteMessage &setBody(const std::vector<char> &body) {
                 _body = boost::move(body);
+                return *this;
             }
 
         protected:

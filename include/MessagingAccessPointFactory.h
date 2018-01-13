@@ -18,11 +18,7 @@ namespace io {
         public:
 
             static boost::shared_ptr<MessagingAccessPoint> getMessagingAccessPoint(std::string &url,
-                                                                                   boost::shared_ptr<KeyValue> properties = kv_nullptr) {
-
-
-                return NULL;
-            }
+                                                                                   boost::shared_ptr<KeyValue> properties = kv_nullptr);
 
         };
 

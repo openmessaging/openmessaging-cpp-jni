@@ -1,4 +1,8 @@
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+
 #include <gtest/gtest.h>
+
 
 #include "KeyValue.h"
 
@@ -25,4 +29,12 @@ TEST(KeyValueTest, testGet) {
 
     double d = kv.get<double>("d");
     ASSERT_DOUBLE_EQ(4.0, d);
+}
+
+TEST(KeyValueTest, testSharedPtr) {
+    using namespace io::openmessaging;
+    boost::shared_ptr<KeyValue> kv_nullptr;
+
+    boost::shared_ptr<KeyValue> kv(boost::make_shared<KeyValue>());
+
 }

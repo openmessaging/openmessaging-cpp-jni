@@ -1,1 +1,4 @@
-![Build Status](https://travis-ci.org/lizhanhui/babel-tower.svg?branch=master)
+## Documentation
+
+1. [Application Design Specification](doc/ApplicationDesignSpecification.md)
+

@@ -17,16 +17,16 @@ namespace io {
                 std::string implVersion();
 
                 boost::shared_ptr<producer::Producer>
-                createProducer(boost::shared_ptr<KeyValue> properties = kv_nullptr);
+                createProducer(boost::shared_ptr<KeyValue> properties);
 
                 boost::shared_ptr<consumer::PushConsumer>
-                createPushConsumer(boost::shared_ptr<KeyValue> properties = kv_nullptr);
+                createPushConsumer(boost::shared_ptr<KeyValue> properties);
 
                 boost::shared_ptr<consumer::PullConsumer>
-                createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties = kv_nullptr);
+                createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties);
 
                 boost::shared_ptr<consumer::StreamingConsumer> createStreamingConsumer(const std::string &queueName,
-                                                                                       boost::shared_ptr<KeyValue> properites = kv_nullptr);
+                                                                                       boost::shared_ptr<KeyValue> properites);
 
                 boost::shared_ptr<ResourceManager> getResourceManager();
 

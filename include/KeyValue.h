@@ -5,53 +5,35 @@
 #include <map>
 #include <set>
 
-#include <boost/lexical_cast.hpp>
-
 namespace io {
     namespace openmessaging {
-
-        using namespace std;
-
         class KeyValue {
         public:
-            template<typename T>
-            KeyValue &put(const string &key, T value) {
-                m[key] = to_string(value);
-                return *this;
+            virtual ~KeyValue() {
+
             }
 
-            template<typename T>
-            T get(const string &key) {
-                map<string, string>::iterator it = m.find(key);
-                if (it != m.end()) {
-                    return boost::lexical_cast<T>(m[key]);
-                }
+            virtual KeyValue& put(const std::string &key, int value) = 0;
 
-                return T();
-            }
+            virtual KeyValue& put(const std::string &key, long value) = 0;
 
-            set<string> keySet() {
-                set<string> s;
-                if (m.empty()) {
-                    return s;
-                }
+            virtual KeyValue& put(const std::string &key, double value) = 0;
 
-                for (map<string, string>::const_iterator it = m.cbegin(); it != m.cend(); it++) {
-                    s.insert(it->first);
-                }
+            virtual KeyValue& put(const std::string &key, const std::string &value) = 0;
 
-                return s;
-            }
+            virtual int getInt(const std::string &key, int defaultValue = 0) = 0;
 
-            bool containsKey(string key) {
-                return m.find(key) != m.end();
-            }
+            virtual long getLong(const std::string &key, long defaultValue = 0L) = 0;
 
-        protected:
-            map<string, string> m;
+            virtual double getDouble(const std::string &key, double defaultValue = 0.0) = 0;
+
+            virtual std::string getString(const std::string &key, const std::string &defaultValue = "") = 0;
+
+            virtual std::set<std::string> keySet() = 0;
+
+            virtual bool containsKey(const std::string &key) = 0;
 
         };
-
     }
 
 }

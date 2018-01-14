@@ -26,7 +26,7 @@ namespace io {
                     boost::shared_ptr<KeyValue> properties) {
 
                 if (!isRunning()) {
-
+                    Initialize(NULL);
                 }
 
 

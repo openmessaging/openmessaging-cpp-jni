@@ -11,7 +11,9 @@ endif (COMMAND cmake_policy)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 
+# set(JAVA_HOME "/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home")
 find_package(JNI REQUIRED)
+message("Java include path: ${JAVA_INCLUDE_PATH}")
 
 find_package(Boost REQUIRED)
 

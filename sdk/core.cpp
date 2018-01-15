@@ -26,7 +26,6 @@ namespace io {
                 jOptions->addOption("-Xms1G");
                 jOptions->addOption("-Xmx1G");
 
-                JavaVMInitArgs vm_args;
                 int optionCount = jOptions->options.size();
                 JavaVMOption *options = new JavaVMOption[optionCount];
 
@@ -34,6 +33,8 @@ namespace io {
                     options[i].optionString = const_cast<char *>(jOptions->options[i].c_str());
                 }
 
+                JavaVMInitArgs vm_args;
+                memset(&vm_args, 0, sizeof(vm_args));
                 vm_args.version = jOptions->_version;
                 vm_args.nOptions = optionCount;
                 vm_args.options = options;

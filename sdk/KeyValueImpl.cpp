@@ -31,9 +31,15 @@ namespace io {
                     abort();
                 }
 
-                putInt = current.env->GetMethodID(defaultKeyValueClass, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue");
+                putInt = current.env->GetMethodID(defaultKeyValueClass, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
                 if (NULL == putInt) {
                     BOOST_LOG_TRIVIAL(warning) << "put(String, int) is not found for io/openmessaging/internal/DefaultKeyValue";
+                    abort();
+                }
+
+                putLong = current.env->GetMethodID(defaultKeyValueClass, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+                if (NULL == putLong) {
+                    BOOST_LOG_TRIVIAL(warning) << "put(String, long) is not found for io/openmessaging/internal/DefaultKeyValue";
                     abort();
                 }
 
@@ -46,6 +52,10 @@ namespace io {
                     current.env->DeleteGlobalRef(defaultKeyValueClass);
                     defaultKeyValueClass = NULL;
                 }
+
+                if (defaultKeyValueObject) {
+                    current.env->DeleteGlobalRef(defaultKeyValueObject);
+                }
             }
 
 
@@ -57,6 +67,9 @@ namespace io {
             }
 
             KeyValue& KeyValueImpl::put(const std::string &key, long value) {
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                current.env->CallObjectMethod(defaultKeyValueObject, putLong, k, value);
                 return *this;
             }
 

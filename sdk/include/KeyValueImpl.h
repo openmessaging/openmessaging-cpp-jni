@@ -37,6 +37,7 @@ namespace io {
                 jclass defaultKeyValueClass;
                 jmethodID defaultKeyValueCtor;
                 jmethodID putInt;
+                jmethodID putLong;
 
                 jobject defaultKeyValueObject;
 

@@ -4,10 +4,10 @@
 
 #ifndef OMS_OMSEVENT_H
 #define OMS_OMSEVENT_H
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace observer {
+BEGIN_NAMESPACE_3(io, openmessaging, observer)
+
             class OMSEvent {
             public:
                 virtual ~OMSEvent() {
@@ -18,8 +18,6 @@ namespace io {
 
                 virtual std::string details() = 0;
             };
-        }
-    }
-}
 
+END_NAMESPACE_3(io, openmessaging, observer)
 #endif //OMS_OMSEVENT_H

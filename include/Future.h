@@ -5,9 +5,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "SendResult.h"
+#include "Namespace.h"
+BEGIN_NAMESPACE_2(io, openmessaging)
 
-namespace io {
-    namespace openmessaging {
         class Future {
         public:
             virtual ~Future() {
@@ -27,7 +27,7 @@ namespace io {
             std::exception &getThrowable() = 0;
 
         };
-    }
-}
+
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_FUTURE_H

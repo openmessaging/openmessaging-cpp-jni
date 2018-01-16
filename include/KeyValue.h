@@ -5,21 +5,22 @@
 #include <map>
 #include <set>
 
-namespace io {
-    namespace openmessaging {
+#include "Namespace.h"
+
+BEGIN_NAMESPACE_2(io, openmessaging)
         class KeyValue {
         public:
             virtual ~KeyValue() {
 
             }
 
-            virtual KeyValue& put(const std::string &key, int value) = 0;
+            virtual KeyValue &put(const std::string &key, int value) = 0;
 
-            virtual KeyValue& put(const std::string &key, long value) = 0;
+            virtual KeyValue &put(const std::string &key, long value) = 0;
 
-            virtual KeyValue& put(const std::string &key, double value) = 0;
+            virtual KeyValue &put(const std::string &key, double value) = 0;
 
-            virtual KeyValue& put(const std::string &key, const std::string &value) = 0;
+            virtual KeyValue &put(const std::string &key, const std::string &value) = 0;
 
             virtual int getInt(const std::string &key, int defaultValue = 0) = 0;
 
@@ -32,10 +33,6 @@ namespace io {
             virtual std::set<std::string> keySet() = 0;
 
             virtual bool containsKey(const std::string &key) = 0;
-
         };
-    }
-
-}
-
+END_NAMESPACE_2(io, openmessaging)
 #endif // KEYVALUE_H

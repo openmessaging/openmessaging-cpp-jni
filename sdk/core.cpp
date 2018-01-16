@@ -22,7 +22,7 @@ namespace io {
 
                 boost::shared_ptr<io::openmessaging::core::JavaOption> jOptions =
                         boost::make_shared<JavaOption>(JNI_VERSION_1_8);
-                jOptions->addOption("-Djava.class.path=/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq/lib/*");
+                jOptions->addOption("-Djava.class.path=/Users/lizhanhui/work/openmessaging-java/openmessaging-api/target/openmessaging-api-0.2.0-alpha.1-SNAPSHOT.jar");
                 jOptions->addOption("-Xms1G");
                 jOptions->addOption("-Xmx1G");
 

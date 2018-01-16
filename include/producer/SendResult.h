@@ -6,10 +6,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "KeyValue.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace producer {
+BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
             class SendResult {
             public:
@@ -30,11 +29,6 @@ namespace io {
                 boost::shared_ptr<KeyValue> _properties;
             };
 
-        }
-
-
-    }
-
-}
+END_NAMESPACE_3(io, openmessaging, producer)
 
 #endif // SENDRESULT_H

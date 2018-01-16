@@ -7,11 +7,10 @@
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
 #include "MessageIterator.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
-        namespace consumer {
             class StreamingConsumer : public virtual ServiceLifecycle {
             public:
                 virtual ~StreamingConsumer() {
@@ -33,9 +32,6 @@ namespace io {
                 virtual MessageIterator seekByTime(long timestamp) = 0;
             };
 
-        }
-
-    }
-}
+END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_STREAMCONSUMER_H

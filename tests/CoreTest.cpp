@@ -4,5 +4,4 @@
 TEST(CoreTest, testInitializeAndShutdown) {
     using namespace io::openmessaging::core;
     Initialize();
-    Shutdown();
 }

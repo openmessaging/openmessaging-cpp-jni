@@ -1,9 +1,10 @@
 #ifndef OMS_PUSHCONSUMERINTERCEPTOR_H
 #define OMS_PUSHCONSUMERINTERCEPTOR_H
 
-namespace io {
-    namespace openmessaging {
-        namespace consumer {
+#include "Namespace.h"
+
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
+
             class PushConsumerInterceptor {
             public:
                virtual ~PushConsumerInterceptor() {
@@ -13,8 +14,7 @@ namespace io {
 
                 virtual void postHandle(boost::shared_ptr<void> context) = 0;
             };
-        }
-    }
-}
+
+END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_PUSHCONSUMERINTERCEPTOR_H

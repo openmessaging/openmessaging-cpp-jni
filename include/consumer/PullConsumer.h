@@ -7,10 +7,10 @@
 
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace consumer {
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
+
             class PullConsumer : public virtual ServiceLifecycle {
             public:
                 virtual ~PullConsumer() {
@@ -24,8 +24,7 @@ namespace io {
                 virtual void ack(const std::string &messageId,
                                  boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
             };
-        }
-    }
-}
+
+END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_PULLCONSUMER_H

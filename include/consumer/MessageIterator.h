@@ -4,10 +4,10 @@
 #include <boost/shared_ptr.hpp>
 
 #include "ServiceLifecycle.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace consumer {
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
+
             class MessageIterator : public virtual ServiceLifecycle {
             public:
                 virtual ~MessageIterator() {
@@ -26,8 +26,6 @@ namespace io {
 
                 virtual boost::shared_ptr<Message> previous() = 0;
             };
-        }
-    }
-}
+END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_MESSAGEITERATOR_H

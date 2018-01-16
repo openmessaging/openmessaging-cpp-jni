@@ -8,11 +8,10 @@
 #include "ServiceLifecycle.h"
 #include "PushConsumerInterceptor.h"
 #include "MessageListener.h"
-
-namespace io {
-    namespace openmessaging {
+#include "Namespace.h"
+BEGIN_NAMESPACE_2(io, openmessaging)
         extern boost::shared_ptr<KeyValue> kv_nullptr;
-        namespace consumer {
+        BEGIN_NAMESPACE_1(consumer)
             class PushConsumer : public virtual ServiceLifecycle {
             public:
                 virtual ~PushConsumer() {
@@ -37,8 +36,7 @@ namespace io {
 
                 virtual void removeInterceptor(boost::shared_ptr<PushConsumerInterceptor> interceptor) = 0;
             };
-        }
-    }
-}
+
+END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_PUSHCONSUMER_H

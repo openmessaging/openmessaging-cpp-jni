@@ -38,9 +38,20 @@ namespace io {
                 jmethodID defaultKeyValueCtor;
                 jmethodID putInt;
                 jmethodID putLong;
+                jmethodID putDouble;
+                jmethodID putString;
+
+                jmethodID getIntMethod;
+                jmethodID getLongMethod;
+                jmethodID getDoubleMethod;
+                jmethodID getStringMethod;
+                jmethodID keySetMethod;
+                jmethodID containsKeyMethod;
 
                 jobject defaultKeyValueObject;
 
+                inline jmethodID getMethod(CurrentEnv &current, const std::string &name, const std::string &signature,
+                                           bool isStatic = false);
             };
         }
     }

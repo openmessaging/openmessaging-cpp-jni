@@ -11,39 +11,34 @@ namespace io {
 
                 CurrentEnv current;
                 jclass localDefaultKeyValueClass = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
-                if (NULL == localDefaultKeyValueClass) {
-                    BOOST_LOG_TRIVIAL(warning) << "io/openmessaging/internal/DefaultKeyValue is not found";
+                if (!localDefaultKeyValueClass) {
+                    BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/internal/DefaultKeyValue is not found";
                     abort();
                 }
                 defaultKeyValueClass = reinterpret_cast<jclass>(current.env->NewGlobalRef(localDefaultKeyValueClass));
 
-                defaultKeyValueCtor = current.env->GetMethodID(defaultKeyValueClass, "<init>", "()V");
-                if (NULL == defaultKeyValueCtor) {
-                    BOOST_LOG_TRIVIAL(warning) << "Default constructor of io/openmessaging/internal/DefaultKeyValue is not found";
-                    abort();
-                }
-
+                defaultKeyValueCtor = getMethod(current, "<init>", "()V");
                 jobject localDefaultKeyValueObject = current.env->NewObject(defaultKeyValueClass, defaultKeyValueCtor);
-                if (NULL != localDefaultKeyValueObject) {
+                if (localDefaultKeyValueObject) {
                     defaultKeyValueObject = current.env->NewGlobalRef(localDefaultKeyValueObject);
                 } else {
                     BOOST_LOG_TRIVIAL(warning) << "Unable to create object for io/openmessaging/internal/DefaultKeyValue";
                     abort();
                 }
 
-                putInt = current.env->GetMethodID(defaultKeyValueClass, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
-                if (NULL == putInt) {
-                    BOOST_LOG_TRIVIAL(warning) << "put(String, int) is not found for io/openmessaging/internal/DefaultKeyValue";
-                    abort();
-                }
+                putInt = getMethod(current, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
+                putLong = getMethod(current, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+                putDouble = getMethod(current, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
+                putString = getMethod(current, "put", "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
 
-                putLong = current.env->GetMethodID(defaultKeyValueClass, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
-                if (NULL == putLong) {
-                    BOOST_LOG_TRIVIAL(warning) << "put(String, long) is not found for io/openmessaging/internal/DefaultKeyValue";
-                    abort();
-                }
+                getIntMethod = getMethod(current, "getInt", "(Ljava/lang/String;)I");
+                getLongMethod = getMethod(current, "getLong", "(Ljava/lang/String;)J");
+                getDoubleMethod = getMethod(current, "getDouble", "(Ljava/lang/String;)D");
+                getStringMethod = getMethod(current, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
 
             }
+
+
 
 
             KeyValueImpl::~KeyValueImpl() {
@@ -63,6 +58,7 @@ namespace io {
                 CurrentEnv current;
                 jstring k = current.env->NewStringUTF(key.c_str());
                 current.env->CallObjectMethod(defaultKeyValueObject, putInt, k, value);
+                current.env->DeleteLocalRef(k);
                 return *this;
             }
 
@@ -70,41 +66,114 @@ namespace io {
                 CurrentEnv current;
                 jstring k = current.env->NewStringUTF(key.c_str());
                 current.env->CallObjectMethod(defaultKeyValueObject, putLong, k, value);
+                current.env->DeleteLocalRef(k);
                 return *this;
             }
 
             KeyValue& KeyValueImpl::put(const std::string &key, double value) {
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                current.env->CallObjectMethod(defaultKeyValueObject, putDouble, k, value);
+                current.env->DeleteLocalRef(k);
                 return *this;
             }
 
             KeyValue& KeyValueImpl::put(const std::string &key, const std::string &value) {
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jstring v = current.env->NewStringUTF(value.c_str());
+                current.env->CallObjectMethod(defaultKeyValueObject, putString, k, v);
+                current.env->DeleteLocalRef(k);
+                current.env->DeleteLocalRef(v);
                 return *this;
             }
 
             int KeyValueImpl::getInt(const std::string &key, int defaultValue) {
-                return 0;
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jint value = current.env->CallIntMethod(defaultKeyValueObject, getIntMethod, k);
+                current.env->DeleteLocalRef(k);
+                if (current.env->ExceptionCheck()) {
+                    current.env->ExceptionDescribe();
+                    current.env->ExceptionClear();
+                    return defaultValue;
+                }
+                return value;
             }
 
             long KeyValueImpl::getLong(const std::string &key, long defaultValue) {
-                return 0L;
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jlong value = current.env->CallLongMethod(defaultKeyValueObject, getLongMethod, k);
+                current.env->DeleteLocalRef(k);
+                if (current.env->ExceptionCheck()) {
+                    current.env->ExceptionDescribe();
+                    current.env->ExceptionClear();
+                    return defaultValue;
+                }
+                return value;
             }
 
             double KeyValueImpl::getDouble(const std::string &key, double defaultValue) {
-                return 0.0;
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jdouble value = current.env->CallDoubleMethod(defaultKeyValueObject, getDoubleMethod, k);
+                current.env->DeleteLocalRef(k);
+                if (current.env->ExceptionCheck()) {
+                    current.env->ExceptionDescribe();
+                    current.env->ExceptionClear();
+                    return defaultValue;
+                }
+                return value;
             }
 
             std::string KeyValueImpl::getString(const std::string &key, const std::string &defaultValue) {
-                return std::string("");
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jstring value = reinterpret_cast<jstring>(current.env->CallObjectMethod(defaultKeyValueObject, getStringMethod, k));
+                current.env->DeleteLocalRef(k);
+                if (current.env->ExceptionCheck()) {
+                    current.env->ExceptionDescribe();
+                    current.env->ExceptionClear();
+                    return defaultValue;
+                }
+
+                const char* data = current.env->GetStringUTFChars(value, NULL);
+                return std::string(data);
             }
 
             std::set<std::string> KeyValueImpl::keySet() {
                 std::set<std::string> s;
+                CurrentEnv current;
+                keySetMethod = getMethod(current, "keySet", "()V");
+                jobject jKeySet = current.env->CallObjectMethod(defaultKeyValueObject, keySetMethod);
+
+
                 return s;
             }
 
             bool KeyValueImpl::containsKey(const std::string &key) {
                 return true;
             }
+
+            inline jmethodID KeyValueImpl::getMethod(CurrentEnv &current, const std::string &name,
+                                                     const std::string &signature, bool isStatic) {
+                jmethodID  methodId;
+                if (isStatic) {
+                    methodId = current.env->GetStaticMethodID(defaultKeyValueClass, name.c_str(), signature.c_str());
+                } else {
+                    methodId = current.env->GetMethodID(defaultKeyValueClass, name.c_str(), signature.c_str());
+                }
+
+                if (!methodId) {
+                    BOOST_LOG_TRIVIAL(warning) << "Failed to GetMethodID. Method: " << name << ", Signature: " << signature;
+                    abort();
+                }
+
+                return methodId;
+            }
         }
+
+
     }
 }

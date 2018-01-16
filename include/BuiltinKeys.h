@@ -6,9 +6,9 @@
 #define OMS_BUILTINKEYS_H
 
 #include <string>
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
         class BuiltinKeys {
         public:
             static const std::string MessageId;
@@ -61,7 +61,5 @@ namespace io {
         const std::string BuiltinKeys::ScheduleExpression = "ScheduleExpression";
         const std::string BuiltinKeys::TraceId = "TraceId";
         const std::string BuiltinKeys::Stream = "Stream";
-    }
-}
-
+END_NAMESPACE_2(io, openmessaging)
 #endif //OMS_BUILTINKEYS_H

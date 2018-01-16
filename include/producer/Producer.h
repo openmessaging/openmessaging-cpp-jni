@@ -7,11 +7,11 @@
 #include "ServiceLifecycle.h"
 #include "Message.h"
 #include "SendResult.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
         extern boost::shared_ptr<KeyValue> kv_nullptr;
-        namespace producer {
+        BEGIN_NAMESPACE_1(producer)
             class Producer : public virtual MessageFactory, public virtual ServiceLifecycle {
             public:
                 virtual ~Producer() {
@@ -23,8 +23,5 @@ namespace io {
                 virtual boost::shared_ptr<SendResult> send(boost::shared_ptr<Message> message,
                                                            boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
             };
-        }
-    }
-}
-
+END_NAMESPACE_3(io, openmessaging, producer)
 #endif //OMS_PRODUCER_H

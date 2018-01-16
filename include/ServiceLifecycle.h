@@ -1,8 +1,9 @@
 #ifndef SERVICELIFECYCLE_H
 #define SERVICELIFECYCLE_H
 
-namespace io {
-    namespace openmessaging {
+#include "Namespace.h"
+
+BEGIN_NAMESPACE_2(io, openmessaging)
 
         class ServiceLifecycle {
         public:
@@ -14,8 +15,6 @@ namespace io {
             }
         };
 
-    }
-
-}
+END_NAMESPACE_2(io, openmessaging)
 
 #endif // SERVICELIFECYCLE_H

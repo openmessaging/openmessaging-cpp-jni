@@ -8,9 +8,9 @@
 #include "ServiceLifecycle.h"
 #include "KeyValue.h"
 #include "routing/Routing.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
 
         class ResourceManager : public virtual ServiceLifecycle {
         public:
@@ -65,8 +65,6 @@ namespace io {
             virtual void updateMessage(const std::string &messageId, boost::shared_ptr<KeyValue> headers) = 0;
         };
 
-    }
-
-}
+END_NAMESPACE_2(io, openmessaging)
 
 #endif // RESOURCEMANAGER_H

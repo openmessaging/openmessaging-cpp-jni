@@ -12,10 +12,9 @@
 #include "consumer/StreamingConsumer.h"
 #include "ResourceManager.h"
 #include "observer/Observer.h"
+#include "Namespace.h"
 
-namespace io {
-
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
 
         class MessagingAccessPoint : public virtual ServiceLifecycle {
         public:
@@ -54,8 +53,6 @@ namespace io {
             virtual std::vector<boost::shared_ptr<consumer::StreamingConsumer> > streamingConsumers() = 0;
         };
 
-    }
-
-}
+END_NAMESPACE_2(io, openmessaging)
 
 #endif // MESSAGINGACCESSPOINT_H

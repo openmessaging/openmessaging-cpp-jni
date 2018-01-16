@@ -6,9 +6,9 @@
 
 #include "KeyValue.h"
 #include "BuiltinKeys.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
         class Message {
         public:
             Message() : _headers(new KeyValue()),
@@ -48,8 +48,7 @@ namespace io {
 
             boost::shared_ptr<KeyValue> _properties;
         };
-    }
 
-}
+END_NAMESPACE_2(io, openmessaging)
 
 #endif // MESSAGE_H

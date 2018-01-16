@@ -5,9 +5,10 @@
 
 #include "Future.h"
 #include "producer/SendResult.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
+
         class Promise : public Future {
         public:
             bool cancel(bool interruptIfRunning) = 0;
@@ -20,7 +21,7 @@ namespace io {
             virtual ~Promise() {
             }
         };
-    }
-}
+
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_PROMISE_H

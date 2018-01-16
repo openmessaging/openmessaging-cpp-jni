@@ -5,11 +5,8 @@
 
 #include "ServiceLifecycle.h"
 #include "ServiceLifecycle.h"
-
-namespace io {
-    namespace openmessaging {
-        namespace routing {
-
+#include "Namespace.h"
+BEGIN_NAMESPACE_3(io, openmessaging, routing)
             class Routing : public virtual ServiceLifecycle {
             public:
                 virtual ~Routing() {
@@ -27,10 +24,6 @@ namespace io {
                 virtual std::string routingName() = 0;
             };
 
-        }
-
-    }
-
-}
+END_NAMESPACE_3(io, openmessaging, routing)
 
 #endif //OMS_ROUTING_H

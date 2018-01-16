@@ -6,9 +6,10 @@
 #include <boost/move/move.hpp>
 
 #include "Message.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
+
         class ByteMessage : public Message {
         public:
             std::vector<char> &getBody() {
@@ -23,8 +24,7 @@ namespace io {
         protected:
             std::vector<char> _body;
         };
-    }
-}
 
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_BYTEMESSAGE_H

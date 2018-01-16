@@ -7,10 +7,9 @@
 
 #include "KeyValue.h"
 #include "MessagingAccessPoint.h"
+#include "Namespace.h"
 
-
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
 
         extern boost::shared_ptr<KeyValue> kv_nullptr;
 
@@ -22,8 +21,6 @@ namespace io {
 
         };
 
-    }
-
-}
+END_NAMESPACE_2(io, openmessaging)
 
 #endif // MESSAGINGACCESSPOINTFACTORY_H

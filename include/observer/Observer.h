@@ -4,10 +4,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "OMSEvent.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace observer {
+BEGIN_NAMESPACE_3(io, openmessaging, observer)
             class Observer {
             public:
                 virtual ~Observer() {
@@ -16,8 +15,7 @@ namespace io {
 
                 virtual void onEvent(boost::shared_ptr<OMSEvent> &event) = 0;
             };
-        }
-    }
-}
+
+END_NAMESPACE_3(io, openmessaging, observer)
 
 #endif //OMS_OBSERVER_H

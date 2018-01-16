@@ -2,10 +2,8 @@
 #define OMS_OMSEXCEPTIONEVENT_H
 
 #include "OMSEvent.h"
-
-namespace io {
-    namespace openmessaging {
-        namespace observer {
+#include "Namespace.h"
+BEGIN_NAMESPACE_3(io, openmessaging, observer)
 
             class OMSExceptionEvent : public virtual OMSEvent {
             public:
@@ -14,7 +12,5 @@ namespace io {
                 }
             };
 
-        }
-    }
-}
+END_NAMESPACE_3(io, openmessaging, observer)
 #endif //OMS_OMSEXCEPTIONEVENT_H

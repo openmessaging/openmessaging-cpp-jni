@@ -4,10 +4,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "KeyValue.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace routing {
+BEGIN_NAMESPACE_3(io, openmessaging, routing)
             class Operator {
             public:
                 virtual ~Operator() {
@@ -18,8 +17,6 @@ namespace io {
 
                 virtual std::string expression() = 0;
             };
-        }
-    }
-}
+END_NAMESPACE_3(io, openmessaging, routing)
 
 #endif //OMS_OPERATOR_H

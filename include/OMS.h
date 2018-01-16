@@ -5,9 +5,9 @@
 #include <boost/make_shared.hpp>
 
 #include "KeyValue.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
+BEGIN_NAMESPACE_2(io, openmessaging)
 
         boost::shared_ptr<KeyValue> kv_nullptr;
 
@@ -19,8 +19,5 @@ namespace io {
             }
         };
 
-    } // end of namespace openmessaging
-} // end of namespace io
-
-
+END_NAMESPACE_2(io, openmessaging)
 #endif

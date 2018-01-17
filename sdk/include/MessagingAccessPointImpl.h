@@ -57,6 +57,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jclass classMessagingAccessPoint;
 
         jmethodID  midImplVersion;
+        jmethodID  midCreateProducer;
+        jmethodID  midCreateProducer2;
 
     };
 

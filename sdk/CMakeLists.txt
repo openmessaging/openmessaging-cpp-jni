@@ -1,6 +1,7 @@
 add_library(${CMAKE_PROJECT_NAME} SHARED
         core.cpp
         KeyValueImpl.cpp
+        ProducerImpl.cpp
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} ${JNI_LIBRARIES})

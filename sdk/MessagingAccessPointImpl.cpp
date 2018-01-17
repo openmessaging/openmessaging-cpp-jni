@@ -1,5 +1,7 @@
 #include "core.h"
 #include "MessagingAccessPointImpl.h"
+#include "KeyValueImpl.h"
+#include "ProducerImpl.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, core)
 
@@ -12,6 +14,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jclass classMessagingAccessPointLocal = current.env->FindClass("io/openmessaging/MessagingAccessPoint");
         classMessagingAccessPoint = dynamic_cast<jclass>(current.env->NewGlobalRef(classMessagingAccessPointLocal));
         midImplVersion = current.env->GetMethodID(classMessagingAccessPoint, "implVersion", "()Ljava/lang/String;");
+
+        midCreateProducer = current.env->GetMethodID(classMessagingAccessPoint, "createProducer", "()Lio/openmessaging/producer/Producer;");
+        midCreateProducer2 = current.env->GetMethodID(classMessagingAccessPoint, "createProducer", "(Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/Producer");
     }
 
     boost::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
@@ -29,11 +34,16 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     boost::shared_ptr<producer::Producer> MessagingAccessPointImpl::createProducer(
             boost::shared_ptr<KeyValue> properties) {
-
-        if (!isRunning()) {
-            Initialize();
+        bool useKV = (NULL != properties);
+        CurrentEnv current;
+        jobject producer;
+        if (useKV) {
+            boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+            producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getInternal());
+        } else {
+            producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
         }
-
+        return boost::make_shared<ProducerImpl>(producer, properties);
     }
 
     jobject MessagingAccessPointImpl::getProxy() {

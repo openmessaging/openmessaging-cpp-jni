@@ -3,59 +3,59 @@
 
 #include "core.h"
 #include "KeyValue.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace core {
-            class KeyValueImpl : public virtual KeyValue {
-            public:
-                KeyValueImpl();
+BEGIN_NAMESPACE_3(io, openmessaging, core)
+    class KeyValueImpl : public virtual KeyValue {
+    public:
+        KeyValueImpl();
 
-                virtual ~KeyValueImpl();
+        virtual ~KeyValueImpl();
 
-                virtual KeyValue& put(const std::string &key, int value);
+        virtual KeyValue& put(const std::string &key, int value);
 
-                virtual KeyValue& put(const std::string &key, long value);
+        virtual KeyValue& put(const std::string &key, long value);
 
-                virtual KeyValue& put(const std::string &key, double value);
+        virtual KeyValue& put(const std::string &key, double value);
 
-                virtual KeyValue& put(const std::string &key, const std::string &value);
+        virtual KeyValue& put(const std::string &key, const std::string &value);
 
-                virtual int getInt(const std::string &key, int defaultValue);
+        virtual int getInt(const std::string &key, int defaultValue);
 
-                virtual long getLong(const std::string &key, long defaultValue);
+        virtual long getLong(const std::string &key, long defaultValue);
 
-                virtual double getDouble(const std::string &key, double defaultValue);
+        virtual double getDouble(const std::string &key, double defaultValue);
 
-                virtual std::string getString(const std::string &key, const std::string &defaultValue);
+        virtual std::string getString(const std::string &key, const std::string &defaultValue);
 
-                virtual std::set<std::string> keySet();
+        virtual std::set<std::string> keySet();
 
-                virtual bool containsKey(const std::string &key);
+        virtual bool containsKey(const std::string &key);
 
-            private:
-                jclass defaultKeyValueClass;
-                jmethodID defaultKeyValueCtor;
-                jmethodID putInt;
-                jmethodID putLong;
-                jmethodID putDouble;
-                jmethodID putString;
+        jobject getInternal();
 
-                jmethodID getIntMethod;
-                jmethodID getLongMethod;
-                jmethodID getDoubleMethod;
-                jmethodID getStringMethod;
-                jmethodID keySetMethod;
-                jmethodID containsKeyMethod;
-                jmethodID midContainsKey;
+    private:
+        jclass defaultKeyValueClass;
+        jmethodID defaultKeyValueCtor;
+        jmethodID putInt;
+        jmethodID putLong;
+        jmethodID putDouble;
+        jmethodID putString;
 
-                jobject defaultKeyValueObject;
+        jmethodID getIntMethod;
+        jmethodID getLongMethod;
+        jmethodID getDoubleMethod;
+        jmethodID getStringMethod;
+        jmethodID keySetMethod;
+        jmethodID midContainsKey;
 
-                inline jmethodID getMethod(CurrentEnv &current, const std::string &name, const std::string &signature,
-                                           bool isStatic = false);
-            };
-        }
-    }
-}
+        jobject defaultKeyValueObject;
+
+        inline jmethodID getMethod(CurrentEnv &current, const std::string &name, const std::string &signature,
+                                   bool isStatic = false);
+    };
+
+
+END_NAMESPACE_3(io, openmessaging, core)
 
 #endif //OMS_KEYVALUEIMPL_H

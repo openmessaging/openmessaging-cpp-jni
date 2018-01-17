@@ -13,33 +13,31 @@
 #include <boost/log/support/date_time.hpp>
 
 #include "JavaOption.h"
+#include "Namespace.h"
 
-namespace io {
-    namespace openmessaging {
-        namespace core {
-            extern JavaVM *jvm;
+BEGIN_NAMESPACE_3(io, openmessaging, core)
+    extern JavaVM *jvm;
 
-            void Initialize();
+    void Initialize();
 
-            void Shutdown();
+    void Shutdown();
 
-            bool isRunning();
+    bool isRunning();
 
-            class CurrentEnv {
-            public:
-                CurrentEnv();
+    class CurrentEnv {
+    public:
+        CurrentEnv();
 
-                ~CurrentEnv();
+        ~CurrentEnv();
 
-                JNIEnv *env;
+        JNIEnv *env;
 
-            private:
-                bool attached;
-            };
+    private:
+        bool attached;
+    };
 
-            std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
-        }
-    }
-}
+    std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
+
+END_NAMESPACE_3(io, openmessaging, core)
 
 #endif //OMS_CORE_H

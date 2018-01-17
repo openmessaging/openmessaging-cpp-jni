@@ -47,6 +47,7 @@ namespace io {
                 jmethodID getStringMethod;
                 jmethodID keySetMethod;
                 jmethodID containsKeyMethod;
+                jmethodID midContainsKey;
 
                 jobject defaultKeyValueObject;
 

@@ -1,6 +1,9 @@
 #ifndef OMS_CORE_H
 #define OMS_CORE_H
 
+#include <set>
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/thread.hpp>
@@ -33,6 +36,8 @@ namespace io {
             private:
                 bool attached;
             };
+
+            std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace io {
                 getLongMethod = getMethod(current, "getLong", "(Ljava/lang/String;)J");
                 getDoubleMethod = getMethod(current, "getDouble", "(Ljava/lang/String;)D");
                 getStringMethod = getMethod(current, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
-
+                midContainsKey = getMethod(current, "containsKey", "(Ljava/lang/String;)Z");
             }
 
 
@@ -139,21 +139,24 @@ namespace io {
                 }
 
                 const char* data = current.env->GetStringUTFChars(value, NULL);
-                return std::string(data);
+                std::string ret = data;
+                current.env->ReleaseStringUTFChars(value, data);
+                return ret;
             }
 
             std::set<std::string> KeyValueImpl::keySet() {
-                std::set<std::string> s;
                 CurrentEnv current;
-                keySetMethod = getMethod(current, "keySet", "()V");
+                keySetMethod = getMethod(current, "keySet", "()Ljava/util/Set;");
                 jobject jKeySet = current.env->CallObjectMethod(defaultKeyValueObject, keySetMethod);
-
-
-                return s;
+                return toNativeSet(current, jKeySet);
             }
 
             bool KeyValueImpl::containsKey(const std::string &key) {
-                return true;
+                CurrentEnv current;
+                jstring k = current.env->NewStringUTF(key.c_str());
+                jboolean contains = current.env->CallBooleanMethod(defaultKeyValueObject, midContainsKey, k);
+                current.env->DeleteLocalRef(k);
+                return contains;
             }
 
             inline jmethodID KeyValueImpl::getMethod(CurrentEnv &current, const std::string &name,

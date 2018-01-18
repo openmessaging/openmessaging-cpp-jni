@@ -1,12 +1,15 @@
 #include "core.h"
 #include "MessagingAccessPointImpl.h"
 #include "KeyValueImpl.h"
-#include "ProducerImpl.h"
+#include "producer/ProducerImpl.h"
 #include "consumer/PushConsumer.h"
 #include "consumer/PullConsumer.h"
 #include "consumer/StreamingConsumer.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
+
+    using namespace io::openmessaging::producer;
+    using namespace io::openmessaging::consumer;
 
     MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
                                                        const boost::shared_ptr<KeyValue> &properties,
@@ -143,4 +146,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         current.env->DeleteGlobalRef(objectMessagingAccessPoint);
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)

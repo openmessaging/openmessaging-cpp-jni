@@ -1,8 +1,8 @@
-#include "PullConsumerImpl.h"
+#include "consumer/PullConsumerImpl.h"
 #include "KeyValueImpl.h"
 #include "ByteMessageImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     PullConsumerImpl::PullConsumerImpl(jobject proxy) : objectPullConsumer(proxy), ServiceLifecycleImpl(proxy) {
         CurrentEnv current;
@@ -54,4 +54,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         return objectPullConsumer;
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_3(io, openmessaging, consumer)

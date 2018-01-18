@@ -3,24 +3,22 @@
 
 #include <string>
 #include <vector>
-
 #include <jni.h>
 
-namespace io {
-    namespace openmessaging {
-        namespace core {
-            class JavaOption {
-            public:
-                JavaOption(const jint version);
+#include "Namespace.h"
 
-                void addOption(const std::string &option);
+BEGIN_NAMESPACE_2(io, openmessaging)
 
-                const jint _version;
+    class JavaOption {
+    public:
+        JavaOption(const jint version);
 
-                std::vector<std::string> options;
-            };
-        }
-    }
-}
+        void addOption(const std::string &option);
 
+        const jint _version;
+
+        std::vector<std::string> options;
+    };
+
+END_NAMESPACE_2(io, openmessaging)
 #endif //OMS_JAVAOPTION_H

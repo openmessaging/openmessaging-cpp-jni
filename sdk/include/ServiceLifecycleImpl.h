@@ -5,7 +5,7 @@
 #include "core.h"
 #include "Namespace.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     class ServiceLifecycleImpl : public virtual ServiceLifecycle {
     public:
@@ -24,6 +24,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jmethodID  midShutdown;
     };
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_SERVICELIFECYCLEIMPL_H

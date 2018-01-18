@@ -1,6 +1,6 @@
 #include "ServiceLifecycleImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     ServiceLifecycleImpl::ServiceLifecycleImpl(jobject proxy)  : _proxy(proxy) {
         CurrentEnv current;
@@ -26,4 +26,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         current.env->CallVoidMethod(_proxy, midShutdown);
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)

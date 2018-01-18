@@ -5,7 +5,7 @@
 #include "KeyValue.h"
 #include "Namespace.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
     class KeyValueImpl : public virtual KeyValue {
     public:
         KeyValueImpl();
@@ -56,7 +56,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         void init(CurrentEnv &current);
     };
 
-
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_KEYVALUEIMPL_H

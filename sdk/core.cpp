@@ -1,6 +1,6 @@
 #include "include/core.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     using namespace std;
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
         init_logging();
 
-        boost::shared_ptr<io::openmessaging::core::JavaOption> jOptions =
+        boost::shared_ptr<JavaOption> jOptions =
                 boost::make_shared<JavaOption>(JNI_VERSION_1_8);
         jOptions->addOption("-Djava.class.path=/Users/lizhanhui/work/openmessaging-java/openmessaging-api/target/openmessaging-api-0.2.0-alpha.1-SNAPSHOT.jar");
         jOptions->addOption("-Xms1G");
@@ -129,4 +129,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         options.push_back(option);
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)

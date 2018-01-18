@@ -4,7 +4,7 @@
 #include "ByteMessage.h"
 #include "core.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     class ByteMessageImpl : public ByteMessage {
     public:
@@ -61,6 +61,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     };
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_BYTEMESSAGEIMPL_H

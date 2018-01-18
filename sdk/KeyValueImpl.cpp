@@ -1,6 +1,6 @@
 #include "KeyValueImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     KeyValueImpl::KeyValueImpl() {
         if (!isRunning()) {
@@ -168,4 +168,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         return defaultKeyValueObject;
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)

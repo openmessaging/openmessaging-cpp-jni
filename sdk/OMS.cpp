@@ -6,11 +6,11 @@
 BEGIN_NAMESPACE_2(io, openmessaging)
 
     boost::shared_ptr<KeyValue> OMS::newKeyValue() {
-        core::CurrentEnv current;
+        CurrentEnv current;
         jclass classDefaultKeyValue = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
-        jmethodID ctor = core::getMethod(current, classDefaultKeyValue, "<init>", "()V");
+        jmethodID ctor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
         jobject objectDefaultKeyValue = current.env->NewObject(classDefaultKeyValue, ctor);
-        boost::shared_ptr<KeyValue> ptr = boost::make_shared<core::KeyValueImpl>(current.env->NewGlobalRef(objectDefaultKeyValue));
+        boost::shared_ptr<KeyValue> ptr = boost::make_shared<KeyValueImpl>(current.env->NewGlobalRef(objectDefaultKeyValue));
         current.env->DeleteLocalRef(objectDefaultKeyValue);
         return ptr;
     }

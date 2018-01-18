@@ -4,7 +4,7 @@
 #include "MessagingAccessPoint.h"
 #include "core.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
     class MessagingAccessPointImpl : public MessagingAccessPoint {
     public:
         MessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyValue> &properties, jobject proxy);
@@ -80,6 +80,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     };
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_MESSAGINGACCESSPOINTIMPL_H

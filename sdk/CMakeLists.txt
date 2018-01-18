@@ -4,10 +4,11 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         KeyValueImpl.cpp
         OMS.cpp
         ServiceLifecycleImpl.cpp
-        ProducerImpl.cpp
-        PullConsumerImpl.cpp
-        PushConsumerImpl.cpp
-        StreamingConsumerImpl.cpp
+        producer/ProducerImpl.cpp
+        consumer/StreamImpl.cpp
+        consumer/PullConsumerImpl.cpp
+        consumer/PushConsumerImpl.cpp
+        consumer/StreamingConsumerImpl.cpp
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} ${JNI_LIBRARIES})

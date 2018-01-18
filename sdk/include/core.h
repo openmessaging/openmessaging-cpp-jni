@@ -15,7 +15,7 @@
 #include "JavaOption.h"
 #include "Namespace.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
     extern JavaVM *jvm;
 
     void Initialize();
@@ -41,6 +41,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
     jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name, const std::string &signature,
                         bool isStatic = false);
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_CORE_H

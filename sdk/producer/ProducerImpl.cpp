@@ -1,6 +1,6 @@
-#include "ProducerImpl.h"
+#include "producer/ProducerImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
             : objectProducer(proxy), _properties(properties), ServiceLifecycleImpl(proxy) {
@@ -59,4 +59,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         return message;
     }
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_3(io, openmessaging, producer)

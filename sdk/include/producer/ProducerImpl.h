@@ -8,7 +8,7 @@
 #include "Namespace.h"
 #include "ServiceLifecycleImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     class ProducerImpl : public virtual producer::Producer, public virtual ServiceLifecycleImpl {
     public:
@@ -39,7 +39,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         boost::shared_ptr<KeyValue> _properties;
     };
 
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_3(io, openmessaging, producer)
 
 
 #endif // PRODUCER_H

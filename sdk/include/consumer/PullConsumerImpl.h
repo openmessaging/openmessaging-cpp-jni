@@ -6,7 +6,7 @@
 #include "ServiceLifecycleImpl.h"
 #include "consumer/PullConsumer.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     class PullConsumerImpl : public virtual consumer::PullConsumer, public virtual ServiceLifecycleImpl {
     public:

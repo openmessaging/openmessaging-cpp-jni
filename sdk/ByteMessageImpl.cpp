@@ -1,7 +1,7 @@
 #include "ByteMessageImpl.h"
 #include "KeyValueImpl.h"
 
-BEGIN_NAMESPACE_3(io, openmessaging, core)
+BEGIN_NAMESPACE_2(io, openmessaging)
 
     ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
         CurrentEnv current;
@@ -140,4 +140,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         current.env->DeleteLocalRef(v);
         return *this;
     }
-END_NAMESPACE_3(io, openmessaging, core)
+END_NAMESPACE_2(io, openmessaging)

@@ -5,6 +5,7 @@
 
 #include "ServiceLifecycle.h"
 #include "Namespace.h"
+#include "Message.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 

@@ -57,8 +57,26 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jclass classMessagingAccessPoint;
 
         jmethodID  midImplVersion;
+
         jmethodID  midCreateProducer;
         jmethodID  midCreateProducer2;
+
+        jmethodID  midCreatePushConsumer;
+        jmethodID  midCreatePushConsumer2;
+
+        jmethodID  midCreatePullConsumer;
+        jmethodID  midCreatePullConsumer2;
+
+        jmethodID  midCreateStreamingConsumer;
+        jmethodID  midGetResourceManager;
+        jmethodID  midAddObserver;
+        jmethodID  midRemoveObserver;
+        jmethodID  midProducers;
+        jmethodID  midPushConsumers;
+        jmethodID  midPullConsumers;
+        jmethodID  midStreamingConsumers;
+        jmethodID  midStartup;
+        jmethodID  midShutdown;
 
     };
 

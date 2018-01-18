@@ -7,6 +7,7 @@
 
 #include "KeyValue.h"
 #include "MessagingAccessPoint.h"
+#include "interceptor/MessagingAccessPointInterceptor.h"
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -18,6 +19,11 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             static boost::shared_ptr<MessagingAccessPoint> getMessagingAccessPoint(std::string &url,
                                                                                    boost::shared_ptr<KeyValue> properties = kv_nullptr);
+
+            static void addInterceptor(boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor);
+
+            static void removeInterceptor(boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor);
+
 
         };
 

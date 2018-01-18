@@ -2,7 +2,12 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         core.cpp
         ByteMessageImpl.cpp
         KeyValueImpl.cpp
+        OMS.cpp
+        ServiceLifecycleImpl.cpp
         ProducerImpl.cpp
+        PullConsumerImpl.cpp
+        PushConsumerImpl.cpp
+        StreamingConsumerImpl.cpp
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} ${JNI_LIBRARIES})

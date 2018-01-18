@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, core)
 
-    class ProducerImpl: public producer::Producer, public MessageFactory {
+    class ProducerImpl : public virtual producer::Producer {
     public:
 
         ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties);

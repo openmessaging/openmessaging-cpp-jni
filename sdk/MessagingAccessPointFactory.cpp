@@ -44,4 +44,14 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         return boost::make_shared<core::MessagingAccessPointImpl>(url, properties, globalRef);
     }
 
+    void MessagingAccessPointFactory::addInterceptor(
+            boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor) {
+
+    }
+
+    void MessagingAccessPointFactory::removeInterceptor(
+            boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor) {
+
+    }
+
 END_NAMESPACE_2(io, openmessaging)

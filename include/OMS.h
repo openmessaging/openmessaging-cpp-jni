@@ -13,10 +13,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         class OMS {
         public:
-            static boost::shared_ptr<KeyValue> newKeyValue() {
-                boost::shared_ptr<KeyValue> ptr = boost::make_shared<KeyValue>();
-                return ptr;
-            }
+            static boost::shared_ptr<KeyValue> newKeyValue();
         };
 
 END_NAMESPACE_2(io, openmessaging)

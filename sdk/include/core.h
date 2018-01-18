@@ -38,6 +38,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
 
+    jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name, const std::string &signature,
+                        bool isStatic = false);
+
 END_NAMESPACE_3(io, openmessaging, core)
 
 #endif //OMS_CORE_H

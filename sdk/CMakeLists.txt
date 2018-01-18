@@ -1,5 +1,6 @@
 add_library(${CMAKE_PROJECT_NAME} SHARED
         core.cpp
+        ByteMessageImpl.cpp
         KeyValueImpl.cpp
         ProducerImpl.cpp
         MessagingAccessPointImpl.cpp

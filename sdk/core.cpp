@@ -104,6 +104,23 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         }
     }
 
+    jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,
+                                             const std::string &signature, bool isStatic) {
+        jmethodID  methodId;
+        if (isStatic) {
+            methodId = current.env->GetStaticMethodID(clazz, name.c_str(), signature.c_str());
+        } else {
+            methodId = current.env->GetMethodID(clazz, name.c_str(), signature.c_str());
+        }
+
+        if (!methodId) {
+            BOOST_LOG_TRIVIAL(warning) << "Failed to GetMethodID. Method: " << name << ", Signature: " << signature;
+            abort();
+        }
+
+        return methodId;
+    }
+
     JavaOption::JavaOption(const jint version) : _version(version) {
 
     }

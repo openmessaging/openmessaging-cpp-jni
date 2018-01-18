@@ -2,24 +2,42 @@
 #define OMS_PRODUCERIMPL_H
 
 #include "producer/Producer.h"
+#include "MessageFactory.h"
+#include "ByteMessageImpl.h"
 #include "core.h"
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, core)
 
-    class ProducerImpl: public producer::Producer {
+    class ProducerImpl: public producer::Producer, public MessageFactory {
     public:
+
         ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties);
 
-        ~ProducerImpl();
+        virtual ~ProducerImpl();
 
-        boost::shared_ptr<KeyValue> properties();
+        virtual boost::shared_ptr<KeyValue> properties();
 
-        boost::shared_ptr<producer::SendResult> send(boost::shared_ptr<Message> message,
+        virtual boost::shared_ptr<producer::SendResult> send(boost::shared_ptr<Message> message,
                                            boost::shared_ptr<KeyValue> properties);
+
+        virtual boost::shared_ptr<ByteMessage>
+        createByteMessageToTopic(std::string &topic, std::vector<char> &body);
+
+        virtual boost::shared_ptr<ByteMessage>
+        createByteMessageToQueue(std::string &topic, std::vector<char> &body);
+
+        virtual void startup();
+
+        virtual void shutdown();
 
     private:
         jobject objectProducer;
+        jclass classProducer;
+        jmethodID  midCreateByteMessageToTopic;
+        jmethodID  midCreateByteMessageToQueue;
+        jmethodID  midStartup;
+        jmethodID  midShutdown;
 
         boost::shared_ptr<KeyValue> _properties;
     };

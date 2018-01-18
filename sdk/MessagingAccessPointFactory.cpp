@@ -30,18 +30,17 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         jobject messagingAccessPoint;
         if (useKV) {
+            boost::shared_ptr<core::KeyValueImpl> kv = boost::dynamic_pointer_cast<core::KeyValueImpl>(properties);
             messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
                                                                        midGetMessagingAccessPoint,
-                                                                       boost::static_pointer_cast<core::KeyValueImpl>(properties)->getInternal());
+                                                                       kv->getInternal());
         } else {
             messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
                                                                        midGetMessagingAccessPoint);
         }
 
         current.env->DeleteLocalRef(classMessagingAccessPointFactory);
-
         jobject globalRef = current.env->NewGlobalRef(messagingAccessPoint);
-
         return boost::make_shared<core::MessagingAccessPointImpl>(url, properties, globalRef);
     }
 

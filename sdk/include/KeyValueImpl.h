@@ -10,6 +10,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
     public:
         KeyValueImpl();
 
+        KeyValueImpl(jobject proxy);
+
         virtual ~KeyValueImpl();
 
         virtual KeyValue& put(const std::string &key, int value);
@@ -35,7 +37,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jobject getInternal();
 
     private:
-        jclass defaultKeyValueClass;
+        jclass classDefaultKeyValue;
         jmethodID defaultKeyValueCtor;
         jmethodID putInt;
         jmethodID putLong;
@@ -51,8 +53,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
         jobject defaultKeyValueObject;
 
-        inline jmethodID getMethod(CurrentEnv &current, const std::string &name, const std::string &signature,
-                                   bool isStatic = false);
+        void init(CurrentEnv &current);
     };
 
 

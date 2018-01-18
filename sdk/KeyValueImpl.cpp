@@ -8,39 +8,50 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         }
 
         CurrentEnv current;
-        jclass localDefaultKeyValueClass = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
-        if (!localDefaultKeyValueClass) {
+        jclass classDefaultKeyValueLocal = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
+        if (!classDefaultKeyValueLocal) {
             BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/internal/DefaultKeyValue is not found";
             abort();
         }
-        defaultKeyValueClass = reinterpret_cast<jclass>(current.env->NewGlobalRef(localDefaultKeyValueClass));
 
-        defaultKeyValueCtor = getMethod(current, "<init>", "()V");
-        jobject localDefaultKeyValueObject = current.env->NewObject(defaultKeyValueClass, defaultKeyValueCtor);
+        classDefaultKeyValue = reinterpret_cast<jclass>(current.env->NewGlobalRef(classDefaultKeyValueLocal));
+        init(current);
+
+        defaultKeyValueCtor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
+        jobject localDefaultKeyValueObject = current.env->NewObject(classDefaultKeyValue, defaultKeyValueCtor);
         if (localDefaultKeyValueObject) {
             defaultKeyValueObject = current.env->NewGlobalRef(localDefaultKeyValueObject);
         } else {
             BOOST_LOG_TRIVIAL(warning) << "Unable to create object for io/openmessaging/internal/DefaultKeyValue";
             abort();
         }
+    }
 
-        putInt = getMethod(current, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
-        putLong = getMethod(current, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
-        putDouble = getMethod(current, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
-        putString = getMethod(current, "put", "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+    KeyValueImpl::KeyValueImpl(jobject proxy) : defaultKeyValueObject(proxy) {
+        CurrentEnv current;
+        init(current);
+    }
 
-        getIntMethod = getMethod(current, "getInt", "(Ljava/lang/String;)I");
-        getLongMethod = getMethod(current, "getLong", "(Ljava/lang/String;)J");
-        getDoubleMethod = getMethod(current, "getDouble", "(Ljava/lang/String;)D");
-        getStringMethod = getMethod(current, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
-        midContainsKey = getMethod(current, "containsKey", "(Ljava/lang/String;)Z");
+    void KeyValueImpl::init(CurrentEnv &current) {
+        putInt = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
+        putLong = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+        putDouble = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
+        putString = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+
+        getIntMethod = getMethod(current, classDefaultKeyValue, "getInt", "(Ljava/lang/String;)I");
+        getLongMethod = getMethod(current, classDefaultKeyValue, "getLong", "(Ljava/lang/String;)J");
+        getDoubleMethod = getMethod(current, classDefaultKeyValue, "getDouble", "(Ljava/lang/String;)D");
+        getStringMethod = getMethod(current, classDefaultKeyValue, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
+        midContainsKey = getMethod(current, classDefaultKeyValue, "containsKey", "(Ljava/lang/String;)Z");
+
+        keySetMethod = getMethod(current, classDefaultKeyValue, "keySet", "()Ljava/util/Set;");
     }
 
     KeyValueImpl::~KeyValueImpl() {
         CurrentEnv current;
-        if (defaultKeyValueClass) {
-            current.env->DeleteGlobalRef(defaultKeyValueClass);
-            defaultKeyValueClass = NULL;
+        if (classDefaultKeyValue) {
+            current.env->DeleteGlobalRef(classDefaultKeyValue);
+            classDefaultKeyValue = NULL;
         }
 
         if (defaultKeyValueObject) {
@@ -141,7 +152,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     std::set<std::string> KeyValueImpl::keySet() {
         CurrentEnv current;
-        keySetMethod = getMethod(current, "keySet", "()Ljava/util/Set;");
         jobject jKeySet = current.env->CallObjectMethod(defaultKeyValueObject, keySetMethod);
         return toNativeSet(current, jKeySet);
     }
@@ -152,23 +162,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         jboolean contains = current.env->CallBooleanMethod(defaultKeyValueObject, midContainsKey, k);
         current.env->DeleteLocalRef(k);
         return contains;
-    }
-
-    inline jmethodID KeyValueImpl::getMethod(CurrentEnv &current, const std::string &name,
-                                             const std::string &signature, bool isStatic) {
-        jmethodID  methodId;
-        if (isStatic) {
-            methodId = current.env->GetStaticMethodID(defaultKeyValueClass, name.c_str(), signature.c_str());
-        } else {
-            methodId = current.env->GetMethodID(defaultKeyValueClass, name.c_str(), signature.c_str());
-        }
-
-        if (!methodId) {
-            BOOST_LOG_TRIVIAL(warning) << "Failed to GetMethodID. Method: " << name << ", Signature: " << signature;
-            abort();
-        }
-
-        return methodId;
     }
 
     jobject KeyValueImpl::getInternal() {

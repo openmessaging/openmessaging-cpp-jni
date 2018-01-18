@@ -10,19 +10,16 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        class ByteMessage : public Message {
+        class ByteMessage : public virtual Message {
         public:
-            std::vector<char> &getBody() {
-                return _body;
+            virtual ~ByteMessage() {
+
             }
 
-            ByteMessage &setBody(const std::vector<char> &body) {
-                _body = boost::move(body);
-                return *this;
-            }
+            virtual std::vector<char> getBody()  = 0;
 
-        protected:
-            std::vector<char> _body;
+            virtual ByteMessage& setBody(const std::vector<char> &body) = 0;
+
         };
 
 END_NAMESPACE_2(io, openmessaging)

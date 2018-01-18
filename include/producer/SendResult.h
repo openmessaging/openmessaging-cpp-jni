@@ -10,24 +10,17 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-            class SendResult {
-            public:
-                SendResult(const std::string &msgId, boost::shared_ptr<KeyValue> props) : _messageId(msgId),
-                                                                                          _properties(props) {
-                }
+    class SendResult {
+    public:
+        virtual ~SendResult() {
 
-                const std::string &messageId() const {
-                    return _messageId;
-                }
+        }
 
-                boost::shared_ptr<KeyValue> properties() const {
-                    return _properties;
-                }
+        virtual std::string &messageId() = 0;
 
-            protected:
-                std::string _messageId;
-                boost::shared_ptr<KeyValue> _properties;
-            };
+        virtual boost::shared_ptr<KeyValue> properties() = 0;
+
+    };
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

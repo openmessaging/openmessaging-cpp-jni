@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
         createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties);
 
         boost::shared_ptr<consumer::StreamingConsumer> createStreamingConsumer(const std::string &queueName,
-                                                                               boost::shared_ptr<KeyValue> properites);
+                                                                               boost::shared_ptr<KeyValue> properties);
 
         boost::shared_ptr<ResourceManager> getResourceManager();
 

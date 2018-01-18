@@ -3,8 +3,7 @@
 BEGIN_NAMESPACE_3(io, openmessaging, core)
 
     ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
-            : objectProducer(proxy), _properties(properties) {
-
+            : objectProducer(proxy), _properties(properties), ServiceLifecycleImpl(proxy) {
         CurrentEnv current;
         jclass classProducerLocal = current.env->FindClass("io/openmessaging/producer/Producer");
         classProducer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerLocal));
@@ -58,24 +57,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
         boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.env->NewGlobalRef(jMessage));
         return message;
-    }
-
-    void ProducerImpl::shutdown() {
-        CurrentEnv current;
-        current.env->CallVoidMethod(objectProducer, midShutdown);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-        }
-    }
-
-    void ProducerImpl::startup() {
-        CurrentEnv current;
-        current.env->CallVoidMethod(objectProducer, midStartup);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-        }
     }
 
 END_NAMESPACE_3(io, openmessaging, core)

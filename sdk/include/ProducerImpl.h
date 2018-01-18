@@ -6,10 +6,11 @@
 #include "ByteMessageImpl.h"
 #include "core.h"
 #include "Namespace.h"
+#include "ServiceLifecycleImpl.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, core)
 
-    class ProducerImpl : public virtual producer::Producer {
+    class ProducerImpl : public virtual producer::Producer, public virtual ServiceLifecycleImpl {
     public:
 
         ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties);
@@ -26,10 +27,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
 
         virtual boost::shared_ptr<ByteMessage>
         createByteMessageToQueue(std::string &topic, std::vector<char> &body);
-
-        virtual void startup();
-
-        virtual void shutdown();
 
     private:
         jobject objectProducer;

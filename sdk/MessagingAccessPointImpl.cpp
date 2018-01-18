@@ -78,45 +78,49 @@ BEGIN_NAMESPACE_3(io, openmessaging, core)
     }
 
     boost::shared_ptr<consumer::PushConsumer>
-    createPushConsumer(boost::shared_ptr<KeyValue> properties) {
+    MessagingAccessPointImpl::createPushConsumer(boost::shared_ptr<KeyValue> properties) {
 
     }
 
     boost::shared_ptr<consumer::PullConsumer>
-    createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties) {
+    MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties) {
 
     }
 
-    boost::shared_ptr<consumer::StreamingConsumer> createStreamingConsumer(const std::string &queueName,
-                                                                           boost::shared_ptr<KeyValue> properites) {
+    boost::shared_ptr<consumer::StreamingConsumer>
+    MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties) {
 
     }
 
-    boost::shared_ptr<ResourceManager> getResourceManager() {
+    boost::shared_ptr<ResourceManager> MessagingAccessPointImpl::getResourceManager() {
 
     }
 
-    void addObserver(boost::shared_ptr<observer::Observer> observer) {
+    void MessagingAccessPointImpl::addObserver(boost::shared_ptr<observer::Observer> observer) {
 
     }
 
-    void removeObserver(boost::shared_ptr<observer::Observer> observer) {
+    void MessagingAccessPointImpl::removeObserver(boost::shared_ptr<observer::Observer> observer) {
 
     }
 
-    std::vector<boost::shared_ptr<producer::Producer> > producers() {
+    std::vector<boost::shared_ptr<producer::Producer> >
+    MessagingAccessPointImpl::producers() {
 
     }
 
-    std::vector<boost::shared_ptr<consumer::PushConsumer> > pushConsumers() {
+    std::vector<boost::shared_ptr<consumer::PushConsumer> >
+    MessagingAccessPointImpl::pushConsumers() {
 
     }
 
-    std::vector<boost::shared_ptr<consumer::PullConsumer> > pullConsumers() {
+    std::vector<boost::shared_ptr<consumer::PullConsumer> >
+    MessagingAccessPointImpl::pullConsumers() {
 
     }
 
-    std::vector<boost::shared_ptr<consumer::StreamingConsumer> > streamingConsumers() {
+    std::vector<boost::shared_ptr<consumer::StreamingConsumer> >
+    MessagingAccessPointImpl::streamingConsumers() {
 
     }
 

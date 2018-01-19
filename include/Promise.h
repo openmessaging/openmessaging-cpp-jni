@@ -9,18 +9,17 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        class Promise : public Future {
-        public:
-            bool cancel(bool interruptIfRunning) = 0;
+    class Promise : public Future {
+    public:
+        virtual ~Promise() {
+        }
 
-            bool set(boost::shared_mutex<producer::SendResult> &value) = 0;
+        virtual bool cancel(bool interruptIfRunning) = 0;
 
-            bool setFailure(std::exception &e) = 0;
+        virtual bool set(boost::shared_mutex<producer::SendResult> &value) = 0;
 
-        protected:
-            virtual ~Promise() {
-            }
-        };
+        virtual bool setFailure(std::exception &e) = 0;
+    };
 
 END_NAMESPACE_2(io, openmessaging)
 

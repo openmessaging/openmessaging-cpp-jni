@@ -34,7 +34,7 @@ boost::shared_ptr<KeyValue> ProducerImpl::properties() {
 }
 
 boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> message,
-                                                           boost::shared_ptr<KeyValue> properties) {
+                                                 boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
 
     boost::shared_ptr<ByteMessageImpl> msg = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
@@ -45,7 +45,7 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
         jSendResult = current.env->NewGlobalRef(ret);
         current.env->DeleteLocalRef(ret);
     } else {
-        jobject  ret = current.env->CallObjectMethod(_proxy, midSend, msg->getProxy());
+        jobject ret = current.env->CallObjectMethod(_proxy, midSend, msg->getProxy());
         jSendResult = current.env->NewGlobalRef(ret);
         current.env->DeleteLocalRef(ret);
     }
@@ -82,4 +82,34 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::strin
 
     boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.env->NewGlobalRef(jMessage));
     return message;
+}
+
+boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> message,
+                                   boost::shared_ptr<LocalTransactionBranchExecutor> executor,
+                                   boost::shared_ptr<void> arg,
+                                   boost::shared_ptr<KeyValue> properties) {
+
+}
+
+boost::shared_ptr<Future>
+ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
+          boost::shared_ptr<KeyValue> properties) {
+
+}
+
+void ProducerImpl::sendOneway(boost::shared_ptr<Message> Message,
+                boost::shared_ptr<KeyValue> properties) {
+
+}
+
+boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {
+
+}
+
+void ProducerImpl::addInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) {
+
+}
+
+void ProducerImpl::removeInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) {
+
 }

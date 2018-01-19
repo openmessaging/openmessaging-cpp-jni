@@ -9,6 +9,7 @@
 using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
 using namespace io::openmessaging::consumer;
+using namespace io::openmessaging::observer;
 
 MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
                                                    const boost::shared_ptr<KeyValue> &properties,
@@ -65,18 +66,23 @@ std::string MessagingAccessPointImpl::implVersion() {
     return result;
 }
 
-boost::shared_ptr<producer::Producer> MessagingAccessPointImpl::createProducer(
+boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
         boost::shared_ptr<KeyValue> properties) {
-    bool useKV = (NULL != properties);
     CurrentEnv current;
     jobject producer;
-    if (useKV) {
+    if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
+        jobject producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
+        producer = current.env->NewGlobalRef(producerLocal);
+        current.env->DeleteLocalRef(producerLocal);
     } else {
-        producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
+        jobject producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
+        producer = current.env->NewGlobalRef(producerLocal);
+        current.env->DeleteLocalRef(producerLocal);
     }
-    return boost::make_shared<ProducerImpl>(producer, properties);
+
+    boost::shared_ptr<Producer> ret = boost::make_shared<ProducerImpl>(producer, properties);
+    return ret;
 }
 
 boost::shared_ptr<consumer::PushConsumer>
@@ -107,7 +113,7 @@ void MessagingAccessPointImpl::removeObserver(boost::shared_ptr<observer::Observ
 
 }
 
-std::vector<boost::shared_ptr<producer::Producer> >
+std::vector<boost::shared_ptr<Producer> >
 MessagingAccessPointImpl::producers() {
 
 }

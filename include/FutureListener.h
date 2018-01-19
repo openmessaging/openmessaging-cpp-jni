@@ -1,19 +1,22 @@
 #ifndef OMS_FUTURE_LISTENER_H
 #define OMS_FUTURE_LISTENER_H
 
-#include "Future.h"
+#include <boost/shared_ptr.hpp>
+
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        class FutureListener {
-        public:
-            virtual FutureListener() {
+    class Future;
 
-            }
+    class FutureListener {
+    public:
+        virtual ~FutureListener() {
 
-            virtual operationComplete(const Future &future) = 0;
-        };
+        }
+
+        virtual void operationComplete(const boost::shared_ptr<Future> &future) = 0;
+    };
 
 END_NAMESPACE_2(io, openmessaging)
 

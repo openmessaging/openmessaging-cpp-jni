@@ -1,0 +1,29 @@
+#ifndef OMS_SENDRESULT_H
+#define OMS_SENDRESULT_H
+
+#include "Namespace.h"
+#include "core.h"
+#include "producer/SendResult.h"
+
+BEGIN_NAMESPACE_3(io, openmessaging, producer)
+
+    class SendResultImpl : public virtual SendResult {
+    public:
+        SendResultImpl(jobject proxy);
+
+        virtual ~SendResultImpl();
+
+        virtual std::string messageId();
+
+        virtual boost::shared_ptr<KeyValue> properties();
+
+    private:
+        jobject _proxy;
+        jclass classSendResult;
+        jmethodID midMessageId;
+        jmethodID midProperties;
+    };
+
+END_NAMESPACE_3(io, openmessaging, producer)
+
+#endif //OMS_SENDRESULT_H

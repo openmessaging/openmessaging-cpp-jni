@@ -5,6 +5,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         OMS.cpp
         ServiceLifecycleImpl.cpp
         producer/ProducerImpl.cpp
+        producer/SendResultImpl.cpp
         consumer/StreamImpl.cpp
         consumer/PullConsumerImpl.cpp
         consumer/PushConsumerImpl.cpp

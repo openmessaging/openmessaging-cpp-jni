@@ -7,16 +7,16 @@
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, routing)
-            class Operator {
-            public:
-                virtual ~Operator() {
+    class Operator {
+    public:
+        virtual ~Operator() {
 
-                }
+        }
 
-                virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual boost::shared_ptr<KeyValue> properties() = 0;
 
-                virtual std::string expression() = 0;
-            };
+        virtual std::string expression() = 0;
+    };
 END_NAMESPACE_3(io, openmessaging, routing)
 
 #endif //OMS_OPERATOR_H

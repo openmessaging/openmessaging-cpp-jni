@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual std::string &messageId() = 0;
+        virtual std::string messageId() = 0;
 
         virtual boost::shared_ptr<KeyValue> properties() = 0;
 

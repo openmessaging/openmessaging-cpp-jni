@@ -1,171 +1,167 @@
 #include "KeyValueImpl.h"
 
-BEGIN_NAMESPACE_2(io, openmessaging)
+using namespace io::openmessaging;
 
-    KeyValueImpl::KeyValueImpl() {
-        if (!isRunning()) {
-            Initialize();
-        }
-
-        CurrentEnv current;
-        jclass classDefaultKeyValueLocal = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
-        if (!classDefaultKeyValueLocal) {
-            BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/internal/DefaultKeyValue is not found";
-            abort();
-        }
-
-        classDefaultKeyValue = reinterpret_cast<jclass>(current.env->NewGlobalRef(classDefaultKeyValueLocal));
-        init(current);
-
-        defaultKeyValueCtor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
-        jobject localDefaultKeyValueObject = current.env->NewObject(classDefaultKeyValue, defaultKeyValueCtor);
-        if (localDefaultKeyValueObject) {
-            defaultKeyValueObject = current.env->NewGlobalRef(localDefaultKeyValueObject);
-        } else {
-            BOOST_LOG_TRIVIAL(warning) << "Unable to create object for io/openmessaging/internal/DefaultKeyValue";
-            abort();
-        }
+KeyValueImpl::KeyValueImpl() {
+    CurrentEnv current;
+    jclass classDefaultKeyValueLocal = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
+    if (!classDefaultKeyValueLocal) {
+        BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/internal/DefaultKeyValue is not found";
+        abort();
     }
 
-    KeyValueImpl::KeyValueImpl(jobject proxy) : defaultKeyValueObject(proxy) {
-        CurrentEnv current;
-        init(current);
+    classDefaultKeyValue = reinterpret_cast<jclass>(current.env->NewGlobalRef(classDefaultKeyValueLocal));
+    init(current);
+
+    defaultKeyValueCtor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
+    jobject localDefaultKeyValueObject = current.env->NewObject(classDefaultKeyValue, defaultKeyValueCtor);
+    if (localDefaultKeyValueObject) {
+        defaultKeyValueObject = current.env->NewGlobalRef(localDefaultKeyValueObject);
+    } else {
+        BOOST_LOG_TRIVIAL(warning) << "Unable to create object for io/openmessaging/internal/DefaultKeyValue";
+        abort();
+    }
+}
+
+KeyValueImpl::KeyValueImpl(jobject proxy) : defaultKeyValueObject(proxy) {
+    CurrentEnv current;
+    init(current);
+}
+
+void KeyValueImpl::init(CurrentEnv &current) {
+    putInt = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
+    putLong = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+    putDouble = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
+    putString = getMethod(current, classDefaultKeyValue, "put",
+                          "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+
+    getIntMethod = getMethod(current, classDefaultKeyValue, "getInt", "(Ljava/lang/String;)I");
+    getLongMethod = getMethod(current, classDefaultKeyValue, "getLong", "(Ljava/lang/String;)J");
+    getDoubleMethod = getMethod(current, classDefaultKeyValue, "getDouble", "(Ljava/lang/String;)D");
+    getStringMethod = getMethod(current, classDefaultKeyValue, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
+    midContainsKey = getMethod(current, classDefaultKeyValue, "containsKey", "(Ljava/lang/String;)Z");
+
+    keySetMethod = getMethod(current, classDefaultKeyValue, "keySet", "()Ljava/util/Set;");
+}
+
+KeyValueImpl::~KeyValueImpl() {
+    CurrentEnv current;
+    if (classDefaultKeyValue) {
+        current.env->DeleteGlobalRef(classDefaultKeyValue);
+        classDefaultKeyValue = NULL;
     }
 
-    void KeyValueImpl::init(CurrentEnv &current) {
-        putInt = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
-        putLong = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
-        putDouble = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
-        putString = getMethod(current, classDefaultKeyValue, "put", "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+    if (defaultKeyValueObject) {
+        current.env->DeleteGlobalRef(defaultKeyValueObject);
+    }
+}
 
-        getIntMethod = getMethod(current, classDefaultKeyValue, "getInt", "(Ljava/lang/String;)I");
-        getLongMethod = getMethod(current, classDefaultKeyValue, "getLong", "(Ljava/lang/String;)J");
-        getDoubleMethod = getMethod(current, classDefaultKeyValue, "getDouble", "(Ljava/lang/String;)D");
-        getStringMethod = getMethod(current, classDefaultKeyValue, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
-        midContainsKey = getMethod(current, classDefaultKeyValue, "containsKey", "(Ljava/lang/String;)Z");
+KeyValue &KeyValueImpl::put(const std::string &key, int value) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    current.env->CallObjectMethod(defaultKeyValueObject, putInt, k, value);
+    current.env->DeleteLocalRef(k);
+    return *this;
+}
 
-        keySetMethod = getMethod(current, classDefaultKeyValue, "keySet", "()Ljava/util/Set;");
+KeyValue &KeyValueImpl::put(const std::string &key, long value) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    current.env->CallObjectMethod(defaultKeyValueObject, putLong, k, value);
+    current.env->DeleteLocalRef(k);
+    return *this;
+}
+
+KeyValue &KeyValueImpl::put(const std::string &key, double value) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    current.env->CallObjectMethod(defaultKeyValueObject, putDouble, k, value);
+    current.env->DeleteLocalRef(k);
+    return *this;
+}
+
+KeyValue &KeyValueImpl::put(const std::string &key, const std::string &value) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jstring v = current.env->NewStringUTF(value.c_str());
+    current.env->CallObjectMethod(defaultKeyValueObject, putString, k, v);
+    current.env->DeleteLocalRef(k);
+    current.env->DeleteLocalRef(v);
+    return *this;
+}
+
+int KeyValueImpl::getInt(const std::string &key, int defaultValue) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jint value = current.env->CallIntMethod(defaultKeyValueObject, getIntMethod, k);
+    current.env->DeleteLocalRef(k);
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        return defaultValue;
+    }
+    return value;
+}
+
+long KeyValueImpl::getLong(const std::string &key, long defaultValue) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jlong value = current.env->CallLongMethod(defaultKeyValueObject, getLongMethod, k);
+    current.env->DeleteLocalRef(k);
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        return defaultValue;
+    }
+    return value;
+}
+
+double KeyValueImpl::getDouble(const std::string &key, double defaultValue) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jdouble value = current.env->CallDoubleMethod(defaultKeyValueObject, getDoubleMethod, k);
+    current.env->DeleteLocalRef(k);
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        return defaultValue;
+    }
+    return value;
+}
+
+std::string KeyValueImpl::getString(const std::string &key, const std::string &defaultValue) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jstring value = reinterpret_cast<jstring>(current.env->CallObjectMethod(defaultKeyValueObject, getStringMethod, k));
+    current.env->DeleteLocalRef(k);
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        return defaultValue;
     }
 
-    KeyValueImpl::~KeyValueImpl() {
-        CurrentEnv current;
-        if (classDefaultKeyValue) {
-            current.env->DeleteGlobalRef(classDefaultKeyValue);
-            classDefaultKeyValue = NULL;
-        }
+    const char *data = current.env->GetStringUTFChars(value, NULL);
+    std::string ret = data;
+    current.env->ReleaseStringUTFChars(value, data);
+    current.env->DeleteLocalRef(value);
+    return ret;
+}
 
-        if (defaultKeyValueObject) {
-            current.env->DeleteGlobalRef(defaultKeyValueObject);
-        }
-    }
+std::set<std::string> KeyValueImpl::keySet() {
+    CurrentEnv current;
+    jobject jKeySet = current.env->CallObjectMethod(defaultKeyValueObject, keySetMethod);
+    return toNativeSet(current, jKeySet);
+}
 
-    KeyValue& KeyValueImpl::put(const std::string &key, int value) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        current.env->CallObjectMethod(defaultKeyValueObject, putInt, k, value);
-        current.env->DeleteLocalRef(k);
-        return *this;
-    }
+bool KeyValueImpl::containsKey(const std::string &key) {
+    CurrentEnv current;
+    jstring k = current.env->NewStringUTF(key.c_str());
+    jboolean contains = current.env->CallBooleanMethod(defaultKeyValueObject, midContainsKey, k);
+    current.env->DeleteLocalRef(k);
+    return contains;
+}
 
-    KeyValue& KeyValueImpl::put(const std::string &key, long value) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        current.env->CallObjectMethod(defaultKeyValueObject, putLong, k, value);
-        current.env->DeleteLocalRef(k);
-        return *this;
-    }
+jobject KeyValueImpl::getInternal() {
+    return defaultKeyValueObject;
+}
 
-    KeyValue& KeyValueImpl::put(const std::string &key, double value) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        current.env->CallObjectMethod(defaultKeyValueObject, putDouble, k, value);
-        current.env->DeleteLocalRef(k);
-        return *this;
-    }
-
-    KeyValue& KeyValueImpl::put(const std::string &key, const std::string &value) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jstring v = current.env->NewStringUTF(value.c_str());
-        current.env->CallObjectMethod(defaultKeyValueObject, putString, k, v);
-        current.env->DeleteLocalRef(k);
-        current.env->DeleteLocalRef(v);
-        return *this;
-    }
-
-    int KeyValueImpl::getInt(const std::string &key, int defaultValue) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jint value = current.env->CallIntMethod(defaultKeyValueObject, getIntMethod, k);
-        current.env->DeleteLocalRef(k);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-            return defaultValue;
-        }
-        return value;
-    }
-
-    long KeyValueImpl::getLong(const std::string &key, long defaultValue) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jlong value = current.env->CallLongMethod(defaultKeyValueObject, getLongMethod, k);
-        current.env->DeleteLocalRef(k);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-            return defaultValue;
-        }
-        return value;
-    }
-
-    double KeyValueImpl::getDouble(const std::string &key, double defaultValue) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jdouble value = current.env->CallDoubleMethod(defaultKeyValueObject, getDoubleMethod, k);
-        current.env->DeleteLocalRef(k);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-            return defaultValue;
-        }
-        return value;
-    }
-
-    std::string KeyValueImpl::getString(const std::string &key, const std::string &defaultValue) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jstring value = reinterpret_cast<jstring>(current.env->CallObjectMethod(defaultKeyValueObject, getStringMethod, k));
-        current.env->DeleteLocalRef(k);
-        if (current.env->ExceptionCheck()) {
-            current.env->ExceptionDescribe();
-            current.env->ExceptionClear();
-            return defaultValue;
-        }
-
-        const char* data = current.env->GetStringUTFChars(value, NULL);
-        std::string ret = data;
-        current.env->ReleaseStringUTFChars(value, data);
-        current.env->DeleteLocalRef(value);
-        return ret;
-    }
-
-    std::set<std::string> KeyValueImpl::keySet() {
-        CurrentEnv current;
-        jobject jKeySet = current.env->CallObjectMethod(defaultKeyValueObject, keySetMethod);
-        return toNativeSet(current, jKeySet);
-    }
-
-    bool KeyValueImpl::containsKey(const std::string &key) {
-        CurrentEnv current;
-        jstring k = current.env->NewStringUTF(key.c_str());
-        jboolean contains = current.env->CallBooleanMethod(defaultKeyValueObject, midContainsKey, k);
-        current.env->DeleteLocalRef(k);
-        return contains;
-    }
-
-    jobject KeyValueImpl::getInternal() {
-        return defaultKeyValueObject;
-    }
-
-END_NAMESPACE_2(io, openmessaging)

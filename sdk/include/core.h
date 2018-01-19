@@ -16,7 +16,9 @@
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-    extern JavaVM *jvm;
+
+    JavaVM *jvm;
+    JNIEnv *env;
 
     void Initialize();
 

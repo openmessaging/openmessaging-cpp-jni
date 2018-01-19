@@ -3,6 +3,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ByteMessageImpl.cpp
         KeyValueImpl.cpp
         OMS.cpp
+        BuiltinKeys.cpp
         ServiceLifecycleImpl.cpp
         producer/ProducerImpl.cpp
         producer/SendResultImpl.cpp

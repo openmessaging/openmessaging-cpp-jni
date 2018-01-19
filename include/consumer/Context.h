@@ -5,9 +5,9 @@
 
 #include "KeyValue.h"
 #include "Namespace.h"
+#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-        extern boost::shared_ptr<KeyValue> kv_nullptr;
         BEGIN_NAMESPACE_1(consumer)
             class Context {
             public:

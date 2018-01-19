@@ -13,6 +13,7 @@
 #include "ResourceManager.h"
 #include "observer/Observer.h"
 #include "Namespace.h"
+#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -35,8 +36,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             virtual boost::shared_ptr<consumer::PullConsumer>
             createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
 
-            virtual boost::shared_ptr<consumer::StreamingConsumer> createStreamingConsumer(const std::string &queueName,
-                                                                                           boost::shared_ptr<KeyValue> properites = kv_nullptr) = 0;
+            virtual boost::shared_ptr<consumer::StreamingConsumer>
+            createStreamingConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
 
             virtual boost::shared_ptr<ResourceManager> getResourceManager() = 0;
 

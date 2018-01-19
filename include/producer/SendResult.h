@@ -1,5 +1,5 @@
-#ifndef SENDRESULT_H
-#define SENDRESULT_H
+#ifndef OMS_SEND_RESULT_H
+#define OMS_SEND_RESULT_H
 
 #include <string>
 
@@ -24,4 +24,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
 END_NAMESPACE_3(io, openmessaging, producer)
 
-#endif // SENDRESULT_H
+#endif // OMS_SEND_RESULT_H

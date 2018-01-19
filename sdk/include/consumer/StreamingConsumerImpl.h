@@ -20,13 +20,13 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual std::vector<std::string> consumers();
 
-        virtual consumer::MessageIterator current();
+        virtual MessageIterator current();
 
-        virtual consumer::MessageIterator begin();
+        virtual MessageIterator begin();
 
-        virtual consumer::MessageIterator end();
+        virtual MessageIterator end();
 
-        virtual consumer::MessageIterator seekByTime(long timestamp);
+        virtual MessageIterator seekByTime(long timestamp);
 
     private:
         jclass classStreamingConsumer;

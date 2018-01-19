@@ -34,6 +34,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jmethodID  midCreateByteMessageToQueue;
         jmethodID  midStartup;
         jmethodID  midShutdown;
+        jmethodID  midSend;
+        jmethodID  midSend2;
 
         boost::shared_ptr<KeyValue> _properties;
     };

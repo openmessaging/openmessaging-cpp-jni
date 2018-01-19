@@ -34,7 +34,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool containsKey(const std::string &key);
 
-        jobject getInternal();
+        jobject getProxy();
 
     private:
         jclass classDefaultKeyValue;

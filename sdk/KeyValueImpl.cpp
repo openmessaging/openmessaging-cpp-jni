@@ -161,7 +161,7 @@ bool KeyValueImpl::containsKey(const std::string &key) {
     return contains;
 }
 
-jobject KeyValueImpl::getInternal() {
+jobject KeyValueImpl::getProxy() {
     return defaultKeyValueObject;
 }
 

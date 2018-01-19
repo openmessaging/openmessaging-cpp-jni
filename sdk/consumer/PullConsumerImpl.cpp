@@ -36,7 +36,7 @@ boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> pr
     jobject jMessage;
     if (!properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jMessage = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getInternal());
+        jMessage = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
         jMessage = current.env->CallObjectMethod(_proxy, midPoll);
     }
@@ -49,7 +49,7 @@ void PullConsumerImpl::ack(const std::string &messageId, boost::shared_ptr<KeyVa
     jstring msgId = current.env->NewStringUTF(messageId.c_str());
     if (!properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        current.env->CallObjectMethod(_proxy, midAck2, msgId, ptr->getInternal());
+        current.env->CallObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
         current.env->CallObjectMethod(_proxy, midAck, msgId);
     }

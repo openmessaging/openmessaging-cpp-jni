@@ -28,7 +28,7 @@ MessagingAccessPointFactory::getMessagingAccessPoint(std::string &url, boost::sh
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
         messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
                                                                    midGetMessagingAccessPoint,
-                                                                   kv->getInternal());
+                                                                   kv->getProxy());
     } else {
         messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
                                                                    midGetMessagingAccessPoint);

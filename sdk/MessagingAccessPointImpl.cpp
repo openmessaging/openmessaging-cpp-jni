@@ -72,7 +72,7 @@ boost::shared_ptr<producer::Producer> MessagingAccessPointImpl::createProducer(
     jobject producer;
     if (useKV) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getInternal());
+        producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
     } else {
         producer = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
     }

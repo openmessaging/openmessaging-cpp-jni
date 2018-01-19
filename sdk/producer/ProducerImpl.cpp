@@ -1,4 +1,7 @@
 #include "producer/ProducerImpl.h"
+#include "KeyValueImpl.h"
+#include "ByteMessageImpl.h"
+#include "producer/SendResultImpl.h"
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
@@ -13,6 +16,13 @@ ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties
     midCreateByteMessageToTopic = getMethod(current, classProducer, "createTopicBytesMessage", signature);
     midStartup = getMethod(current, classProducer, "startup", "()V");
     midShutdown = getMethod(current, classProducer, "shutdown", "()V");
+
+    std::string sendSignature = "(Lio/openmessaging/Message;)Lio/openmessaging/producer/SendResult;";
+    midSend = getMethod(current, classProducer, "send", sendSignature);
+
+    std::string send2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
+    midSend2 = getMethod(current, classProducer, "send", send2Signature);
+
 }
 
 ProducerImpl::~ProducerImpl() {
@@ -26,8 +36,23 @@ boost::shared_ptr<KeyValue> ProducerImpl::properties() {
 
 boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> message,
                                                            boost::shared_ptr<KeyValue> properties) {
+    CurrentEnv current;
 
+    boost::shared_ptr<ByteMessageImpl> msg = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
+    jobject jSendResult;
+    if (properties) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        jobject ret = current.env->CallObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
+        jSendResult = current.env->NewGlobalRef(ret);
+        current.env->DeleteLocalRef(ret);
+    } else {
+        jobject  ret = current.env->CallObjectMethod(_proxy, midSend, msg->getProxy());
+        jSendResult = current.env->NewGlobalRef(ret);
+        current.env->DeleteLocalRef(ret);
+    }
 
+    boost::shared_ptr<SendResult> sendResult = boost::make_shared<SendResultImpl>(jSendResult);
+    return sendResult;
 }
 
 boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::string &topic,

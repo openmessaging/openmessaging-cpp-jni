@@ -1,5 +1,5 @@
-#ifndef OPEN_MESSAGING_H
-#define OPEN_MESSAGING_H
+#ifndef OMS_OMS_H
+#define OMS_OMS_H
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -17,4 +17,5 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     };
 
 END_NAMESPACE_2(io, openmessaging)
-#endif
+
+#endif // OMS_OMS_H

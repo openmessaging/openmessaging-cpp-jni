@@ -1,5 +1,5 @@
-#ifndef OMS_KEYVALUEIMPL_H
-#define OMS_KEYVALUEIMPL_H
+#ifndef OMS_KEY_VALUE_IMPL_H
+#define OMS_KEY_VALUE_IMPL_H
 
 #include "core.h"
 #include "KeyValue.h"
@@ -58,4 +58,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif //OMS_KEYVALUEIMPL_H
+#endif //OMS_KEY_VALUE_IMPL_H

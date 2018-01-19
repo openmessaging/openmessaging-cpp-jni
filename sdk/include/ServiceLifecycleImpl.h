@@ -1,5 +1,5 @@
-#ifndef OMS_SERVICELIFECYCLEIMPL_H
-#define OMS_SERVICELIFECYCLEIMPL_H
+#ifndef OMS_SERVICE_LIFECYCLE_IMPL_H
+#define OMS_SERVICE_LIFECYCLE_IMPL_H
 
 #include "ServiceLifecycle.h"
 #include "core.h"
@@ -28,4 +28,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif //OMS_SERVICELIFECYCLEIMPL_H
+#endif //OMS_SERVICE_LIFECYCLE_IMPL_H

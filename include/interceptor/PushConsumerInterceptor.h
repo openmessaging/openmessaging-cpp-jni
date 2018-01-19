@@ -1,5 +1,5 @@
-#ifndef OMS_PUSHCONSUMERINTERCEPTOR_H
-#define OMS_PUSHCONSUMERINTERCEPTOR_H
+#ifndef OMS_PUSH_CONSUMER_INTERCEPTOR_H
+#define OMS_PUSH_CONSUMER_INTERCEPTOR_H
 
 #include "Namespace.h"
 #include <boost/shared_ptr.hpp>
@@ -31,4 +31,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 
-#endif //OMS_PUSHCONSUMERINTERCEPTOR_H
+#endif //OMS_PUSH_CONSUMER_INTERCEPTOR_H

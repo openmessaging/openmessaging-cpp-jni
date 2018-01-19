@@ -1,5 +1,5 @@
-#ifndef OMS_PRODUCERIMPL_H
-#define OMS_PRODUCERIMPL_H
+#ifndef OMS_PRODUCER_IMPL_H
+#define OMS_PRODUCER_IMPL_H
 
 #include "producer/Producer.h"
 #include "MessageFactory.h"
@@ -43,4 +43,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 END_NAMESPACE_3(io, openmessaging, producer)
 
 
-#endif // PRODUCER_H
+#endif // OMS_PRODUCER_IMPL_H

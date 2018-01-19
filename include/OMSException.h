@@ -1,5 +1,5 @@
-#ifndef OMS_EXCEPTION_H
-#define OMS_EXCEPTION_H
+#ifndef OMS_OMS_EXCEPTION_H
+#define OMS_OMS_EXCEPTION_H
 
 #include <exception>
 #include <string>
@@ -22,4 +22,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         };
 
 END_NAMESPACE_2(io, openmessaging)
-#endif //OMS_EXCEPTION_H
+#endif //OMS_OMS_EXCEPTION_H

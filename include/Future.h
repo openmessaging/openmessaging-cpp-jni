@@ -4,8 +4,9 @@
 #include <exception>
 #include <boost/shared_ptr.hpp>
 
-#include "SendResult.h"
+#include "producer/SendResult.h"
 #include "Namespace.h"
+
 BEGIN_NAMESPACE_2(io, openmessaging)
 
         class Future {

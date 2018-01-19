@@ -1,5 +1,5 @@
-#ifndef MESSAGEFACTORY_H
-#define MESSAGEFACTORY_H
+#ifndef OMS_MESSAGE_FACTORY_H
+#define OMS_MESSAGE_FACTORY_H
 
 #include <string>
 #include <vector>
@@ -24,4 +24,5 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     };
 
 END_NAMESPACE_2(io, openmessaging)
-#endif // MESSAGEFACTORY_H
+
+#endif // OMS_MESSAGE_FACTORY_H

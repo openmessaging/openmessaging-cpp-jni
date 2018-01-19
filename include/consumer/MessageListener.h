@@ -1,5 +1,5 @@
-#ifndef OMS_MESSAGELISTENER_H
-#define OMS_MESSAGELISTENER_H
+#ifndef OMS_MESSAGE_LISTENER_H
+#define OMS_MESSAGE_LISTENER_H
 
 #include "Context.h"
 #include "Namespace.h"
@@ -17,4 +17,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)
-#endif //OMS_MESSAGELISTENER_H
+#endif //OMS_MESSAGE_LISTENER_H

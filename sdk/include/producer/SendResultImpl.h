@@ -1,5 +1,5 @@
-#ifndef OMS_SENDRESULT_H
-#define OMS_SENDRESULT_H
+#ifndef OMS_SEND_RESULT_H
+#define OMS_SEND_RESULT_H
 
 #include "Namespace.h"
 #include "core.h"
@@ -26,4 +26,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
 END_NAMESPACE_3(io, openmessaging, producer)
 
-#endif //OMS_SENDRESULT_H
+#endif //OMS_SEND_RESULT_H

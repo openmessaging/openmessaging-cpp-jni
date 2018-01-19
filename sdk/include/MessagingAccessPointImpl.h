@@ -1,5 +1,5 @@
-#ifndef OMS_MESSAGINGACCESSPOINTIMPL_H
-#define OMS_MESSAGINGACCESSPOINTIMPL_H
+#ifndef OMS_MESSAGING_ACCESS_POINT_IMPL_H
+#define OMS_MESSAGING_ACCESS_POINT_IMPL_H
 
 #include "MessagingAccessPoint.h"
 #include "core.h"
@@ -82,4 +82,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif //OMS_MESSAGINGACCESSPOINTIMPL_H
+#endif //OMS_MESSAGING_ACCESS_POINT_IMPL_H

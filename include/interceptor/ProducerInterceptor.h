@@ -1,5 +1,5 @@
-#ifndef OMS_PRODUCERINTERCEPTOR_H
-#define OMS_PRODUCERINTERCEPTOR_H
+#ifndef OMS_PRODUCER_INTERCEPTOR_H
+#define OMS_PRODUCER_INTERCEPTOR_H
 
 #include "Namespace.h"
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
@@ -29,4 +29,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 
-#endif //OMS_PRODUCERINTERCEPTOR_H
+#endif // OMS_PRODUCER_INTERCEPTOR_H

@@ -1,5 +1,5 @@
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#ifndef OMS_RESOURCE_MANAGER_H
+#define OMS_RESOURCE_MANAGER_H
 
 #include <string>
 
@@ -67,4 +67,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif // RESOURCEMANAGER_H
+#endif // OMS_RESOURCE_MANAGER_H

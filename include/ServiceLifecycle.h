@@ -1,5 +1,5 @@
-#ifndef SERVICELIFECYCLE_H
-#define SERVICELIFECYCLE_H
+#ifndef OMS_SERVICE_LIFECYCLE_H
+#define OMS_SERVICE_LIFECYCLE_H
 
 #include "Namespace.h"
 
@@ -17,4 +17,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif // SERVICELIFECYCLE_H
+#endif // OMS_SERVICE_LIFECYCLE_H

@@ -1,5 +1,5 @@
-#ifndef OMS_STREAMCONSUMER_H
-#define OMS_STREAMCONSUMER_H
+#ifndef OMS_STREAM_CONSUMER_H
+#define OMS_STREAM_CONSUMER_H
 
 #include <string>
 #include <vector>
@@ -34,4 +34,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
-#endif //OMS_STREAMCONSUMER_H
+#endif //OMS_STREAM_CONSUMER_H

@@ -1,5 +1,5 @@
-#ifndef OMS_BYTEMESSAGE_H
-#define OMS_BYTEMESSAGE_H
+#ifndef OMS_BYTE_MESSAGE_H
+#define OMS_BYTE_MESSAGE_H
 
 #include <vector>
 
@@ -24,4 +24,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif //OMS_BYTEMESSAGE_H
+#endif //OMS_BYTE_MESSAGE_H

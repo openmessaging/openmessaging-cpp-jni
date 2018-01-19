@@ -1,5 +1,5 @@
-#ifndef OMS_BUILTINKEYS_H
-#define OMS_BUILTINKEYS_H
+#ifndef OMS_BUILTIN_KEYS_H
+#define OMS_BUILTIN_KEYS_H
 
 #include <string>
 #include "Namespace.h"
@@ -43,4 +43,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         };
 
 END_NAMESPACE_2(io, openmessaging)
-#endif //OMS_BUILTINKEYS_H
+#endif // OMS_BUILTIN_KEYS_H

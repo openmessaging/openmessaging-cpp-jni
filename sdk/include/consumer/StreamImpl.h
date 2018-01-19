@@ -1,5 +1,5 @@
-#ifndef OMS_STREAMIMPL_H
-#define OMS_STREAMIMPL_H
+#ifndef OMS_STREAM_IMPL_H
+#define OMS_STREAM_IMPL_H
 
 #include "consumer/Stream.h"
 #include "ServiceLifecycleImpl.h"
@@ -29,4 +29,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     };
 END_NAMESPACE_3(io, openmessaging, core)
 
-#endif //OMS_STREAMIMPL_H
+#endif //OMS_STREAM_IMPL_H

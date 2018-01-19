@@ -1,5 +1,5 @@
-#ifndef OMS_JAVAOPTION_H
-#define OMS_JAVAOPTION_H
+#ifndef OMS_JAVA_OPTION_H
+#define OMS_JAVA_OPTION_H
 
 #include <string>
 #include <vector>
@@ -21,4 +21,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     };
 
 END_NAMESPACE_2(io, openmessaging)
-#endif //OMS_JAVAOPTION_H
+#endif //OMS_JAVA_OPTION_H

@@ -1,5 +1,5 @@
-#ifndef OMS_MESSAGEITERATOR_H
-#define OMS_MESSAGEITERATOR_H
+#ifndef OMS_MESSAGE_ITERATOR_H
+#define OMS_MESSAGE_ITERATOR_H
 
 #include <boost/shared_ptr.hpp>
 
@@ -30,4 +30,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
-#endif //OMS_MESSAGEITERATOR_H
+#endif //OMS_MESSAGE_ITERATOR_H

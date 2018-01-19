@@ -1,5 +1,5 @@
-#ifndef KEYVALUE_H
-#define KEYVALUE_H
+#ifndef OMS_KEY_VALUE_H
+#define OMS_KEY_VALUE_H
 
 #include <string>
 #include <map>
@@ -35,4 +35,5 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             virtual bool containsKey(const std::string &key) = 0;
         };
 END_NAMESPACE_2(io, openmessaging)
-#endif // KEYVALUE_H
+
+#endif // OMS_KEY_VALUE_H

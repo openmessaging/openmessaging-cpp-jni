@@ -1,5 +1,5 @@
-#ifndef OMS_BYTEMESSAGEIMPL_H
-#define OMS_BYTEMESSAGEIMPL_H
+#ifndef OMS_BYTE_MESSAGE_IMPL_H
+#define OMS_BYTE_MESSAGE_IMPL_H
 
 #include "ByteMessage.h"
 #include "core.h"
@@ -65,4 +65,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif //OMS_BYTEMESSAGEIMPL_H
+#endif //OMS_BYTE_MESSAGE_IMPL_H

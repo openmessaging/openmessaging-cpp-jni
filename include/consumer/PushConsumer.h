@@ -1,5 +1,5 @@
-#ifndef OMS_PUSHCONSUMER_H
-#define OMS_PUSHCONSUMER_H
+#ifndef OMS_PUSH_CONSUMER_H
+#define OMS_PUSH_CONSUMER_H
 
 #include <string>
 
@@ -40,4 +40,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
-#endif //OMS_PUSHCONSUMER_H
+#endif //OMS_PUSH_CONSUMER_H

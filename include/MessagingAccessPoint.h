@@ -1,5 +1,5 @@
-#ifndef MESSAGINGACCESSPOINT_H
-#define MESSAGINGACCESSPOINT_H
+#ifndef OMS_MESSAGING_ACCESS_POINT_H
+#define OMS_MESSAGING_ACCESS_POINT_H
 
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -56,4 +56,4 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-#endif // MESSAGINGACCESSPOINT_H
+#endif // OMS_MESSAGING_ACCESS_POINT_H

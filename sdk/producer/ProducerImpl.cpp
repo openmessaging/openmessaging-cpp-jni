@@ -1,6 +1,5 @@
 #include "producer/ProducerImpl.h"
 #include "KeyValueImpl.h"
-#include "ByteMessageImpl.h"
 #include "producer/SendResultImpl.h"
 
 using namespace io::openmessaging;

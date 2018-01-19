@@ -4,8 +4,17 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     using namespace io::openmessaging::consumer;
 
-    PushConsumerImpl::PushConsumerImpl(jobject proxy) : objectPushConsumer(proxy), ServiceLifecycleImpl(proxy) {
+    PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
+        CurrentEnv current;
+        jclass classPushConsumerLocal = current.env->FindClass("io/openmessaging/consumer/PushConsumer");
+        classPushConsumer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classPushConsumerLocal));
+        current.env->DeleteLocalRef(classPushConsumerLocal);
 
+    }
+
+    PushConsumerImpl::~PushConsumerImpl() {
+        CurrentEnv current;
+        current.env->DeleteGlobalRef(classPushConsumer);
     }
 
     boost::shared_ptr<KeyValue> PushConsumerImpl::properties() {

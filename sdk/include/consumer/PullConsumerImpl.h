@@ -24,7 +24,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         jobject getProxy();
 
     private:
-        jobject objectPullConsumer;
         jclass classPullConsumer;
         jmethodID midProperties;
         jmethodID midPoll;

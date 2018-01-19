@@ -23,8 +23,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual boost::shared_ptr<consumer::MessageIterator> seekByTime(long timestamp);
 
     private:
-        jobject objectStream;
-
         jclass classStream;
 
         jmethodID midProperties;

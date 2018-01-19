@@ -1,9 +1,17 @@
 #include "consumer/StreamingConsumerImpl.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-    StreamingConsumerImpl::StreamingConsumerImpl(jobject proxy) : objectStreamingConsumer(proxy),
-                                                                  ServiceLifecycleImpl(proxy) {
+    StreamingConsumerImpl::StreamingConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
+        CurrentEnv current;
+        jclass classStreamingConsumerLocal = current.env->FindClass("io/openmessaging/consumer/StreamingConsumer");
+        classStreamingConsumer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classStreamingConsumerLocal));
+        current.env->DeleteLocalRef(classStreamingConsumerLocal);
 
+    }
+
+    StreamingConsumerImpl::~StreamingConsumerImpl() {
+        CurrentEnv current;
+        current.env->DeleteGlobalRef(classStreamingConsumer);
     }
 
     boost::shared_ptr<KeyValue> StreamingConsumerImpl::properties() {

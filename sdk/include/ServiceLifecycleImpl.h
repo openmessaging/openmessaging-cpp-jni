@@ -17,8 +17,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual void shutdown();
 
-    private:
+    protected:
         jobject _proxy;
+
+    private:
         jclass classServiceLifecycle;
         jmethodID  midStartup;
         jmethodID  midShutdown;

@@ -12,6 +12,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     public:
         PushConsumerImpl(jobject proxy);
 
+        virtual ~PushConsumerImpl();
+
         virtual boost::shared_ptr<KeyValue> properties();
 
         virtual void resume();
@@ -32,7 +34,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 
     private:
-        jobject objectPushConsumer;
+        jclass classPushConsumer;
 
     };
 

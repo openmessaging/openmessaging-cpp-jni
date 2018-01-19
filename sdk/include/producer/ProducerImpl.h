@@ -29,7 +29,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         createByteMessageToQueue(std::string &topic, std::vector<char> &body);
 
     private:
-        jobject objectProducer;
         jclass classProducer;
         jmethodID  midCreateByteMessageToTopic;
         jmethodID  midCreateByteMessageToQueue;

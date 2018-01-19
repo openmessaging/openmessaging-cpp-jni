@@ -12,6 +12,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     public:
         StreamingConsumerImpl(jobject proxy);
 
+        virtual ~StreamingConsumerImpl();
+
         virtual boost::shared_ptr<KeyValue> properties();
 
         virtual std::vector<std::string> streams();
@@ -27,7 +29,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual consumer::MessageIterator seekByTime(long timestamp);
 
     private:
-        jobject objectStreamingConsumer;
+        jclass classStreamingConsumer;
 
     };
 

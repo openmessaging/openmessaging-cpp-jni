@@ -4,7 +4,7 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
-    PullConsumerImpl::PullConsumerImpl(jobject proxy) : objectPullConsumer(proxy), ServiceLifecycleImpl(proxy) {
+    PullConsumerImpl::PullConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
         CurrentEnv current;
         jclass classPullConsumerLocal = current.env->FindClass("io/openmessaging/consumer/PullConsumer");
         classPullConsumer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classPullConsumerLocal));
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
         CurrentEnv current;
-        jobject kv = current.env->CallObjectMethod(objectPullConsumer, midProperties);
+        jobject kv = current.env->CallObjectMethod(_proxy, midProperties);
         boost::shared_ptr<KeyValueImpl> ptr = boost::make_shared<KeyValueImpl>(current.env->NewGlobalRef(kv));
         current.env->DeleteLocalRef(kv);
         return ptr;
@@ -30,9 +30,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         jobject jMessage;
         if (!properties) {
             boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-            jMessage = current.env->CallObjectMethod(objectPullConsumer, midPoll2, ptr->getInternal());
+            jMessage = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getInternal());
         } else {
-            jMessage = current.env->CallObjectMethod(objectPullConsumer, midPoll);
+            jMessage = current.env->CallObjectMethod(_proxy, midPoll);
         }
         boost::shared_ptr<Message> pMessage = boost::make_shared<ByteMessageImpl>(jMessage);
         return pMessage;
@@ -43,15 +43,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         jstring msgId = current.env->NewStringUTF(messageId.c_str());
         if (!properties) {
             boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-            current.env->CallObjectMethod(objectPullConsumer, midAck2, msgId, ptr->getInternal());
+            current.env->CallObjectMethod(_proxy, midAck2, msgId, ptr->getInternal());
         } else {
-            current.env->CallObjectMethod(objectPullConsumer, midAck, msgId);
+            current.env->CallObjectMethod(_proxy, midAck, msgId);
         }
         current.env->DeleteLocalRef(msgId);
     }
 
     jobject PullConsumerImpl::getProxy() {
-        return objectPullConsumer;
+        return _proxy;
     }
 
 END_NAMESPACE_3(io, openmessaging, consumer)

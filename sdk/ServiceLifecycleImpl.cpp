@@ -13,7 +13,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     }
 
     ServiceLifecycleImpl::~ServiceLifecycleImpl() {
-
+        CurrentEnv current;
+        current.env->DeleteGlobalRef(_proxy);
+        current.env->DeleteGlobalRef(classServiceLifecycle);
     };
 
     void ServiceLifecycleImpl::startup() {

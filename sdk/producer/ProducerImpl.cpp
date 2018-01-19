@@ -3,7 +3,7 @@
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
-            : objectProducer(proxy), _properties(properties), ServiceLifecycleImpl(proxy) {
+            : _properties(properties), ServiceLifecycleImpl(proxy) {
         CurrentEnv current;
         jclass classProducerLocal = current.env->FindClass("io/openmessaging/producer/Producer");
         classProducer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerLocal));
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     ProducerImpl::~ProducerImpl() {
         CurrentEnv current;
-        current.env->DeleteGlobalRef(objectProducer);
+        current.env->DeleteGlobalRef(classProducer);
     }
 
     boost::shared_ptr<KeyValue> ProducerImpl::properties() {
@@ -36,7 +36,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jsize len = static_cast<jint>(body.size());
         jbyteArray pBody = current.env->NewByteArray(len);
         current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte*>(body.data()));
-        jobject jMessage = current.env->CallObjectMethod(objectProducer, midCreateByteMessageToTopic, pTopic, pBody);
+        jobject jMessage = current.env->CallObjectMethod(_proxy, midCreateByteMessageToTopic, pTopic, pBody);
         current.env->DeleteLocalRef(pBody);
         current.env->DeleteLocalRef(pTopic);
 
@@ -51,7 +51,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jsize len = static_cast<jint>(body.size());
         jbyteArray pBody = current.env->NewByteArray(len);
         current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte*>(body.data()));
-        jobject jMessage = current.env->CallObjectMethod(objectProducer, midCreateByteMessageToQueue, pTopic, pBody);
+        jobject jMessage = current.env->CallObjectMethod(_proxy, midCreateByteMessageToQueue, pTopic, pBody);
         current.env->DeleteLocalRef(pBody);
         current.env->DeleteLocalRef(pTopic);
 

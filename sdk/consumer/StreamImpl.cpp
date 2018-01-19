@@ -5,7 +5,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     using namespace io::openmessaging::consumer;
 
-    StreamImpl::StreamImpl(jobject proxy) : objectStream(proxy), ServiceLifecycleImpl(proxy) {
+    StreamImpl::StreamImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
         CurrentEnv current;
         jclass classStreamLocal = current.env->FindClass("io/openmessaging/consumer/Stream");
         classStream = reinterpret_cast<jclass>(current.env->NewGlobalRef(classStreamLocal));
@@ -15,12 +15,12 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     StreamImpl::~StreamImpl() {
         CurrentEnv current;
-        current.env->DeleteGlobalRef(objectStream);
+        current.env->DeleteGlobalRef(classStream);
     }
 
     boost::shared_ptr<KeyValue> StreamImpl::properties() {
         CurrentEnv current;
-        jobject kv = current.env->CallObjectMethod(objectStream, midProperties);
+        jobject kv = current.env->CallObjectMethod(_proxy, midProperties);
         boost::shared_ptr<KeyValue> pKV = boost::make_shared<KeyValueImpl>(current.env->NewGlobalRef(kv));
         current.env->DeleteLocalRef(kv);
         return pKV;

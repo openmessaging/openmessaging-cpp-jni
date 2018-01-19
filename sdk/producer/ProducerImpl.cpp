@@ -4,7 +4,7 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
 
 ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
-        : _properties(properties), ServiceLifecycleImpl(proxy) {
+        : ServiceLifecycleImpl(proxy), _properties(properties) {
     CurrentEnv current;
     jclass classProducerLocal = current.env->FindClass("io/openmessaging/producer/Producer");
     classProducer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerLocal));

@@ -21,6 +21,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual boost::shared_ptr<SendResult> send(boost::shared_ptr<Message> message,
                                                    boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+
+
     };
 END_NAMESPACE_3(io, openmessaging, producer)
 #endif //OMS_PRODUCER_H

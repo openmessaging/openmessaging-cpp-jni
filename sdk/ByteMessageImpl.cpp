@@ -140,3 +140,7 @@ ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, const s
     current.env->DeleteLocalRef(v);
     return *this;
 }
+
+jobject ByteMessageImpl::getProxy() {
+    return objectByteMessage;
+}

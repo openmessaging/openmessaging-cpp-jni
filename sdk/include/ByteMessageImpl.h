@@ -36,6 +36,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual ByteMessageImpl& putUserHeaders(const std::string &key, const std::string &value);
 
+        jobject getProxy();
+
     private:
         jobject objectByteMessage;
 

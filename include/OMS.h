@@ -8,7 +8,9 @@
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-    boost::shared_ptr<KeyValue> kv_nullptr;
+
+    extern boost::shared_ptr<KeyValue> kv_nullptr;
+
     class OMS {
     public:
         static boost::shared_ptr<KeyValue> newKeyValue();

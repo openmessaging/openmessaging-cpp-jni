@@ -10,7 +10,7 @@
 
 TEST(KeyValueImplTest, testPutGetInt) {
     using namespace io::openmessaging;
-    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<core::KeyValueImpl>();
+    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
     int value = 1;
     kvPtr->put(k, value);
@@ -21,7 +21,7 @@ TEST(KeyValueImplTest, testPutGetInt) {
 
 TEST(KeyValueImplTest, testPutGetLong) {
     using namespace io::openmessaging;
-    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<core::KeyValueImpl>();
+    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
     long value = 1;
     kvPtr->put(k, value);
@@ -32,7 +32,7 @@ TEST(KeyValueImplTest, testPutGetLong) {
 
 TEST(KeyValueImplTest, testPutGetDouble) {
     using namespace io::openmessaging;
-    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<core::KeyValueImpl>();
+    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
     double value = 1.0;
     kvPtr->put(k, value);
@@ -44,7 +44,7 @@ TEST(KeyValueImplTest, testPutGetDouble) {
 TEST(KeyValueImplTest, testKeySet) {
     using namespace io::openmessaging;
 
-    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<core::KeyValueImpl>();
+    boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
 
     std::string k1 = "a";
     int v1 = 1;

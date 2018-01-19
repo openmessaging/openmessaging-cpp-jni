@@ -1,16 +1,21 @@
 add_library(${CMAKE_PROJECT_NAME} SHARED
+        JavaOption.cpp
+        CurrentEnv.cpp
         core.cpp
-        ByteMessageImpl.cpp
         KeyValueImpl.cpp
         OMS.cpp
         BuiltinKeys.cpp
         ServiceLifecycleImpl.cpp
-        producer/ProducerImpl.cpp
+
+        ByteMessageImpl.cpp
         producer/SendResultImpl.cpp
+        producer/ProducerImpl.cpp
+
         consumer/StreamImpl.cpp
         consumer/PullConsumerImpl.cpp
         consumer/PushConsumerImpl.cpp
         consumer/StreamingConsumerImpl.cpp
+
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} ${JNI_LIBRARIES})

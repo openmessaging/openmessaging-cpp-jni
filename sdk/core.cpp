@@ -1,8 +1,12 @@
-#include "include/core.h"
+#include "core.h"
 
-using namespace io::openmessaging;
+BEGIN_NAMESPACE_2(io, openmessaging)
 
 using namespace std;
+
+JavaVM *jvm;
+
+JNIEnv *env;
 
 boost::once_flag once = BOOST_ONCE_INIT;
 
@@ -74,7 +78,7 @@ std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {
 
     while (current.env->CallBooleanMethod(objIterator, midHasNext)) {
         jobject item = current.env->CallObjectMethod(objIterator, midNext);
-        jstring str = static_cast<jstring>(item);
+        jstring str = reinterpret_cast<jstring>(item);
         const char *buffer = current.env->GetStringUTFChars(str, NULL);
         nativeSet.insert(buffer);
         current.env->ReleaseStringUTFChars(str, buffer);
@@ -84,21 +88,6 @@ std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {
     current.env->DeleteLocalRef(classIterator);
     current.env->DeleteLocalRef(classIterable);
     return nativeSet;
-}
-
-CurrentEnv::CurrentEnv() : attached(false) {
-    if (jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_8) != JNI_OK) {
-        if (jvm->AttachCurrentThread(reinterpret_cast<void **>(&env), NULL) == JNI_OK) {
-            attached = true;
-        }
-    }
-}
-
-CurrentEnv::~CurrentEnv() {
-    if (attached) {
-        jvm->DetachCurrentThread();
-        env = NULL;
-    }
 }
 
 jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,
@@ -117,12 +106,4 @@ jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,
 
     return methodId;
 }
-
-JavaOption::JavaOption(const jint version) : _version(version) {
-
-}
-
-void JavaOption::addOption(const string &option) {
-    options.push_back(option);
-}
-
+END_NAMESPACE_2(io, openmessaging)

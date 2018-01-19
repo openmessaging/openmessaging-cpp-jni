@@ -2,6 +2,6 @@
 #include "core.h"
 
 TEST(CoreTest, testInitializeAndShutdown) {
-    using namespace io::openmessaging::core;
+    using namespace io::openmessaging;
     Initialize();
 }

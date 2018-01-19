@@ -14,29 +14,15 @@
 
 #include "JavaOption.h"
 #include "Namespace.h"
+#include "CurrentEnv.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-
-    JavaVM *jvm;
-    JNIEnv *env;
 
     void Initialize();
 
     void Shutdown();
 
     bool isRunning();
-
-    class CurrentEnv {
-    public:
-        CurrentEnv();
-
-        ~CurrentEnv();
-
-        JNIEnv *env;
-
-    private:
-        bool attached;
-    };
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
 

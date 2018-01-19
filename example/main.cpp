@@ -1,10 +1,9 @@
 #include <iostream>
 #include "core.h"
-#include <jni.h>
 
 int main() {
 
-    using namespace io::openmessaging::core;
+    using namespace io::openmessaging;
 
     std::cout << "Hello, World!" << std::endl;
 

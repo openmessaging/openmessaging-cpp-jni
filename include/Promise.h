@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool cancel(bool interruptIfRunning) = 0;
 
-        virtual bool set(boost::shared_mutex<producer::SendResult> &value) = 0;
+        virtual bool set(boost::shared_ptr<producer::SendResult> &value) = 0;
 
         virtual bool setFailure(std::exception &e) = 0;
     };

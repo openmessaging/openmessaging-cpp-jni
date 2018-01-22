@@ -7,9 +7,12 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         BuiltinKeys.cpp
         ServiceLifecycleImpl.cpp
 
+        PromiseImpl.cpp
+
         ByteMessageImpl.cpp
         producer/SendResultImpl.cpp
         producer/ProducerImpl.cpp
+        producer/LocalTransactionBranchExecutorImpl.cpp
 
         consumer/StreamImpl.cpp
         consumer/PullConsumerImpl.cpp

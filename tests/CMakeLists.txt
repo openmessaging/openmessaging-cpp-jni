@@ -1,6 +1,11 @@
 # file(GLOB_RECURSE TEST_FILES ${CMAKE_SOURCE_DIR}/tests/*.cpp)
 
-add_executable(runUnitTests RunAllTest.cpp CoreTest.cpp KeyValueImplTest.cpp)
+add_executable(runUnitTests
+        RunAllTest.cpp
+        CoreTest.cpp
+        KeyValueImplTest.cpp
+        PromiseImplTest.cpp
+        )
 
 # Standard linking to gtest stuff.
 target_link_libraries(runUnitTests gtest)

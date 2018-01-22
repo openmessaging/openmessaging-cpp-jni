@@ -47,13 +47,28 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         virtual void removeInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor);
 
     private:
-        jclass classProducer;
+        jclass     classProducer;
+        jclass     classProducerProxy;
+        jobject    objectProducerProxy;
         jmethodID  midCreateByteMessageToTopic;
         jmethodID  midCreateByteMessageToQueue;
         jmethodID  midStartup;
         jmethodID  midShutdown;
+
+        // SendResult send(Message message);
         jmethodID  midSend;
+
+        // SendResult send(Message message, KeyValue properties);
         jmethodID  midSend2;
+
+        // SendResult send(Message message, LocalTransactionBranchExecutor branchExecutor, Object arg, KeyValue properties);
+        jmethodID  midSend3;
+
+        // ProducerProxy#public void sendAsync(final long opaque, Message message)
+        jmethodID  midSendAsync;
+
+        // ProducerProxy#public void sendAsync(final long opaque, Message message, KeyValue properties)
+        jmethodID  midSendAsync2;
 
         boost::shared_ptr<KeyValue> _properties;
     };

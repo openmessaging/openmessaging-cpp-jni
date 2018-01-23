@@ -48,8 +48,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     private:
         jclass     classProducer;
-        jclass     classProducerProxy;
-        jobject    objectProducerProxy;
+        jclass     classProducerAdaptor;
+        jobject    objectProducerAdaptor;
         jmethodID  midCreateByteMessageToTopic;
         jmethodID  midCreateByteMessageToQueue;
         jmethodID  midStartup;

@@ -15,6 +15,13 @@ KeyValueImpl::KeyValueImpl() {
 
     defaultKeyValueCtor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
     jobject localDefaultKeyValueObject = current.env->NewObject(classDefaultKeyValue, defaultKeyValueCtor);
+
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        abort();
+    }
+
     if (localDefaultKeyValueObject) {
         defaultKeyValueObject = current.env->NewGlobalRef(localDefaultKeyValueObject);
     } else {
@@ -85,6 +92,10 @@ KeyValue &KeyValueImpl::put(const std::string &key, const std::string &value) {
     jstring k = current.env->NewStringUTF(key.c_str());
     jstring v = current.env->NewStringUTF(value.c_str());
     current.env->CallObjectMethod(defaultKeyValueObject, putString, k, v);
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+    }
     current.env->DeleteLocalRef(k);
     current.env->DeleteLocalRef(v);
     return *this;

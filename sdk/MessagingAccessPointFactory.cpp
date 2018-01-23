@@ -23,19 +23,34 @@ MessagingAccessPointFactory::getMessagingAccessPoint(std::string &url, boost::sh
                                                                     "getMessagingAccessPoint", signature);
     }
 
+    jstring accessUrl = current.env->NewStringUTF(url.c_str());
+
     jobject messagingAccessPoint;
     if (useKV) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        jobject props = kv->getProxy();
         messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
                                                                    midGetMessagingAccessPoint,
-                                                                   kv->getProxy());
+                                                                   accessUrl,
+                                                                   props);
     } else {
         messagingAccessPoint = current.env->CallStaticObjectMethod(classMessagingAccessPointFactory,
-                                                                   midGetMessagingAccessPoint);
+                                                                   midGetMessagingAccessPoint,
+                                                                   accessUrl);
+    }
+
+    current.env->DeleteLocalRef(accessUrl);
+
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        jthrowable exception = current.env->ExceptionOccurred();
+        current.env->ExceptionClear();
+        BOOST_LOG_TRIVIAL(warning) << "Failed to create MessagingAccessPoint";
     }
 
     current.env->DeleteLocalRef(classMessagingAccessPointFactory);
     jobject globalRef = current.env->NewGlobalRef(messagingAccessPoint);
+    current.env->DeleteLocalRef(messagingAccessPoint);
     return boost::make_shared<MessagingAccessPointImpl>(url, properties, globalRef);
 }
 

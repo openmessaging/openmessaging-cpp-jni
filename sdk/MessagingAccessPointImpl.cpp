@@ -77,6 +77,10 @@ boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
         current.env->DeleteLocalRef(producerLocal);
     } else {
         jobject producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
+        if (!producerLocal) {
+            BOOST_LOG_TRIVIAL(error) << "Failed to create producer";
+            abort();
+        }
         producer = current.env->NewGlobalRef(producerLocal);
         current.env->DeleteLocalRef(producerLocal);
     }

@@ -1,3 +1,7 @@
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/dirent.h>
+
 #include "core.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -20,10 +24,13 @@ void init0() {
 
     boost::shared_ptr<JavaOption> jOptions =
             boost::make_shared<JavaOption>(JNI_VERSION_1_8);
-    jOptions->addOption(
-            "-Djava.class.path=/Users/lizhanhui/work/openmessaging-java/openmessaging-api/target/openmessaging-api-0.2.0-alpha.1-SNAPSHOT.jar");
+    std::string class_path_option = build_class_path_option();
+    jOptions->addOption(class_path_option);
     jOptions->addOption("-Xms1G");
     jOptions->addOption("-Xmx1G");
+    jOptions->addOption("-verbose");
+    jOptions->addOption("-Xcheck:jni");
+    jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
 
     int optionCount = jOptions->options.size();
     JavaVMOption *options = new JavaVMOption[optionCount];
@@ -106,4 +113,58 @@ jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,
 
     return methodId;
 }
+
+bool file_name_filter(const std::string &file_name) {
+    const std::string file_extension = ".jar";
+    return stringEndsWith(file_name, file_extension);
+}
+
+std::string expand_class_path(const std::string& path_with_wildcard) {
+    std::string result;
+    const std::string wildcard = "*";
+    if (stringEndsWith(path_with_wildcard, wildcard)) {
+        const std::string dir = path_with_wildcard.substr(0, path_with_wildcard.size() - wildcard.size());
+        std::vector<std::string> files = list(dir, file_name_filter);
+        for (int i = 0; i < files.size(); ++i) {
+            if (result.empty()) {
+                result = dir + files[i];
+            } else {
+                result += ":" + dir + files[i];
+            }
+        }
+    }
+    return result;
+}
+
+bool stringEndsWith(const std::string &s, const std::string &ext) {
+    if (s.size() < ext.size()) {
+        return false;
+    }
+
+    return s.substr(s.size() - ext.size()) == ext;
+}
+
+std::vector<std::string> list(const std::string &dir, bool (*f)(const std::string&)) {
+    DIR* pDir;
+    struct dirent *entry;
+    vector<string> result;
+    if ((pDir = opendir(dir.c_str())) != NULL) {
+        while((entry = readdir(pDir)) != NULL) {
+            if (f(entry->d_name)) {
+                result.push_back(entry->d_name);
+            }
+        }
+        closedir(pDir);
+    }
+    return result;
+}
+
+std::string build_class_path_option() {
+    std::string option = "-Djava.class.path=";
+    std::string lib_dir = "/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq/lib/*";
+    std::string expanded_class_path = expand_class_path(lib_dir);
+    BOOST_LOG_TRIVIAL(info) << "Class Path: " << expanded_class_path;
+    return option + expanded_class_path;
+}
+
 END_NAMESPACE_2(io, openmessaging)

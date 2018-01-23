@@ -36,20 +36,25 @@ ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties
     jclass classProducerLocal = current.env->FindClass("io/openmessaging/producer/Producer");
     classProducer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerLocal));
 
-    jclass classProducerProxyLocal = current.env->FindClass("io/openmessaging/producer/ProducerProxy");
-    classProducerProxy = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerProxyLocal));
+    jclass classProducerAdaptorLocal = current.env->FindClass("io/openmessaging/producer/ProducerAdaptor");
+    if (!classProducerAdaptorLocal) {
+        BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/producer/ProducerAdaptor is not found";
+        abort();
+    }
 
-    if (current.env->RegisterNatives(classProducerProxy, methods, 1) < 0) {
+    classProducerAdaptor = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerAdaptorLocal));
+
+    if (current.env->RegisterNatives(classProducerAdaptor, methods, 1) < 0) {
         BOOST_LOG_TRIVIAL(error) << "Failed to bind native methods";
         abort();
     }
 
-    jmethodID producerProxyCtor = getMethod(current, classProducerProxy, "<init>", "(Lio/openmessaging/producer/Producer;)V");
-    jobject objectProducerProxyLocal = current.env->NewObject(classProducerProxy, producerProxyCtor, proxy);
-    objectProducerProxy = current.env->NewGlobalRef(objectProducerProxyLocal);
-    current.env->DeleteLocalRef(objectProducerProxyLocal);
+    jmethodID producerAdaptorCtor = getMethod(current, classProducerAdaptor, "<init>", "(Lio/openmessaging/producer/Producer;)V");
+    jobject objectProducerAdaptorLocal = current.env->NewObject(classProducerAdaptor, producerAdaptorCtor, proxy);
+    objectProducerAdaptor = current.env->NewGlobalRef(objectProducerAdaptorLocal);
+    current.env->DeleteLocalRef(objectProducerAdaptorLocal);
 
-    std::string signature = "(Ljava/lang/String;[B)Lio/openmessaging/Message;";
+    std::string signature = "(Ljava/lang/String;[B)Lio/openmessaging/BytesMessage;";
     midCreateByteMessageToQueue = getMethod(current, classProducer, "createQueueBytesMessage", signature);
     midCreateByteMessageToTopic = getMethod(current, classProducer, "createTopicBytesMessage", signature);
     midStartup = getMethod(current, classProducer, "startup", "()V");
@@ -61,21 +66,21 @@ ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties
     std::string send2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
     midSend2 = getMethod(current, classProducer, "send", send2Signature);
 
-    std::string send3Signature = "(Lio/openmessaging/Message;Lio/openmessaging/producer/LocalTransactionBranchExecutor;Ljava/lang/Object;Lio/openmessaging/KeyValue;)Lio/openmessaging/SendResult;";
+    std::string send3Signature = "(Lio/openmessaging/Message;Lio/openmessaging/producer/LocalTransactionBranchExecutor;Ljava/lang/Object;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
     midSend3 = getMethod(current, classProducer, "send", send3Signature);
 
     std::string sendAsyncSignature = "(JLio/openmessaging/Message;)V";
-    midSendAsync = getMethod(current, classProducerProxy, "sendAsync", sendAsyncSignature);
+    midSendAsync = getMethod(current, classProducerAdaptor, "sendAsync", sendAsyncSignature);
 
     std::string sendAsync2Signature = "(JLio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
-    midSendAsync2 = getMethod(current, classProducerProxy, "sendAsync", sendAsync2Signature);
+    midSendAsync2 = getMethod(current, classProducerAdaptor, "sendAsync", sendAsync2Signature);
 }
 
 ProducerImpl::~ProducerImpl() {
     CurrentEnv current;
     current.env->DeleteGlobalRef(classProducer);
-    current.env->DeleteGlobalRef(classProducerProxy);
-    current.env->DeleteGlobalRef(objectProducerProxy);
+    current.env->DeleteGlobalRef(classProducerAdaptor);
+    current.env->DeleteGlobalRef(objectProducerAdaptor);
 }
 
 boost::shared_ptr<KeyValue> ProducerImpl::properties() {
@@ -166,7 +171,7 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
             boost::interprocess::scoped_lock<boost::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
-        current.env->CallVoidMethod(objectProducerProxy, midSendAsync, opaque, messageImpl->getProxy());
+        current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
         return ft;
     } else {
         BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";

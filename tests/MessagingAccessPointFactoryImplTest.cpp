@@ -16,6 +16,8 @@ TEST(MessagingAccessPointFactoryTest, testCtor) {
     string driverClassKey = "oms.driver.impl";
     string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
+    Initialize();
+
     boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
     properties->put(driverClassKey, driverClass);
 

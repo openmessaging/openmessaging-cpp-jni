@@ -104,7 +104,7 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
 }
 
 boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::string &topic,
-                                                                      std::vector<char> &body) {
+                                                                      std::vector<unsigned char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
     jsize len = static_cast<jint>(body.size());
@@ -119,7 +119,7 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::strin
 }
 
 boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::string &topic,
-                                                                      std::vector<char> &body) {
+                                                                      std::vector<unsigned char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
     jsize len = static_cast<jint>(body.size());

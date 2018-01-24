@@ -3,6 +3,7 @@
 add_executable(runUnitTests
         RunAllTest.cpp
         CoreTest.cpp
+        CurrentEnvTest.cpp
         KeyValueImplTest.cpp
         OMSTest.cpp
         PromiseImplTest.cpp

@@ -5,10 +5,17 @@
 #include <boost/make_shared.hpp>
 
 #include <gtest/gtest.h>
+#include "core.h"
 #include "KeyValueImpl.h"
 
+class KeyValueImplTest : public ::testing::Test {
+public:
+    virtual void SetUp() {
+        io::openmessaging::Initialize();
+    }
+};
 
-TEST(KeyValueImplTest, testPutGetInt) {
+TEST_F(KeyValueImplTest, testPutGetInt) {
     using namespace io::openmessaging;
     boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
@@ -19,7 +26,7 @@ TEST(KeyValueImplTest, testPutGetInt) {
     ASSERT_EQ(value, kvPtr->getInt(k));
 }
 
-TEST(KeyValueImplTest, testPutGetLong) {
+TEST_F(KeyValueImplTest, testPutGetLong) {
     using namespace io::openmessaging;
     boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
@@ -30,7 +37,7 @@ TEST(KeyValueImplTest, testPutGetLong) {
     ASSERT_EQ(value, kvPtr->getLong(k));
 }
 
-TEST(KeyValueImplTest, testPutGetDouble) {
+TEST_F(KeyValueImplTest, testPutGetDouble) {
     using namespace io::openmessaging;
     boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();
     std::string k = "a";
@@ -41,7 +48,7 @@ TEST(KeyValueImplTest, testPutGetDouble) {
     ASSERT_DOUBLE_EQ(value, kvPtr->getDouble(k));
 }
 
-TEST(KeyValueImplTest, testKeySet) {
+TEST_F(KeyValueImplTest, testKeySet) {
     using namespace io::openmessaging;
 
     boost::shared_ptr<KeyValue> kvPtr = boost::make_shared<KeyValueImpl>();

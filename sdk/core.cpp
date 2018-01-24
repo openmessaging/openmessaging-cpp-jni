@@ -97,6 +97,16 @@ std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {
     return nativeSet;
 }
 
+bool checkAndClearException(CurrentEnv &current) {
+    if (current.env->ExceptionCheck()) {
+        current.env->ExceptionDescribe();
+        current.env->ExceptionClear();
+        return true;
+    }
+    
+    return false;
+}
+
 jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,
                     const std::string &signature, bool isStatic) {
     jmethodID methodId;

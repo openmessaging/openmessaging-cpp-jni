@@ -35,8 +35,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         sendAsync(boost::shared_ptr<Message> message,
                                  boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
 
-        virtual void sendOneway(boost::shared_ptr<Message> Message,
-                                boost::shared_ptr<KeyValue> properties) = 0;
+        virtual void sendOneway(boost::shared_ptr<Message> message,
+                                boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
 
         virtual boost::shared_ptr<BatchMessageSender> createSequenceBatchMessageSender() = 0;
 

@@ -6,6 +6,7 @@ add_executable(runUnitTests
         KeyValueImplTest.cpp
         PromiseImplTest.cpp
         MessagingAccessPointFactoryImplTest.cpp
+        ProducerImplTest.cpp
         )
 
 # Standard linking to gtest stuff.

@@ -13,6 +13,7 @@ CurrentEnv::CurrentEnv() : attached(false) {
             attached = true;
         }
     }
+    this->env->EnsureLocalCapacity(1024);
 }
 
 CurrentEnv::~CurrentEnv() {

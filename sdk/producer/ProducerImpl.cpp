@@ -74,6 +74,12 @@ ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties
 
     std::string sendAsync2Signature = "(JLio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
     midSendAsync2 = getMethod(current, classProducerAdaptor, "sendAsync", sendAsync2Signature);
+
+    const std::string sendOnewaySignature = "(Lio/openmessaging/Message;)V";
+    midSendOneway = getMethod(current, classProducer, "sendOneway", sendOnewaySignature);
+
+    const std::string sendOneway2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
+    midSendOneway2 = getMethod(current, classProducer, "sendOneway", sendOneway2Signature);
 }
 
 ProducerImpl::~ProducerImpl() {
@@ -150,6 +156,13 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
     CurrentEnv current;
     jobject jSendResult = current.env->CallObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
                                                         executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
+
+    if (checkAndClearException(current)) {
+        BOOST_LOG_TRIVIAL(warning) << "Exception thrown in Java SDK";
+        boost::shared_ptr<SendResult> ret_nullptr;
+        return ret_nullptr;
+    }
+
     boost::shared_ptr<SendResultImpl> ret = boost::make_shared<SendResultImpl>(current.env->NewGlobalRef(jSendResult));
     current.env->DeleteLocalRef(jSendResult);
     return ret;
@@ -182,9 +195,18 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
     return f_nullptr;
 }
 
-void ProducerImpl::sendOneway(boost::shared_ptr<Message> Message,
+void ProducerImpl::sendOneway(boost::shared_ptr<Message> message,
                 boost::shared_ptr<KeyValue> properties) {
+    CurrentEnv current;
+    boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
+    if (properties) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        current.env->CallVoidMethod(_proxy, midSendOneway2, messageImpl->getProxy(), kv->getProxy());
+    } else {
+        current.env->CallVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
+    }
 
+    checkAndClearException(current);
 }
 
 boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {

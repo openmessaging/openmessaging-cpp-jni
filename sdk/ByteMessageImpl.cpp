@@ -12,21 +12,21 @@ ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
     midGetBody = getMethod(current, classByteMessage, "getBody", "()[B");
 
     midPutSysHeadersInt = getMethod(current, classByteMessage, "putSysHeaders",
-                                    "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
+                                    "(Ljava/lang/String;I)Lio/openmessaging/Message;");
     midPutSysHeadersLong = getMethod(current, classByteMessage, "putSysHeaders",
-                                     "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+                                     "(Ljava/lang/String;J)Lio/openmessaging/Message;");
     midPutSysHeadersDouble = getMethod(current, classByteMessage, "putSysHeaders",
-                                       "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
+                                       "(Ljava/lang/String;D)Lio/openmessaging/Message;");
     midPutSysHeadersString = getMethod(current, classByteMessage, "putSysHeaders",
-                                       "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+                                       "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/Message;");
     midPutUserHeadersInt = getMethod(current, classByteMessage, "putUserHeaders",
-                                     "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
+                                     "(Ljava/lang/String;I)Lio/openmessaging/Message;");
     midPutUserHeadersLong = getMethod(current, classByteMessage, "putUserHeaders",
-                                      "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
+                                      "(Ljava/lang/String;J)Lio/openmessaging/Message;");
     midPutUserHeadersDouble = getMethod(current, classByteMessage, "putUserHeaders",
-                                        "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
+                                        "(Ljava/lang/String;D)Lio/openmessaging/Message;");
     midPutUserHeadersString = getMethod(current, classByteMessage, "putUserHeaders",
-                                        "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
+                                        "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/Message;");
 }
 
 ByteMessageImpl::~ByteMessageImpl() {

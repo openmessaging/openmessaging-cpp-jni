@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <boost/shared_ptr.hpp>
+#include <climits>
 
 #include "producer/SendResult.h"
 #include "Namespace.h"
@@ -20,9 +21,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             virtual bool isDone() = 0;
 
-            virtual boost::shared_ptr<producer::SendResult> get() = 0;
-
-            virtual boost::shared_ptr<producer::SendResult> get(long timeout) = 0;
+            virtual boost::shared_ptr<producer::SendResult> get(unsigned long timeout = LONG_MAX) = 0;
 
             virtual Future &addListener(boost::shared_ptr<FutureListener> listener) = 0;
 

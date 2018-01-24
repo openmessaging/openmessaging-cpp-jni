@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual void operationComplete(const boost::shared_ptr<Future> &future) = 0;
+        virtual void operationComplete(const Future& future) = 0;
     };
 
 END_NAMESPACE_2(io, openmessaging)

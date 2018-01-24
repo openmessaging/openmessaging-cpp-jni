@@ -1,7 +1,10 @@
 #ifndef OMS_PROMISE_IMPL_H
 #define OMS_PROMISE_IMPL_H
 
+#include <vector>
+#include <boost/thread.hpp>
 #include "Promise.h"
+#include "producer/SendResult.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -15,9 +18,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool isDone();
 
-        virtual boost::shared_ptr<producer::SendResult> get();
-
-        virtual boost::shared_ptr<producer::SendResult> get(long timeout);
+        virtual boost::shared_ptr<producer::SendResult> get(unsigned long timeout = LONG_MAX);
 
         virtual Future &addListener(boost::shared_ptr<FutureListener> listener);
 
@@ -30,7 +31,14 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual bool setFailure(std::exception &e);
 
     private:
+        bool done;
+        bool failed;
+        bool cancelled;
         std::exception e;
+        std::vector<boost::shared_ptr<FutureListener> > _listeners;
+        boost::mutex _mtx;
+        boost::condition_variable _cv;
+        boost::shared_ptr<producer::SendResult> _value;
     };
 
 END_NAMESPACE_2(io, openmessaging)

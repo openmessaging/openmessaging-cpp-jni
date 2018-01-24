@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual ~Promise() {
         }
 
-        virtual bool cancel(bool interruptIfRunning) = 0;
+        virtual bool cancel(bool interruptIfRunning = false) = 0;
 
         virtual bool set(boost::shared_ptr<producer::SendResult> &value) = 0;
 

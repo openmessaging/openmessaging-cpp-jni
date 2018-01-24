@@ -2,6 +2,7 @@
 
 add_executable(runUnitTests
         RunAllTest.cpp
+        CountdownLatchTest.cpp
         CoreTest.cpp
         CurrentEnvTest.cpp
         KeyValueImplTest.cpp
@@ -24,7 +25,8 @@ else()
             boost_log-mt
             boost_date_time-mt
             boost_system-mt
-            boost_thread-mt)
+            boost_thread-mt
+            boost_chrono-mt)
 endif ()
 
 set_target_properties(runUnitTests PROPERTIES

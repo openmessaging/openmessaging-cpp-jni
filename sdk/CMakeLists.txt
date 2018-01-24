@@ -1,6 +1,7 @@
 add_library(${CMAKE_PROJECT_NAME} SHARED
         JavaOption.cpp
         CurrentEnv.cpp
+        CountdownLatch.cpp
         core.cpp
         KeyValueImpl.cpp
         OMS.cpp
@@ -28,7 +29,12 @@ add_definitions(-DBOOST_LOG_DYN_LINK=1)
 if (Boost_LIBRARIES)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${Boost_LIBRARIES})
 else ()
-    target_link_libraries(${CMAKE_PROJECT_NAME} boost_log-mt boost_date_time-mt boost_system-mt boost_thread-mt)
+    target_link_libraries(${CMAKE_PROJECT_NAME}
+            boost_log-mt
+            boost_date_time-mt
+            boost_system-mt
+            boost_thread-mt
+            boost_chrono-mt)
 endif ()
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES

@@ -28,8 +28,8 @@ void init0() {
     jOptions->addOption(class_path_option);
     jOptions->addOption("-Xms1G");
     jOptions->addOption("-Xmx1G");
-    jOptions->addOption("-verbose");
-    jOptions->addOption("-Xcheck:jni");
+//    jOptions->addOption("-verbose");
+//    jOptions->addOption("-Xcheck:jni");
     jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
 
     int optionCount = jOptions->options.size();

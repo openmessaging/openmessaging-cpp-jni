@@ -35,6 +35,13 @@ KeyValueImpl::KeyValueImpl() {
 
 KeyValueImpl::KeyValueImpl(jobject proxy) : defaultKeyValueObject(proxy) {
     CurrentEnv current;
+
+    jclass classDefaultKeyValueLocal = current.env->GetObjectClass(proxy);
+    checkAndClearException(current);
+    classDefaultKeyValue = reinterpret_cast<jclass>(current.env->NewGlobalRef(classDefaultKeyValueLocal));
+    current.env->DeleteLocalRef(classDefaultKeyValueLocal);
+    checkAndClearException(current);
+
     init(current);
 }
 

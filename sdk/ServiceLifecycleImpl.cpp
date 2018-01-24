@@ -4,7 +4,7 @@ using namespace io::openmessaging;
 
 ServiceLifecycleImpl::ServiceLifecycleImpl(jobject proxy) : _proxy(proxy) {
     CurrentEnv current;
-    jclass classServiceLifecycleLocal = current.env->FindClass("io/openmessaging/ServiceLifecycle");
+    jclass classServiceLifecycleLocal = current.env->GetObjectClass(proxy);
     classServiceLifecycle = reinterpret_cast<jclass>(current.env->NewGlobalRef(classServiceLifecycleLocal));
     current.env->DeleteLocalRef(classServiceLifecycleLocal);
 

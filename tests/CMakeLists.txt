@@ -4,6 +4,7 @@ add_executable(runUnitTests
         RunAllTest.cpp
         CoreTest.cpp
         KeyValueImplTest.cpp
+        OMSTest.cpp
         PromiseImplTest.cpp
         MessagingAccessPointFactoryImplTest.cpp
         ProducerImplTest.cpp

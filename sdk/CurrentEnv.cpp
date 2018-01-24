@@ -1,5 +1,5 @@
 #include <jni.h>
-#include <core.h>
+#include "core.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
     extern JavaVM *jvm;

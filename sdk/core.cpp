@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/dirent.h>
+#include <pthread.h>
 
 #include "core.h"
 
@@ -12,7 +13,7 @@ JavaVM *jvm;
 
 JNIEnv *env;
 
-boost::once_flag once = BOOST_ONCE_INIT;
+pthread_once_t once_flag = PTHREAD_ONCE_INIT;
 
 void init_logging() {
     boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
@@ -58,7 +59,7 @@ void init0() {
 }
 
 void Initialize() {
-    boost::call_once(once, init0);
+    pthread_once(&once_flag, init0);
 }
 
 void Shutdown() {

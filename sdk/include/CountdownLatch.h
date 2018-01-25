@@ -14,6 +14,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         void await();
 
+        bool await(long long timeout);
+
     private:
         boost::mutex _mtx;
         unsigned int _count;

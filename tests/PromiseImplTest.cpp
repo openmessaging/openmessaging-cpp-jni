@@ -76,5 +76,5 @@ TEST_F(PromiseImplTest, testAddListener) {
     boost::shared_ptr<producer::SendResult> pSendResult =
             boost::make_shared<producer::SendResultImpl>(objectSendResult);
     promise.set(pSendResult);
-    countdownLatch.await();
+    ASSERT_TRUE(countdownLatch.await(10000));
 }

@@ -25,3 +25,14 @@ TEST(CountdownLatchTest, testSynchronizaiton) {
     }
 }
 
+TEST(CountdownLatchTest, testTimedWait) {
+    CountdownLatch countdownLatch(1);
+    boost::thread t(CountdownLatchTest_f, boost::ref(countdownLatch));
+    ASSERT_FALSE(countdownLatch.await(1000));
+}
+
+TEST(CountdownLatchTest, testTimedWaitSuccess) {
+    CountdownLatch countdownLatch(1);
+    boost::thread t(CountdownLatchTest_f, boost::ref(countdownLatch));
+    ASSERT_TRUE(countdownLatch.await(10000));
+}

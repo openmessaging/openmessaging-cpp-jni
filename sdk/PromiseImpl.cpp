@@ -54,6 +54,12 @@ boost::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) 
 
 Future& PromiseImpl::addListener(boost::shared_ptr<FutureListener> listener) {
     boost::lock_guard<boost::mutex> lk(_mtx);
+    if (done) {
+        listener->operationComplete(*this);
+    } else if (cancelled) {
+        return *this;
+    }
+
     _listeners.push_back(listener);
     return *this;
 }

@@ -17,7 +17,7 @@ public:
     }
 
     virtual void operationComplete(const io::openmessaging::Future& future) {
-        std::cout << "OK" << std::endl;
+        std::cout << "Execute callback OK" << std::endl;
         _countdownLatch.countdown();
     }
 
@@ -76,5 +76,16 @@ TEST_F(PromiseImplTest, testAddListener) {
     boost::shared_ptr<producer::SendResult> pSendResult =
             boost::make_shared<producer::SendResultImpl>(objectSendResult);
     promise.set(pSendResult);
+    ASSERT_TRUE(countdownLatch.await(10000));
+}
+
+TEST_F(PromiseImplTest, testAddListener2) {
+    PromiseImpl promise;
+    CountdownLatch countdownLatch(1);
+    boost::shared_ptr<FutureListener> listener = boost::make_shared<FutureListenerExample>(boost::ref(countdownLatch));
+    boost::shared_ptr<producer::SendResult> pSendResult =
+            boost::make_shared<producer::SendResultImpl>(objectSendResult);
+    promise.set(pSendResult);
+    promise.addListener(listener); // Should execute listener immediately
     ASSERT_TRUE(countdownLatch.await(10000));
 }

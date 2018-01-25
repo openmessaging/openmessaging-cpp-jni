@@ -6,12 +6,12 @@
 #include <climits>
 
 #include "producer/SendResult.h"
-#include "Namespace.h"
+#include "Uncopyable.h"
 #include "FutureListener.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        class Future {
+        class Future : private Uncopyable {
         public:
             virtual ~Future() {
 

@@ -2,6 +2,7 @@
 
 add_executable(runUnitTests
         RunAllTest.cpp
+        UncopyableTest.cpp
         CountdownLatchTest.cpp
         CoreTest.cpp
         CurrentEnvTest.cpp

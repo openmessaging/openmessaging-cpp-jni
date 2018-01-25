@@ -31,6 +31,18 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
                                                    boost::shared_ptr<void> arg,
                                                    boost::shared_ptr<KeyValue> properties) = 0;
 
+        /**
+         * Asynchronously send a message to its destination, which is specified in system headers.
+         *
+         * This method returns immediately after invocation and returning future follows similar
+         * semantics to that of C++ standard library. Additionally, future accepts callback hooks
+         * that are executed on future completion.
+         *
+         * @param message The message to send.
+         * @return Smart pointer to Future instance.
+         */
+        // virtual boost::shared_ptr<Future> sendAsync(const Message &message) = 0;
+
         virtual boost::shared_ptr<Future>
         sendAsync(boost::shared_ptr<Message> message,
                                  boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;

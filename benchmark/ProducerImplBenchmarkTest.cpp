@@ -46,7 +46,7 @@ BENCHMARK_DEFINE_F(ProducerImplBenchmarkTest, SynchronousSendTest)(benchmark::St
 BENCHMARK_REGISTER_F(ProducerImplBenchmarkTest, SynchronousSendTest)
 ->RangeMultiplier(2)
 ->Range(1<<8, 1<<16)
-->Threads(2)
+->Threads(1)
 ->Unit(benchmark::kMicrosecond);
 
 BENCHMARK_MAIN();

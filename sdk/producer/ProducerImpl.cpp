@@ -1,3 +1,5 @@
+#include <map>
+
 #include "producer/ProducerImpl.h"
 #include "producer/LocalTransactionBranchExecutorImpl.h"
 #include "KeyValueImpl.h"
@@ -5,20 +7,59 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
 #include "PromiseImpl.h"
-#include <map>
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    void sendAsyncCallback(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
-
-    }
-
     long long sendOpaque = 0;
     boost::mutex sendAsyncMutex;
-    std::map<long long, boost::shared_ptr<void> > sendAsyncMap;
+    std::map<long long, boost::shared_ptr<Promise> > sendAsyncMap;
+
+    void sendAsyncCallback(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
+
+        boost::shared_ptr<Promise> promise;
+        {
+            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
+            promise = sendAsyncMap[opaque];
+            sendAsyncMap.erase(opaque);
+        }
+
+        if (!promise) {
+            BOOST_LOG_TRIVIAL(warning) << "Cannot find promise of opaque: " << opaque;
+            return;
+        }
+
+        jclass classFuture = env->GetObjectClass(jFuture);
+        jmethodID midIsCancelled = env->GetMethodID(classFuture, "isCancelled", "()Z");
+        if (env->CallBooleanMethod(jFuture, midIsCancelled)) {
+            promise->cancel();
+            env->DeleteLocalRef(jFuture);
+            env->DeleteLocalRef(classFuture);
+            env->DeleteLocalRef(object);
+            return;
+        }
+
+
+        jmethodID midGetThrowable = env->GetMethodID(classFuture, "getThrowable", "()Ljava/lang/Throwable;");
+        jobject throwable = env->CallObjectMethod(jFuture, midGetThrowable);
+
+        if (env->IsSameObject(throwable, NULL)) {
+            jmethodID midGet = env->GetMethodID(classFuture, "get", "()Ljava/lang/Object;");
+            jobject objectSendResultLocal = env->CallObjectMethod(jFuture, midGet);
+            jobject objectSendResult = env->NewGlobalRef(objectSendResultLocal);
+            env->DeleteLocalRef(objectSendResultLocal);
+            if (objectSendResult) {
+                boost::shared_ptr<SendResult> sendResultPtr = boost::make_shared<SendResultImpl>(objectSendResult);
+                promise->set(sendResultPtr);
+            }
+        }
+
+        env->DeleteLocalRef(jFuture);
+        env->DeleteLocalRef(classFuture);
+        env->DeleteLocalRef(object);
+    }
 
     static JNINativeMethod methods[] = {
         {
@@ -173,9 +214,8 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
           boost::shared_ptr<KeyValue> properties) {
 
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
-    boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
 
-    if (messageImpl && properties) {
+    if (messageImpl) {
         CurrentEnv current;
         boost::shared_ptr<Promise> ft = boost::make_shared<PromiseImpl>();
         long long opaque;
@@ -184,7 +224,16 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
             boost::interprocess::scoped_lock<boost::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
-        current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
+        if (properties) {
+            boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+            if (!propertiesImpl) {
+                BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";
+            }
+            current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, messageImpl->getProxy(),
+                                        propertiesImpl->getProxy());
+        } else {
+            current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
+        }
         return ft;
     } else {
         BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";

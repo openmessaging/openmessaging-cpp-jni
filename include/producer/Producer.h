@@ -39,10 +39,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * that are executed on future completion.
          *
          * @param message The message to send.
+         * @param properties Optional additional properties.
          * @return Smart pointer to Future instance.
          */
-        // virtual boost::shared_ptr<Future> sendAsync(const Message &message) = 0;
-
         virtual boost::shared_ptr<Future>
         sendAsync(boost::shared_ptr<Message> message,
                                  boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;

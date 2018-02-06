@@ -43,3 +43,23 @@ TEST(MessagingAccessPointFactoryTest, testCtor) {
     cout << sendResult->messageId() << endl;
 
 }
+
+TEST(MessagingAccessPointFactoryTest, testCreatePullConsumer) {
+    using namespace io::openmessaging;
+    using namespace std;
+
+    string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+    string driverClassKey = "oms.driver.impl";
+    string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
+
+    Initialize();
+
+    boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+    properties->put(driverClassKey, driverClass);
+
+    boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+            MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
+    std::string queueName("testQueue");
+    boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName);
+    pullConsumer->startup();
+}

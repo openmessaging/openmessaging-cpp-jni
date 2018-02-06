@@ -21,3 +21,13 @@ CurrentEnv::~CurrentEnv() {
         jvm->DetachCurrentThread();
     }
 }
+
+bool CurrentEnv::checkAndClearException() {
+    if (env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+        return true;
+    }
+
+    return false;
+}

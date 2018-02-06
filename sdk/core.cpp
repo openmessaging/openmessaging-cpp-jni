@@ -31,7 +31,7 @@ void init0() {
     jOptions->addOption("-Xmx1G");
 //    jOptions->addOption("-verbose");
 //    jOptions->addOption("-Xcheck:jni");
-    jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005");
+    jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
 
     int optionCount = jOptions->options.size();
     JavaVMOption *options = new JavaVMOption[optionCount];
@@ -96,16 +96,6 @@ std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {
     current.env->DeleteLocalRef(classIterator);
     current.env->DeleteLocalRef(classIterable);
     return nativeSet;
-}
-
-bool checkAndClearException(CurrentEnv &current) {
-    if (current.env->ExceptionCheck()) {
-        current.env->ExceptionDescribe();
-        current.env->ExceptionClear();
-        return true;
-    }
-    
-    return false;
 }
 
 jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name,

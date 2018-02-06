@@ -13,7 +13,7 @@ boost::shared_ptr<KeyValue> OMS::newKeyValue() {
     jclass classDefaultKeyValue = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
     jmethodID ctor = getMethod(current, classDefaultKeyValue, "<init>", "()V");
     jobject objectDefaultKeyValue = current.env->NewObject(classDefaultKeyValue, ctor);
-    checkAndClearException(current);
+    current.checkAndClearException();
     boost::shared_ptr<KeyValue> ptr = boost::make_shared<KeyValueImpl>(
             current.env->NewGlobalRef(objectDefaultKeyValue));
     current.env->DeleteLocalRef(objectDefaultKeyValue);

@@ -198,7 +198,7 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
     jobject jSendResult = current.env->CallObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
                                                         executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
 
-    if (checkAndClearException(current)) {
+    if (current.checkAndClearException()) {
         BOOST_LOG_TRIVIAL(warning) << "Exception thrown in Java SDK";
         boost::shared_ptr<SendResult> ret_nullptr;
         return ret_nullptr;
@@ -255,7 +255,7 @@ void ProducerImpl::sendOneway(boost::shared_ptr<Message> message,
         current.env->CallVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
     }
 
-    checkAndClearException(current);
+    current.checkAndClearException();
 }
 
 boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {

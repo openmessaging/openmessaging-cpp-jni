@@ -33,15 +33,17 @@ boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
 
 boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
-    jobject jMessage;
+    jobject jMessageLocal;
     if (!properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jMessage = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getProxy());
+        jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
-        jMessage = current.env->CallObjectMethod(_proxy, midPoll);
+        jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll);
     }
-    boost::shared_ptr<Message> pMessage = boost::make_shared<ByteMessageImpl>(jMessage);
-    return pMessage;
+    jobject jMessage = current.env->NewGlobalRef(jMessageLocal);
+    current.env->DeleteLocalRef(jMessageLocal);
+    boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(jMessage);
+    return messagePtr;
 }
 
 void PullConsumerImpl::ack(const std::string &messageId, boost::shared_ptr<KeyValue> properties) {

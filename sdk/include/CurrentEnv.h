@@ -12,6 +12,18 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         JNIEnv *env;
 
+        template<typename T>
+        T makeGlobal(T localRef) {
+            T globalRef = static_cast<T>(env->NewGlobalRef(localRef));
+            env->DeleteLocalRef(localRef);
+            return boost::move(globalRef);
+        }
+
+        bool checkAndClearException();
+
+        void deleteLocalRef(jobject localRef) {
+            env->DeleteLocalRef(localRef);
+        }
     private:
         bool attached;
     };

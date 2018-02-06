@@ -15,6 +15,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         producer/ProducerImpl.cpp
         producer/LocalTransactionBranchExecutorImpl.cpp
 
+        consumer/ContextImpl.cpp
         consumer/StreamImpl.cpp
         consumer/PullConsumerImpl.cpp
         consumer/PushConsumerImpl.cpp

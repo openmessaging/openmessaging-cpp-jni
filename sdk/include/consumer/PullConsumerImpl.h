@@ -1,5 +1,5 @@
-#ifndef OMS_PUSH_CONSUMER_IMPL_H
-#define OMS_PUSH_CONSUMER_IMPL_H
+#ifndef OMS_PULL_CONSUMER_IMPL_H
+#define OMS_PULL_CONSUMER_IMPL_H
 
 #include "Namespace.h"
 #include "core.h"
@@ -35,4 +35,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 END_NAMESPACE_3(io, openmessaging, core)
 
-#endif //OMS_PUSH_CONSUMER_IMPL_H
+#endif //OMS_PULL_CONSUMER_IMPL_H

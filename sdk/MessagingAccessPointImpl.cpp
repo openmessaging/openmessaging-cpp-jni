@@ -2,8 +2,8 @@
 #include "MessagingAccessPointImpl.h"
 #include "KeyValueImpl.h"
 #include "producer/ProducerImpl.h"
-#include "consumer/PushConsumer.h"
-#include "consumer/PullConsumer.h"
+#include "consumer/PushConsumerImpl.h"
+#include "consumer/PullConsumerImpl.h"
 #include "consumer/StreamingConsumer.h"
 
 using namespace io::openmessaging;
@@ -69,21 +69,20 @@ std::string MessagingAccessPointImpl::implVersion() {
 boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
         boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
-    jobject producer;
+    jobject producerLocal;
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jobject producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
-        producer = current.env->NewGlobalRef(producerLocal);
-        current.env->DeleteLocalRef(producerLocal);
+        producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
     } else {
-        jobject producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
-        if (!producerLocal) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to create producer";
-            abort();
-        }
-        producer = current.env->NewGlobalRef(producerLocal);
-        current.env->DeleteLocalRef(producerLocal);
+        producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
     }
+
+    if (current.checkAndClearException()) {
+        BOOST_LOG_TRIVIAL(error) << "Failed to create producer";
+        abort();
+    }
+
+    jobject producer = current.makeGlobal(producerLocal);
 
     boost::shared_ptr<Producer> ret = boost::make_shared<ProducerImpl>(producer, properties);
     return ret;
@@ -91,12 +90,44 @@ boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
 
 boost::shared_ptr<consumer::PushConsumer>
 MessagingAccessPointImpl::createPushConsumer(boost::shared_ptr<KeyValue> properties) {
+    CurrentEnv current;
+    jobject pushConsumerLocal;
+    if (properties) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        pushConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
 
+    } else {
+        pushConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer);
+    }
+
+    if (current.checkAndClearException()) {
+        abort();
+    }
+
+    jobject pushConsumer = current.makeGlobal(pushConsumerLocal);
+    boost::shared_ptr<PushConsumer> ret = boost::make_shared<PushConsumerImpl>(pushConsumer);
+    return ret;
 }
 
 boost::shared_ptr<consumer::PullConsumer>
 MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties) {
+    CurrentEnv current;
+    jobject pullConsumerLocal;
 
+    if (properties) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2, kv->getProxy());
+    } else {
+        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer);
+    }
+
+    if (current.checkAndClearException()) {
+        abort();
+    }
+
+    jobject pullConsumer = current.makeGlobal(pullConsumerLocal);
+    boost::shared_ptr<PullConsumer> ret = boost::make_shared<PullConsumerImpl>(pullConsumer);
+    return ret;
 }
 
 boost::shared_ptr<consumer::StreamingConsumer>

@@ -45,7 +45,7 @@ public:
             if (localObject) {
                 objectSendResult = ctx.env->NewGlobalRef(localObject);
             } else {
-                checkAndClearException(ctx);
+                ctx.checkAndClearException();
             }
         }
     }

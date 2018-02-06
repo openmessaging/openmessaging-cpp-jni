@@ -35,7 +35,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     private:
         jclass classPushConsumer;
+        jclass classMessageListenerAdaptor;
 
+        jmethodID midProperties;
+        jmethodID midResume;
+        jmethodID midSuspend;
+        jmethodID midIsSuspended;
+        jmethodID midAttachQueue;
+        jmethodID midDetachQueue;
     };
 
 END_NAMESPACE_3(io, openmessaging, core)

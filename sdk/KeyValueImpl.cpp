@@ -68,7 +68,7 @@ KeyValueImpl::~KeyValueImpl() {
         classDefaultKeyValue = NULL;
     }
 
-    if (defaultKeyValueObject) {
+    if (!current.env->IsSameObject(defaultKeyValueObject, NULL)) {
         current.env->DeleteGlobalRef(defaultKeyValueObject);
     }
 }

@@ -1,14 +1,12 @@
-#include <string>
-#include <vector>
-
-#include <boost/shared_ptr.hpp>
 #include <gtest/gtest.h>
-
+#include "consumer/PullConsumer.h"
 #include "MessagingAccessPoint.h"
 #include "MessagingAccessPointFactory.h"
+#include "core.h"
 #include "KeyValueImpl.h"
 
-TEST(MessagingAccessPointFactoryTest, testCtor) {
+TEST(PullConsumerImplTest, testCreatePullConsumer) {
+
     using namespace io::openmessaging;
     using namespace std;
 
@@ -24,6 +22,7 @@ TEST(MessagingAccessPointFactoryTest, testCtor) {
     boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
             MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
+    // First send a message
     boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
     producer->startup();
 
@@ -34,33 +33,11 @@ TEST(MessagingAccessPointFactoryTest, testCtor) {
     body.push_back('L');
     body.push_back('L');
     body.push_back('O');
-
     boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+    producer->send(message);
+    // Send message OK
 
-
-    boost::shared_ptr<producer::SendResult> sendResult = producer->send(message);
-
-    cout << sendResult->messageId() << endl;
-
-}
-
-TEST(MessagingAccessPointFactoryTest, testCreatePullConsumer) {
-    using namespace io::openmessaging;
-    using namespace std;
-
-    string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-    string driverClassKey = "oms.driver.impl";
-    string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
-
-    Initialize();
-
-    boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
-    properties->put(driverClassKey, driverClass);
-
-    boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
-            MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
     std::string queueName("TopicTest");
-
 
     boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
     const std::string key = "rmq.consumer.group";
@@ -73,16 +50,14 @@ TEST(MessagingAccessPointFactoryTest, testCreatePullConsumer) {
 
     pullConsumer->startup();
 
-    pullConsumer->shutdown();
-
-//    while (true) {
-//        boost::shared_ptr<Message> message = pullConsumer->poll();
-//        if (message) {
-//            boost::shared_ptr<KeyValue> kv = message->sysHeaders();
-//            std::string msgId = kv->getString(BuiltinKeys::MessageId);
-//            cout << "MessageId: " << msgId << endl;
-//            pullConsumer->ack(msgId);
-//        }
-//
-//    }
+    while (true) {
+        boost::shared_ptr<Message> msg = pullConsumer->poll();
+        if (msg) {
+            boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
+            std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
+            ASSERT_TRUE(!msgId.empty());
+            ASSERT_NO_THROW(pullConsumer->ack(msgId));
+            break;
+        }
+    }
 }

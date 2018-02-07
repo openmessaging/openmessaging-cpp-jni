@@ -34,27 +34,42 @@ boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
 boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
     jobject jMessageLocal;
-    if (!properties) {
+    if (properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
         jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
         jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll);
     }
-    jobject jMessage = current.env->NewGlobalRef(jMessageLocal);
-    current.env->DeleteLocalRef(jMessageLocal);
-    boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(jMessage);
-    return messagePtr;
+
+    if (current.checkAndClearException()) {
+        abort();
+    }
+
+    if (jMessageLocal) {
+        jobject jMessage = current.env->NewGlobalRef(jMessageLocal);
+        current.env->DeleteLocalRef(jMessageLocal);
+        boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(jMessage);
+        return messagePtr;
+    }
+
+    boost::shared_ptr<Message> msg_nullptr;
+    return msg_nullptr;
 }
 
 void PullConsumerImpl::ack(const std::string &messageId, boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
     jstring msgId = current.env->NewStringUTF(messageId.c_str());
-    if (!properties) {
+    if (properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
         current.env->CallObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
         current.env->CallObjectMethod(_proxy, midAck, msgId);
     }
+
+    if (current.checkAndClearException()) {
+        abort();
+    }
+
     current.env->DeleteLocalRef(msgId);
 }
 

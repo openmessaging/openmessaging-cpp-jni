@@ -178,6 +178,10 @@ std::string KeyValueImpl::getString(const std::string &key, const std::string &d
     }
 
     const char *data = current.env->GetStringUTFChars(value, NULL);
+    if (NULL == data) {
+        return defaultValue;
+    }
+
     std::string ret = data;
     current.env->ReleaseStringUTFChars(value, data);
     current.env->DeleteLocalRef(value);

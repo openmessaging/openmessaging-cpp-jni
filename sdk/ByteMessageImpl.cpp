@@ -37,18 +37,20 @@ ByteMessageImpl::~ByteMessageImpl() {
 boost::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
     CurrentEnv current;
     jobject jSysHeader = current.env->CallObjectMethod(objectByteMessage, midSysHeaders);
-    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(
-            current.env->NewGlobalRef(jSysHeader));
-    current.env->DeleteLocalRef(jSysHeader);
+    if (current.checkAndClearException()) {
+        abort();
+    }
+    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.makeGlobal(jSysHeader));
     return headers;
 }
 
 boost::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     CurrentEnv current;
-    jobject jSysHeader = current.env->CallObjectMethod(objectByteMessage, midUserHeaders);
-    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(
-            current.env->NewGlobalRef(jSysHeader));
-    current.env->DeleteLocalRef(jSysHeader);
+    jobject userHeaders = current.env->CallObjectMethod(objectByteMessage, midUserHeaders);
+    if (current.checkAndClearException()) {
+        abort();
+    }
+    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.makeGlobal(userHeaders));
     return headers;
 }
 

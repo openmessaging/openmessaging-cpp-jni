@@ -114,16 +114,29 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost
     CurrentEnv current;
     jobject pullConsumerLocal;
 
+    const char *str = queueName.c_str();
+    jstring queue_name = current.env->NewStringUTF(str);
+
+    if (!queue_name) {
+        // Allocate memory fails
+        current.checkAndClearException();
+        abort();
+    }
+
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2, kv->getProxy());
+        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2,
+                                                          queue_name, kv->getProxy());
     } else {
-        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer);
+        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer,
+                                                          queue_name);
     }
 
     if (current.checkAndClearException()) {
         abort();
     }
+
+    current.deleteLocalRef(queue_name);
 
     jobject pullConsumer = current.makeGlobal(pullConsumerLocal);
     boost::shared_ptr<PullConsumer> ret = boost::make_shared<PullConsumerImpl>(pullConsumer);

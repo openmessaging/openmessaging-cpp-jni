@@ -2,7 +2,7 @@
 #define OMS_MESSAGE_H
 
 #include <string>
-#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr.hpp>
 
 #include "KeyValue.h"
 #include "BuiltinKeys.h"

@@ -1,7 +1,7 @@
 #ifndef OMS_FUTURE_LISTENER_H
 #define OMS_FUTURE_LISTENER_H
 
-#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr.hpp>
 
 #include "Namespace.h"
 

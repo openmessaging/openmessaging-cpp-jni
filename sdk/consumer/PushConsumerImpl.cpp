@@ -3,7 +3,8 @@
 
 #include "consumer/PushConsumerImpl.h"
 #include "KeyValueImpl.h"
-#include "ByteMessage.h"
+#include "ByteMessageImpl.h"
+#include "consumer/ContextImpl.h"
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
@@ -22,15 +23,16 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         }
 
         if (messageListenerPtr) {
-//            boost::shared_ptr<Message> messagePtr = boost::shared_ptr<ByteMessage>(message);
-
+            boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(message);
+            boost::shared_ptr<Context> contextPtr = boost::make_shared<ContextImpl>(context);
+            messageListenerPtr->onMessage(messagePtr, contextPtr);
         }
     }
 
     static JNINativeMethod methods[] = {
             {
                     const_cast<char*>("onMessage"),
-                    const_cast<char*>("(Ljava/lang/String;Lio/openmessaging/Message;Lio/openmessage/consumer/Context)V"),
+                    const_cast<char*>("(Ljava/lang/String;Lio/openmessaging/Message;Lio/openmessaging/consumer/Context;)V"),
                     (void *)&onMessage
             }
     };
@@ -101,20 +103,30 @@ PushConsumer &PushConsumerImpl::attachQueue(std::string &queueName,
     CurrentEnv ctx;
 
     jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
-    jobject messageListener = ctx.env->NewObject(classMessageListenerAdaptor, ctor);
-    const char* strs = queueName.c_str();
-    jstring queue = ctx.env->NewStringUTF(strs);
+    const char* queueNameChars = queueName.c_str();
+    jstring jQueueName = ctx.env->NewStringUTF(queueNameChars);
+    jobject messageListener = ctx.env->NewObject(classMessageListenerAdaptor, ctor, jQueueName);
+    if (ctx.checkAndClearException()) {
+        abort();
+    } else {
+        BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor instance created";
+    }
+
     {
         boost::lock_guard<boost::mutex> lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
-    jobject ret = ctx.env->CallObjectMethod(_proxy, midAttachQueue, queue, messageListener);
-    ctx.checkAndClearException();
-    ctx.env->DeleteLocalRef(ret);
-
-    ctx.env->ReleaseStringUTFChars(queue, strs);
-    return *this;
+    jobject ret = ctx.env->CallObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
+    if (ctx.checkAndClearException()) {
+        BOOST_LOG_TRIVIAL(error) << "Attach queue failed";
+        abort();
+    } else {
+        BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor per queue attached";
+        ctx.env->DeleteLocalRef(ret);
+        ctx.deleteLocalRef(jQueueName);
+        return *this;
+    }
 }
 
 PushConsumer &PushConsumerImpl::detachQueue(std::string &queueName) {

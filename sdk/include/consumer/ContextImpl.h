@@ -9,11 +9,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     class ContextImpl : public Context {
     public:
 
-        ContextImpl(jobject proxy) : _proxy(proxy) {
-            CurrentEnv current;
-            jclass classContextLocal = current.env->FindClass("io/openmessaging/consumer/Context");
-            classContext = current.makeGlobal(classContextLocal);
-        }
+        ContextImpl(jobject proxy);
 
         virtual boost::shared_ptr<KeyValue> properties();
 
@@ -24,6 +20,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         jclass classContext;
         jmethodID midProperties;
         jmethodID midAck;
+        jmethodID midAck2;
 
     };
 END_NAMESPACE_3(io, openmessaging, consumer)

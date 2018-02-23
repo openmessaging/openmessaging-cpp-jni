@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include "core.h"
-#include "CurrentEnv.h"
 
 class CurrentEnvTest : public ::testing::Test {
 public:

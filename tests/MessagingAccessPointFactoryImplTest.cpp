@@ -74,15 +74,4 @@ TEST(MessagingAccessPointFactoryTest, testCreatePullConsumer) {
     pullConsumer->startup();
 
     pullConsumer->shutdown();
-
-//    while (true) {
-//        boost::shared_ptr<Message> message = pullConsumer->poll();
-//        if (message) {
-//            boost::shared_ptr<KeyValue> kv = message->sysHeaders();
-//            std::string msgId = kv->getString(BuiltinKeys::MessageId);
-//            cout << "MessageId: " << msgId << endl;
-//            pullConsumer->ack(msgId);
-//        }
-//
-//    }
 }

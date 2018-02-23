@@ -1,7 +1,10 @@
 # file(GLOB_RECURSE TEST_FILES ${CMAKE_SOURCE_DIR}/tests/*.cpp)
 
+include_directories(include)
+
 add_executable(runUnitTests
         RunAllTest.cpp
+        NonStandardKeys.cpp
         UncopyableTest.cpp
         CountdownLatchTest.cpp
         CoreTest.cpp
@@ -12,6 +15,7 @@ add_executable(runUnitTests
         MessagingAccessPointFactoryImplTest.cpp
         ProducerImplTest.cpp
         PullConsumerImplTest.cpp
+        PushConsumerImplTest.cpp
         )
 
 # Standard linking to gtest stuff.

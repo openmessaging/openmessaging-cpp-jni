@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual void onMessage(boost::shared_ptr<Message> message, boost::shared_ptr<Context> context) = 0;
+        virtual void onMessage(boost::shared_ptr<Message>& message, boost::shared_ptr<Context>& context) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

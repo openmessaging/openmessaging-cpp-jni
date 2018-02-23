@@ -4,6 +4,7 @@
 #include "MessagingAccessPointFactory.h"
 #include "core.h"
 #include "KeyValueImpl.h"
+#include "NonStandardKeys.h"
 
 TEST(PullConsumerImplTest, testCreatePullConsumer) {
 
@@ -40,9 +41,8 @@ TEST(PullConsumerImplTest, testCreatePullConsumer) {
     std::string queueName("TopicTest");
 
     boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
-    const std::string key = "rmq.consumer.group";
     const std::string value = "OMS_CONSUMER";
-    kv->put(key, value);
+    kv->put(NonStandardKeys::CONSUMER_GROUP, value);
 
     boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 

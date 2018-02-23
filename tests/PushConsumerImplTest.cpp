@@ -6,15 +6,23 @@
 #include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
 #include "consumer/MessageListener.h"
+#include "CountdownLatch.h"
 
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     class ExampleMessageListener : virtual public MessageListener {
     public:
+        ExampleMessageListener(CountdownLatch &latch_) : latch(latch_) {
+        }
+
         virtual void onMessage(boost::shared_ptr<Message>& message, boost::shared_ptr<Context>& context) {
             std::cout << "A message received" << std::endl;
+            latch.countdown();
         }
+
+    private:
+        CountdownLatch &latch;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)
@@ -63,21 +71,13 @@ TEST(PushConsumerImplTest, testCreatePushConsumer) {
 
     ASSERT_TRUE(pushConsumer);
 
-    boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>();
+    CountdownLatch latch(1);
+
+    boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>(boost::ref(latch));
     pushConsumer->attachQueue(queueName, messageListener);
 
     pushConsumer->startup();
-
     cout << "Push consumer starts OK" << endl;
-
-//    while (true) {
-//        boost::shared_ptr<Message> msg = pushConsumer->poll();
-//        if (msg) {
-//            boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
-//            std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
-//            ASSERT_TRUE(!msgId.empty());
-//            ASSERT_NO_THROW(pushConsumer->ack(msgId));
-//            break;
-//        }
-//    }
+    latch.await();
+    pushConsumer->shutdown();
 }

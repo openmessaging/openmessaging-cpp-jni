@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include <boost/move/move.hpp>
-
 #include "Message.h"
 #include "Namespace.h"
 

@@ -3,6 +3,7 @@
 include_directories(include)
 
 add_executable(runUnitTests
+        BytesMessageImplTest.cpp
         RunAllTest.cpp
         NonStandardKeys.cpp
         UncopyableTest.cpp

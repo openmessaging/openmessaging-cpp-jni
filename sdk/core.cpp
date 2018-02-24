@@ -66,6 +66,8 @@ void Shutdown() {
     if (jvm) {
         jvm->DestroyJavaVM();
         jvm = NULL;
+        BOOST_LOG_TRIVIAL(info) << "JVM shutdown OK";
+        return;
     }
 }
 

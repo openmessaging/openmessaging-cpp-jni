@@ -6,10 +6,13 @@ using namespace io::openmessaging;
 ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
     CurrentEnv current;
     jclass classByteMessageLocal = current.env->FindClass("io/openmessaging/BytesMessage");
-    classByteMessage = reinterpret_cast<jclass>(current.env->NewGlobalRef(classByteMessageLocal));
+    classByteMessage = current.makeGlobal(classByteMessageLocal);
     midSysHeaders = getMethod(current, classByteMessage, "sysHeaders", "()Lio/openmessaging/KeyValue;");
     midUserHeaders = getMethod(current, classByteMessage, "userHeaders", "()Lio/openmessaging/KeyValue;");
+
     midGetBody = getMethod(current, classByteMessage, "getBody", "()[B");
+
+    midSetBody = getMethod(current, classByteMessage, "setBody", "([B)Lio/openmessaging/BytesMessage;");
 
     midPutSysHeadersInt = getMethod(current, classByteMessage, "putSysHeaders",
                                     "(Ljava/lang/String;I)Lio/openmessaging/Message;");
@@ -66,7 +69,7 @@ std::vector<char> ByteMessageImpl::getBody() {
     return body;
 }
 
-ByteMessageImpl &ByteMessageImpl::setBody(const std::vector<char> &body) {
+ByteMessage &ByteMessageImpl::setBody(const std::vector<char> &body) {
     CurrentEnv current;
     jbyteArray jBody = current.env->NewByteArray(body.size());
     current.env->SetByteArrayRegion(jBody, 0, body.size(), reinterpret_cast<const jbyte *>(&(body.front())));

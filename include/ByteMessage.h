@@ -1,10 +1,9 @@
 #ifndef OMS_BYTE_MESSAGE_H
 #define OMS_BYTE_MESSAGE_H
 
-#include <vector>
-
 #include "Message.h"
 #include "Namespace.h"
+#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -14,9 +13,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             }
 
-            virtual std::vector<char> getBody()  = 0;
+            virtual scoped_array<char> getBody()  = 0;
 
-            virtual ByteMessage& setBody(const std::vector<char> &body) = 0;
+            virtual ByteMessage& setBody(scoped_array<char> &body) = 0;
 
         };
 

@@ -16,9 +16,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual boost::shared_ptr<KeyValue> userHeaders();
 
-        virtual std::vector<char> getBody();
+        virtual scoped_array<char> getBody();
 
-        virtual ByteMessage& setBody(const std::vector<char> &body);
+        virtual ByteMessage& setBody(scoped_array<char> &body);
 
         virtual ByteMessageImpl& putSysHeaders(const std::string &key, int value);
 

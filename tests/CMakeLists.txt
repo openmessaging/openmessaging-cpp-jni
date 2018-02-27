@@ -3,20 +3,21 @@
 include_directories(include)
 
 add_executable(runUnitTests
-        BytesMessageImplTest.cpp
         RunAllTest.cpp
-        NonStandardKeys.cpp
-        UncopyableTest.cpp
-        CountdownLatchTest.cpp
-        CoreTest.cpp
-        CurrentEnvTest.cpp
-        KeyValueImplTest.cpp
-        OMSTest.cpp
-        PromiseImplTest.cpp
-        MessagingAccessPointFactoryImplTest.cpp
-        ProducerImplTest.cpp
-        PullConsumerImplTest.cpp
-        PushConsumerImplTest.cpp
+        scoped_array_test.cpp
+        ByteMessageImplTest.cpp
+#        NonStandardKeys.cpp
+#        UncopyableTest.cpp
+#        CountdownLatchTest.cpp
+#        CoreTest.cpp
+#        CurrentEnvTest.cpp
+#        KeyValueImplTest.cpp
+#        OMSTest.cpp
+#        PromiseImplTest.cpp
+#        MessagingAccessPointFactoryImplTest.cpp
+#        ProducerImplTest.cpp
+#        PullConsumerImplTest.cpp
+#        PushConsumerImplTest.cpp
         )
 
 # Standard linking to gtest stuff.

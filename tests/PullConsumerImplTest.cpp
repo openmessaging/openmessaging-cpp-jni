@@ -28,12 +28,8 @@ TEST(PullConsumerImplTest, testCreatePullConsumer) {
     producer->startup();
 
     string topic = "TopicTest";
-    vector<unsigned char> body;
-    body.push_back('H');
-    body.push_back('E');
-    body.push_back('L');
-    body.push_back('L');
-    body.push_back('O');
+    const char* data = "HELLO";
+    scoped_array<char> body(const_cast<char *>(data), strlen(data));
     boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
     producer->send(message);
     // Send message OK

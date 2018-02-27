@@ -23,10 +23,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
                                            boost::shared_ptr<KeyValue> properties);
 
         virtual boost::shared_ptr<ByteMessage>
-        createByteMessageToTopic(std::string &topic, std::vector<unsigned char> &body);
+        createByteMessageToTopic(std::string &topic, scoped_array<char> &body);
 
         virtual boost::shared_ptr<ByteMessage>
-        createByteMessageToQueue(std::string &topic, std::vector<unsigned char> &body);
+        createByteMessageToQueue(std::string &topic, scoped_array<char> &body);
 
         virtual boost::shared_ptr<SendResult> send(boost::shared_ptr<Message> message,
                                                    boost::shared_ptr<LocalTransactionBranchExecutor> executor,

@@ -49,12 +49,8 @@ TEST(ProducerImplTest, testSendOneway) {
     producer->startup();
 
     string topic = "TopicTest";
-    vector<unsigned char> body;
-    body.push_back('H');
-    body.push_back('E');
-    body.push_back('L');
-    body.push_back('L');
-    body.push_back('O');
+    const char* data = "HELLO";
+    scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
     boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
     producer->sendOneway(message);
@@ -82,12 +78,8 @@ TEST(ProducerImplTest, testSend_accuracy) {
     producer->startup();
 
     string topic = "TopicTest";
-    vector<unsigned char> body;
-    body.push_back('H');
-    body.push_back('E');
-    body.push_back('L');
-    body.push_back('L');
-    body.push_back('O');
+    const char* data = "HELLO";
+    scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
     boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
     for (int i = 0; i < 10000; ++i) {
@@ -115,12 +107,8 @@ TEST(ProducerImplTest, testAsynchrousSend) {
     producer->startup();
 
     string topic = "TopicTest";
-    vector<unsigned char> body;
-    body.push_back('H');
-    body.push_back('E');
-    body.push_back('L');
-    body.push_back('L');
-    body.push_back('O');
+    const char* data = "HELLO";
+    scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
     CountdownLatch latch(1);
     boost::shared_ptr<FutureListener> listener = boost::make_shared<FutureListenerTest>(boost::ref(latch));

@@ -16,8 +16,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         template<typename T>
         class scoped_array {
         public:
-            scoped_array(T *ptr, int length) : ptr_(ptr), length_(length) {
-
+            scoped_array(T *ptr, int length) : ptr_(NULL), length_(length) {
+                ptr_ = new T[length_];
+                memcpy(ptr_, ptr, length_);
             }
 
             /**

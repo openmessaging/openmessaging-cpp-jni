@@ -31,9 +31,9 @@ public:
 
 BENCHMARK_DEFINE_F(ProducerImplBenchmarkTest, SynchronousSendTest)(benchmark::State &state) {
     std::string topic = "TopicTest";
-    unsigned char* data = new unsigned char[state.range(0)];
+    char* data = new char[state.range(0)];
     memset(data, 'x', state.range(0));
-    std::vector<unsigned char> body(data, data + state.range(0));
+    scoped_array<char> body(data, state.range(0));
     delete[] data;
 
     boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);

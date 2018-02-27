@@ -26,6 +26,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 target_link_libraries(${CMAKE_PROJECT_NAME} ${JNI_LIBRARIES})
 
 add_definitions(-DBOOST_LOG_DYN_LINK=1)
+add_definitions(-DBOOST_ALL_DYN_LINK=1)
 
 if (Boost_LIBRARIES)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${Boost_LIBRARIES})

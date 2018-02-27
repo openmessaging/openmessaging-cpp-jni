@@ -8,6 +8,7 @@
 
 #include "ByteMessage.h"
 #include "Namespace.h"
+#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -17,10 +18,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         }
 
         virtual boost::shared_ptr<ByteMessage>
-        createByteMessageToTopic(std::string &topic, std::vector<unsigned char> &body) = 0;
+        createByteMessageToTopic(std::string &topic, scoped_array<char> &body) = 0;
 
         virtual boost::shared_ptr<ByteMessage>
-        createByteMessageToQueue(std::string &topic, std::vector<unsigned char> &body) = 0;
+        createByteMessageToQueue(std::string &topic, scoped_array<char> &body) = 0;
     };
 
 END_NAMESPACE_2(io, openmessaging)

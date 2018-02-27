@@ -152,27 +152,27 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
 }
 
 boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::string &topic,
-                                                                      std::vector<unsigned char> &body) {
+                                                                      scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
-    jsize len = static_cast<jint>(body.size());
+    jsize len = static_cast<jint>(body.getLength());
     jbyteArray pBody = current.env->NewByteArray(len);
-    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.data()));
+    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte*>(body.getRawPtr()));
     jobject jMessage = current.callObjectMethod(_proxy, midCreateByteMessageToTopic, pTopic, pBody);
-    current.env->DeleteLocalRef(pBody);
-    current.env->DeleteLocalRef(pTopic);
+    current.deleteRef(pBody);
+    current.deleteRef(pTopic);
 
     boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
 boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::string &topic,
-                                                                      std::vector<unsigned char> &body) {
+                                                                      scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
-    jsize len = static_cast<jint>(body.size());
+    jsize len = static_cast<jint>(body.getLength());
     jbyteArray pBody = current.env->NewByteArray(len);
-    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.data()));
+    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.getRawPtr()));
     jobject jMessage = current.callObjectMethod(_proxy, midCreateByteMessageToQueue, pTopic, pBody);
     current.env->DeleteLocalRef(pBody);
     current.env->DeleteLocalRef(pTopic);

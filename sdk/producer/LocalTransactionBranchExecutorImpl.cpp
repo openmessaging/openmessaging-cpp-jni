@@ -9,8 +9,8 @@ LocalTransactionBranchExecutorImpl::LocalTransactionBranchExecutorImpl(jobject p
 
 LocalTransactionBranchExecutorImpl::~LocalTransactionBranchExecutorImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(objectLocalTransactionBranchExecutor);
-    current.env->DeleteGlobalRef(classLocalTransactionBranchExecutor);
+    current.deleteRef(objectLocalTransactionBranchExecutor);
+    current.deleteRef(classLocalTransactionBranchExecutor);
 }
 
 void LocalTransactionBranchExecutorImpl::executeLocalTransaction(Message &message,

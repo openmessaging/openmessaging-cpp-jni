@@ -6,13 +6,13 @@ add_executable(runUnitTests
         RunAllTest.cpp
         scoped_array_test.cpp
         ByteMessageImplTest.cpp
-#        NonStandardKeys.cpp
-#        UncopyableTest.cpp
-#        CountdownLatchTest.cpp
-#        CoreTest.cpp
-#        CurrentEnvTest.cpp
-#        KeyValueImplTest.cpp
-#        OMSTest.cpp
+        NonStandardKeys.cpp
+        UncopyableTest.cpp
+        CountdownLatchTest.cpp
+        CoreTest.cpp
+        CurrentEnvTest.cpp
+        KeyValueImplTest.cpp
+        OMSTest.cpp
 #        PromiseImplTest.cpp
 #        MessagingAccessPointFactoryImplTest.cpp
 #        ProducerImplTest.cpp

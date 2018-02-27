@@ -14,4 +14,3 @@ TEST(CoreTest, testStringEndsWith) {
     ASSERT_TRUE(s.substr(s.size() - ext.size()) == ext);
     ASSERT_TRUE(io::openmessaging::stringEndsWith(s, ext));
 }
-

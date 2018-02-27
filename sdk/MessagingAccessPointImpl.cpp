@@ -17,39 +17,36 @@ MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
         _url(url), _properties(properties), objectMessagingAccessPoint(proxy) {
 
     CurrentEnv current;
+    const char *klassMessagingAccessPoint = "io/openmessaging/MessagingAccessPoint";
+    classMessagingAccessPoint = current.findClass(klassMessagingAccessPoint);
 
-    jclass classMessagingAccessPointLocal = current.env->FindClass("io/openmessaging/MessagingAccessPoint");
-    classMessagingAccessPoint =
-            reinterpret_cast<jclass>(current.env->NewGlobalRef(classMessagingAccessPointLocal));
+    midImplVersion = current.getMethodId(classMessagingAccessPoint, "implVersion", "()Ljava/lang/String;");
 
-    midImplVersion = getMethod(current, classMessagingAccessPoint, "implVersion", "()Ljava/lang/String;");
+    const char *createProducerSignature = "()Lio/openmessaging/producer/Producer;";
+    midCreateProducer = current.getMethodId(classMessagingAccessPoint, "createProducer", createProducerSignature);
 
-    std::string createProducerSignature = "()Lio/openmessaging/producer/Producer;";
-    midCreateProducer = getMethod(current, classMessagingAccessPoint, "createProducer", createProducerSignature);
+    const char *producer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/Producer;";
+    midCreateProducer2 = current.getMethodId(classMessagingAccessPoint, "createProducer", producer2Signature);
 
-    std::string producer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/Producer;";
-    midCreateProducer2 = getMethod(current, classMessagingAccessPoint, "createProducer", producer2Signature);
-
-    std::string pushConsumerSignature = "()Lio/openmessaging/consumer/PushConsumer;";
-    midCreatePushConsumer = getMethod(current, classMessagingAccessPoint, "createPushConsumer",
+    const char *pushConsumerSignature = "()Lio/openmessaging/consumer/PushConsumer;";
+    midCreatePushConsumer = current.getMethodId(classMessagingAccessPoint, "createPushConsumer",
                                       pushConsumerSignature);
 
-    std::string pushConsumer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/consumer/PushConsumer;";
-    midCreatePushConsumer2 = getMethod(current, classMessagingAccessPoint, "createPushConsumer",
+    const char *pushConsumer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/consumer/PushConsumer;";
+    midCreatePushConsumer2 = current.getMethodId(classMessagingAccessPoint, "createPushConsumer",
                                        pushConsumer2Signature);
 
-    std::string pullConsumerSignature = "(Ljava/lang/String;)Lio/openmessaging/consumer/PullConsumer;";
-    midCreatePullConsumer = getMethod(current, classMessagingAccessPoint, "createPullConsumer",
+    const char *pullConsumerSignature = "(Ljava/lang/String;)Lio/openmessaging/consumer/PullConsumer;";
+    midCreatePullConsumer = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
                                       pullConsumerSignature);
 
-    std::string pullConsumer2Signature =
+    const char *pullConsumer2Signature =
             "(Ljava/lang/String;Lio/openmessaging/KeyValue;)Lio/openmessaging/consumer/PullConsumer;";
-    midCreatePullConsumer2 = getMethod(current, classMessagingAccessPoint, "createPullConsumer",
+    midCreatePullConsumer2 = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
                                        pullConsumer2Signature);
 
-
-    midStartup = getMethod(current, classMessagingAccessPoint, "startup", "()V");
-    midShutdown = getMethod(current, classMessagingAccessPoint, "shutdown", "()V");
+    midStartup = current.getMethodId(classMessagingAccessPoint, "startup", "()V");
+    midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", "()V");
 }
 
 boost::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
@@ -59,7 +56,7 @@ boost::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
 std::string MessagingAccessPointImpl::implVersion() {
     CurrentEnv current;
     jstring version =
-            reinterpret_cast<jstring>(current.env->CallObjectMethod(objectMessagingAccessPoint, midImplVersion));
+            reinterpret_cast<jstring>(current.callObjectMethod(objectMessagingAccessPoint, midImplVersion));
     const char *pVersion = current.env->GetStringUTFChars(version, NULL);
     std::string result = pVersion;
     current.env->ReleaseStringUTFChars(version, pVersion);
@@ -72,17 +69,12 @@ boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
     jobject producerLocal;
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
+        producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
     } else {
-        producerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreateProducer);
+        producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer);
     }
 
-    if (current.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(error) << "Failed to create producer";
-        abort();
-    }
-
-    jobject producer = current.makeGlobal(producerLocal);
+    jobject producer = current.newGlobalRef(producerLocal);
 
     boost::shared_ptr<Producer> ret = boost::make_shared<ProducerImpl>(producer, properties);
     return ret;
@@ -94,17 +86,13 @@ MessagingAccessPointImpl::createPushConsumer(boost::shared_ptr<KeyValue> propert
     jobject pushConsumerLocal;
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        pushConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
+        pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
 
     } else {
-        pushConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer);
+        pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer);
     }
 
-    if (current.checkAndClearException()) {
-        abort();
-    }
-
-    jobject pushConsumer = current.makeGlobal(pushConsumerLocal);
+    jobject pushConsumer = current.newGlobalRef(pushConsumerLocal);
     boost::shared_ptr<PushConsumer> ret = boost::make_shared<PushConsumerImpl>(pushConsumer);
     return ret;
 }
@@ -115,7 +103,7 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost
     jobject pullConsumerLocal;
 
     const char *str = queueName.c_str();
-    jstring queue_name = current.env->NewStringUTF(str);
+    jstring queue_name = current.newStringUTF(str);
 
     if (!queue_name) {
         // Allocate memory fails
@@ -125,20 +113,16 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost
 
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2,
+        pullConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2,
                                                           queue_name, kv->getProxy());
     } else {
-        pullConsumerLocal = current.env->CallObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer,
+        pullConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer,
                                                           queue_name);
     }
 
-    if (current.checkAndClearException()) {
-        abort();
-    }
+    current.deleteRef(queue_name);
 
-    current.deleteLocalRef(queue_name);
-
-    jobject pullConsumer = current.makeGlobal(pullConsumerLocal);
+    jobject pullConsumer = current.newGlobalRef(pullConsumerLocal);
     boost::shared_ptr<PullConsumer> ret = boost::make_shared<PullConsumerImpl>(pullConsumer);
     return ret;
 }

@@ -6,20 +6,19 @@ using namespace io::openmessaging::producer;
 
 SendResultImpl::SendResultImpl(jobject proxy) : _proxy(proxy) {
     CurrentEnv current;
-    jclass classSendResultLocal = current.env->FindClass("io/openmessaging/producer/SendResult");
-    classSendResult = reinterpret_cast<jclass>(current.env->NewGlobalRef(classSendResultLocal));
-    current.env->DeleteLocalRef(classSendResultLocal);
 
-    midMessageId = getMethod(current, classSendResult, "messageId", "()Ljava/lang/String;");
+    const char *clazzSendResult = "io/openmessaging/producer/SendResult";
+    classSendResult = current.findClass(clazzSendResult);
 
-    midProperties = getMethod(current, classSendResult, "properties", "()Lio/openmessaging/KeyValue;");
+    midMessageId = current.getMethodId(classSendResult, "messageId", "()Ljava/lang/String;");
+    midProperties = current.getMethodId(classSendResult, "properties", "()Lio/openmessaging/KeyValue;");
 }
 
 
 SendResultImpl::~SendResultImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(_proxy);
-    current.env->DeleteGlobalRef(classSendResult);
+    current.deleteRef(_proxy);
+    current.deleteRef(classSendResult);
 }
 
 std::string SendResultImpl::messageId() {

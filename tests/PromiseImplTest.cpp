@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 #include <producer/SendResultImpl.h>
 #include "PromiseImpl.h"
-#include "core.h"
 #include "CountdownLatch.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -23,8 +22,8 @@ public:
 
 private:
     CountdownLatch &_countdownLatch;
-
 };
+
 END_NAMESPACE_2(io, openmessaging)
 
 using namespace io::openmessaging;
@@ -34,26 +33,17 @@ public:
     virtual void SetUp() {
         Initialize();
         CurrentEnv ctx;
-        jclass classSendResultLocal = ctx.env->FindClass("io/openmessaging/rocketmq/domain/SendResultImpl");
-        if (classSendResultLocal) {
-            classSendResult = reinterpret_cast<jclass>(ctx.env->NewGlobalRef(classSendResultLocal));
-            ctx.env->DeleteLocalRef(classSendResultLocal);
-
-            midDefaultCtor = getMethod(ctx, classSendResult, "<init>", "(Ljava/lang/String;Lio/openmessaging/KeyValue;)V");
-
-            jobject localObject = ctx.env->NewObject(classSendResult, midDefaultCtor, NULL, NULL);
-            if (localObject) {
-                objectSendResult = ctx.env->NewGlobalRef(localObject);
-            } else {
-                ctx.checkAndClearException();
-            }
-        }
+        const char *klassSendResultImpl = "io/openmessaging/rocketmq/domain/SendResultImpl";
+        classSendResult = ctx.findClass(klassSendResultImpl);
+        midDefaultCtor = ctx.getMethodId(classSendResult, "<init>", "(Ljava/lang/String;Lio/openmessaging/KeyValue;)V");
+        jobject localObject = ctx.newObject(classSendResult, midDefaultCtor, NULL, NULL);
+        objectSendResult = ctx.newGlobalRef(localObject);
     }
 
     virtual void TearDown() {
         CurrentEnv current;
-        current.env->DeleteGlobalRef(classSendResult);
-        current.env->DeleteGlobalRef(objectSendResult);
+        current.deleteRef(classSendResult);
+        current.deleteRef(objectSendResult);
     }
 
 protected:

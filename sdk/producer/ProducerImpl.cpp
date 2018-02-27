@@ -31,10 +31,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
             return;
         }
 
+        CurrentEnv current(env);
+
         jclass classFuture = env->GetObjectClass(jFuture);
-        jmethodID midIsCancelled = env->GetMethodID(classFuture, "isCancelled", "()Z");
-        if (env->CallBooleanMethod(jFuture, midIsCancelled)) {
+        jmethodID midIsCancelled = current.getMethodId(classFuture, "isCancelled", "()Z");
+
+        if (current.callBooleanMethod(jFuture, midIsCancelled)) {
             promise->cancel();
+
+            // clean up JNI calling contex
             env->DeleteLocalRef(jFuture);
             env->DeleteLocalRef(classFuture);
             env->DeleteLocalRef(object);
@@ -42,20 +47,20 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
 
-        jmethodID midGetThrowable = env->GetMethodID(classFuture, "getThrowable", "()Ljava/lang/Throwable;");
-        jobject throwable = env->CallObjectMethod(jFuture, midGetThrowable);
+        jmethodID midGetThrowable = current.getMethodId(classFuture, "getThrowable", "()Ljava/lang/Throwable;");
+        jobject throwable = current.callObjectMethod(jFuture, midGetThrowable);
 
         if (env->IsSameObject(throwable, NULL)) {
-            jmethodID midGet = env->GetMethodID(classFuture, "get", "()Ljava/lang/Object;");
-            jobject objectSendResultLocal = env->CallObjectMethod(jFuture, midGet);
-            jobject objectSendResult = env->NewGlobalRef(objectSendResultLocal);
-            env->DeleteLocalRef(objectSendResultLocal);
+            jmethodID midGet = current.getMethodId(classFuture, "get", "()Ljava/lang/Object;");
+            jobject objectSendResultLocal = current.callObjectMethod(jFuture, midGet);
+            jobject objectSendResult = current.newGlobalRef(objectSendResultLocal);
             if (objectSendResult) {
                 boost::shared_ptr<SendResult> sendResultPtr = boost::make_shared<SendResultImpl>(objectSendResult);
                 promise->set(sendResultPtr);
             }
         }
 
+        // clean up JNI
         env->DeleteLocalRef(jFuture);
         env->DeleteLocalRef(classFuture);
         env->DeleteLocalRef(object);
@@ -74,53 +79,46 @@ END_NAMESPACE_3(io, openmessaging, producer)
 ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
         : ServiceLifecycleImpl(proxy), _properties(properties) {
     CurrentEnv current;
-    jclass classProducerLocal = current.env->FindClass("io/openmessaging/producer/Producer");
-    classProducer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerLocal));
+    const char *clazzProducer = "io/openmessaging/producer/Producer";
+    const char *clazzProducerAdaptor = "io/openmessaging/producer/ProducerAdaptor";
 
-    jclass classProducerAdaptorLocal = current.env->FindClass("io/openmessaging/producer/ProducerAdaptor");
-    if (!classProducerAdaptorLocal) {
-        BOOST_LOG_TRIVIAL(warning) << "Class io/openmessaging/producer/ProducerAdaptor is not found";
-        abort();
-    }
-
-    classProducerAdaptor = reinterpret_cast<jclass>(current.env->NewGlobalRef(classProducerAdaptorLocal));
+    classProducer = current.findClass(clazzProducer);
+    classProducerAdaptor = current.findClass(clazzProducerAdaptor);
 
     if (current.env->RegisterNatives(classProducerAdaptor, methods, 1) < 0) {
         BOOST_LOG_TRIVIAL(error) << "Failed to bind native methods";
         abort();
     }
 
-    jmethodID producerAdaptorCtor = getMethod(current, classProducerAdaptor, "<init>", "(Lio/openmessaging/producer/Producer;)V");
-    jobject objectProducerAdaptorLocal = current.env->NewObject(classProducerAdaptor, producerAdaptorCtor, proxy);
-    objectProducerAdaptor = current.env->NewGlobalRef(objectProducerAdaptorLocal);
-    current.env->DeleteLocalRef(objectProducerAdaptorLocal);
+    jmethodID producerAdaptorCtor = current.getMethodId(classProducerAdaptor, "<init>", "(Lio/openmessaging/producer/Producer;)V");
+    objectProducerAdaptor = current.newObject(classProducerAdaptor, producerAdaptorCtor, proxy);
 
-    std::string signature = "(Ljava/lang/String;[B)Lio/openmessaging/BytesMessage;";
-    midCreateByteMessageToQueue = getMethod(current, classProducer, "createQueueBytesMessage", signature);
-    midCreateByteMessageToTopic = getMethod(current, classProducer, "createTopicBytesMessage", signature);
-    midStartup = getMethod(current, classProducer, "startup", "()V");
-    midShutdown = getMethod(current, classProducer, "shutdown", "()V");
+    const char *signature = "(Ljava/lang/String;[B)Lio/openmessaging/BytesMessage;";
+    midCreateByteMessageToQueue = current.getMethodId(classProducer, "createQueueBytesMessage", signature);
+    midCreateByteMessageToTopic = current.getMethodId(classProducer, "createTopicBytesMessage", signature);
+    midStartup = current.getMethodId(classProducer, "startup", "()V");
+    midShutdown = current.getMethodId(classProducer, "shutdown", "()V");
 
-    std::string sendSignature = "(Lio/openmessaging/Message;)Lio/openmessaging/producer/SendResult;";
-    midSend = getMethod(current, classProducer, "send", sendSignature);
+    const char *sendSignature = "(Lio/openmessaging/Message;)Lio/openmessaging/producer/SendResult;";
+    midSend = current.getMethodId(classProducer, "send", sendSignature);
 
-    std::string send2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
-    midSend2 = getMethod(current, classProducer, "send", send2Signature);
+    const char *send2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
+    midSend2 = current.getMethodId(classProducer, "send", send2Signature);
 
-    std::string send3Signature = "(Lio/openmessaging/Message;Lio/openmessaging/producer/LocalTransactionBranchExecutor;Ljava/lang/Object;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
-    midSend3 = getMethod(current, classProducer, "send", send3Signature);
+    const char *send3Signature = "(Lio/openmessaging/Message;Lio/openmessaging/producer/LocalTransactionBranchExecutor;Ljava/lang/Object;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
+    midSend3 = current.getMethodId(classProducer, "send", send3Signature);
 
-    std::string sendAsyncSignature = "(JLio/openmessaging/Message;)V";
-    midSendAsync = getMethod(current, classProducerAdaptor, "sendAsync", sendAsyncSignature);
+    const char *sendAsyncSignature = "(JLio/openmessaging/Message;)V";
+    midSendAsync = current.getMethodId(classProducerAdaptor, "sendAsync", sendAsyncSignature);
 
-    std::string sendAsync2Signature = "(JLio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
-    midSendAsync2 = getMethod(current, classProducerAdaptor, "sendAsync", sendAsync2Signature);
+    const char *sendAsync2Signature = "(JLio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
+    midSendAsync2 = current.getMethodId(classProducerAdaptor, "sendAsync", sendAsync2Signature);
 
-    const std::string sendOnewaySignature = "(Lio/openmessaging/Message;)V";
-    midSendOneway = getMethod(current, classProducer, "sendOneway", sendOnewaySignature);
+    const char *sendOnewaySignature = "(Lio/openmessaging/Message;)V";
+    midSendOneway = current.getMethodId(classProducer, "sendOneway", sendOnewaySignature);
 
-    const std::string sendOneway2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
-    midSendOneway2 = getMethod(current, classProducer, "sendOneway", sendOneway2Signature);
+    const char *sendOneway2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
+    midSendOneway2 = current.getMethodId(classProducer, "sendOneway", sendOneway2Signature);
 }
 
 ProducerImpl::~ProducerImpl() {
@@ -142,13 +140,11 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
     jobject jSendResult;
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jobject ret = current.env->CallObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
-        jSendResult = current.env->NewGlobalRef(ret);
-        current.env->DeleteLocalRef(ret);
+        jobject ret = current.callObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
+        jSendResult = current.newGlobalRef(ret);
     } else {
-        jobject ret = current.env->CallObjectMethod(_proxy, midSend, msg->getProxy());
-        jSendResult = current.env->NewGlobalRef(ret);
-        current.env->DeleteLocalRef(ret);
+        jobject ret = current.callObjectMethod(_proxy, midSend, msg->getProxy());
+        jSendResult = current.newGlobalRef(ret);
     }
 
     boost::shared_ptr<SendResult> sendResult = boost::make_shared<SendResultImpl>(jSendResult);
@@ -162,11 +158,11 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::strin
     jsize len = static_cast<jint>(body.size());
     jbyteArray pBody = current.env->NewByteArray(len);
     current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.data()));
-    jobject jMessage = current.env->CallObjectMethod(_proxy, midCreateByteMessageToTopic, pTopic, pBody);
+    jobject jMessage = current.callObjectMethod(_proxy, midCreateByteMessageToTopic, pTopic, pBody);
     current.env->DeleteLocalRef(pBody);
     current.env->DeleteLocalRef(pTopic);
 
-    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.env->NewGlobalRef(jMessage));
+    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
@@ -177,11 +173,11 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::strin
     jsize len = static_cast<jint>(body.size());
     jbyteArray pBody = current.env->NewByteArray(len);
     current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.data()));
-    jobject jMessage = current.env->CallObjectMethod(_proxy, midCreateByteMessageToQueue, pTopic, pBody);
+    jobject jMessage = current.callObjectMethod(_proxy, midCreateByteMessageToQueue, pTopic, pBody);
     current.env->DeleteLocalRef(pBody);
     current.env->DeleteLocalRef(pTopic);
 
-    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.env->NewGlobalRef(jMessage));
+    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
@@ -195,17 +191,10 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
             boost::dynamic_pointer_cast<LocalTransactionBranchExecutorImpl>(executor);
     boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
     CurrentEnv current;
-    jobject jSendResult = current.env->CallObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
+    jobject jSendResult = current.callObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
                                                         executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
 
-    if (current.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(warning) << "Exception thrown in Java SDK";
-        boost::shared_ptr<SendResult> ret_nullptr;
-        return ret_nullptr;
-    }
-
-    boost::shared_ptr<SendResultImpl> ret = boost::make_shared<SendResultImpl>(current.env->NewGlobalRef(jSendResult));
-    current.env->DeleteLocalRef(jSendResult);
+    boost::shared_ptr<SendResultImpl> ret = boost::make_shared<SendResultImpl>(current.newGlobalRef(jSendResult));
     return ret;
 }
 
@@ -229,10 +218,10 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
             if (!propertiesImpl) {
                 BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";
             }
-            current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, messageImpl->getProxy(),
-                                        propertiesImpl->getProxy());
+            current.callVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, messageImpl->getProxy(),
+                                   propertiesImpl->getProxy());
         } else {
-            current.env->CallVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
+            current.callVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
         }
         return ft;
     } else {
@@ -250,9 +239,9 @@ void ProducerImpl::sendOneway(boost::shared_ptr<Message> message,
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
     if (properties) {
         boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        current.env->CallVoidMethod(_proxy, midSendOneway2, messageImpl->getProxy(), kv->getProxy());
+        current.callVoidMethod(_proxy, midSendOneway2, messageImpl->getProxy(), kv->getProxy());
     } else {
-        current.env->CallVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
+        current.callVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
     }
 
     current.checkAndClearException();

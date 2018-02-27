@@ -24,9 +24,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
 
-    jmethodID getMethod(CurrentEnv &current, jclass clazz, const std::string &name, const std::string &signature,
-                        bool isStatic = false);
-
     std::string expand_class_path(const std::string& wildcard);
 
     std::vector<std::string> list(const std::string &dir, bool (*f)(const std::string&));

@@ -5,15 +5,13 @@ using namespace io::openmessaging::consumer;
 
 StreamingConsumerImpl::StreamingConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
     CurrentEnv current;
-    jclass classStreamingConsumerLocal = current.env->FindClass("io/openmessaging/consumer/StreamingConsumer");
-    classStreamingConsumer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classStreamingConsumerLocal));
-    current.env->DeleteLocalRef(classStreamingConsumerLocal);
-
+    const char *klassStreamingConsumer = "io/openmessaging/consumer/StreamingConsumer";
+    classStreamingConsumer = current.findClass(klassStreamingConsumer);
 }
 
 StreamingConsumerImpl::~StreamingConsumerImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(classStreamingConsumer);
+    current.deleteRef(classStreamingConsumer);
 }
 
 boost::shared_ptr<KeyValue> StreamingConsumerImpl::properties() {

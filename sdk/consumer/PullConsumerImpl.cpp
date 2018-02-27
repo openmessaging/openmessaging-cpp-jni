@@ -7,47 +7,42 @@ using namespace io::openmessaging::consumer;
 
 PullConsumerImpl::PullConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
     CurrentEnv current;
-    jclass classPullConsumerLocal = current.env->FindClass("io/openmessaging/consumer/PullConsumer");
-    classPullConsumer = reinterpret_cast<jclass>(current.env->NewGlobalRef(classPullConsumerLocal));
-    current.env->DeleteLocalRef(classPullConsumerLocal);
+    const char *klassPullConsumer = "io/openmessaging/consumer/PullConsumer";
+    classPullConsumer = current.findClass(klassPullConsumer);
 
-    midProperties = getMethod(current, classPullConsumer, "properties", "()Lio/openmessaging/KeyValue;");
-    midPoll = getMethod(current, classPullConsumer, "poll", "()Lio/openmessaging/Message;");
-    midPoll2 = getMethod(current, classPullConsumer, "poll", "(Lio/openmessaging/KeyValue;)Lio/openmessaging/Message;");
-    midAck = getMethod(current, classPullConsumer, "ack", "(Ljava/lang/String;)V");
-    midAck2 = getMethod(current, classPullConsumer, "ack", "(Ljava/lang/String;Lio/openmessaging/KeyValue;)V");
+    midProperties = current.getMethodId(classPullConsumer, "properties", "()Lio/openmessaging/KeyValue;");
+    midPoll = current.getMethodId(classPullConsumer, "poll", "()Lio/openmessaging/Message;");
+    midPoll2 = current.getMethodId(classPullConsumer, "poll", "(Lio/openmessaging/KeyValue;)Lio/openmessaging/Message;");
+    midAck = current.getMethodId(classPullConsumer, "ack", "(Ljava/lang/String;)V");
+    midAck2 = current.getMethodId(classPullConsumer, "ack", "(Ljava/lang/String;Lio/openmessaging/KeyValue;)V");
 }
 
 PullConsumerImpl::~PullConsumerImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(classPullConsumer);
+    current.deleteRef(classPullConsumer);
 }
 
 boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
     CurrentEnv current;
-    jobject kv = current.env->CallObjectMethod(_proxy, midProperties);
-    boost::shared_ptr<KeyValueImpl> ptr = boost::make_shared<KeyValueImpl>(current.env->NewGlobalRef(kv));
-    current.env->DeleteLocalRef(kv);
+    jobject kv = current.callObjectMethod(_proxy, midProperties);
+    boost::shared_ptr<KeyValueImpl> ptr = boost::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
+    current.deleteRef(kv);
     return ptr;
 }
 
 boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
+
     jobject jMessageLocal;
     if (properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll2, ptr->getProxy());
+        jMessageLocal = current.callObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
-        jMessageLocal = current.env->CallObjectMethod(_proxy, midPoll);
-    }
-
-    if (current.checkAndClearException()) {
-        abort();
+        jMessageLocal = current.callObjectMethod(_proxy, midPoll);
     }
 
     if (jMessageLocal) {
-        jobject jMessage = current.env->NewGlobalRef(jMessageLocal);
-        current.env->DeleteLocalRef(jMessageLocal);
+        jobject jMessage = current.newGlobalRef(jMessageLocal);
         boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(jMessage);
         return messagePtr;
     }
@@ -58,19 +53,16 @@ boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> pr
 
 void PullConsumerImpl::ack(const std::string &messageId, boost::shared_ptr<KeyValue> properties) {
     CurrentEnv current;
-    jstring msgId = current.env->NewStringUTF(messageId.c_str());
+
+    jstring msgId = current.newStringUTF(messageId.c_str());
     if (properties) {
         boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        current.env->CallObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
+        current.callObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
-        current.env->CallObjectMethod(_proxy, midAck, msgId);
+        current.callObjectMethod(_proxy, midAck, msgId);
     }
 
-    if (current.checkAndClearException()) {
-        abort();
-    }
-
-    current.env->DeleteLocalRef(msgId);
+    current.deleteRef(msgId);
 }
 
 jobject PullConsumerImpl::getProxy() {

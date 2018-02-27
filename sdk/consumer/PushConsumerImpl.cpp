@@ -43,57 +43,57 @@ END_NAMESPACE_3(io, openmessaging, consumer)
 
 PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
     CurrentEnv current;
-    jclass classPushConsumerLocal = current.env->FindClass("io/openmessaging/consumer/PushConsumer");
-    classPushConsumer = current.makeGlobal(classPushConsumerLocal);
 
-    jclass classMessageListenerAdaptorLocal = current.env->FindClass("io/openmessaging/consumer/MessageListenerAdaptor");
-    classMessageListenerAdaptor = current.makeGlobal(classMessageListenerAdaptorLocal);
+    const char *klassPushConsumer = "io/openmessaging/consumer/PushConsumer";
+    classPushConsumer = current.findClass(klassPushConsumer);
+
+    const char *klassMessageListenerAdaptor = "io/openmessaging/consumer/MessageListenerAdaptor";
+    classMessageListenerAdaptor = current.findClass(klassMessageListenerAdaptor);
+
     if (current.env->RegisterNatives(classMessageListenerAdaptor, methods, 1) < 0) {
         BOOST_LOG_TRIVIAL(warning) << "Failed to register native methods";
         abort();
     }
 
-    midProperties = current.env->GetMethodID(classPushConsumer, "properties", "()Lio/openmessaging/KeyValue;");
-    midResume = current.env->GetMethodID(classPushConsumer, "resume", "()V");
-    midSuspend = current.env->GetMethodID(classPushConsumer, "suspend", "()V");
-    midIsSuspended = current.env->GetMethodID(classPushConsumer, "isSuspended", "()Z");
-    const char *attachQueueSignature = "(Ljava/lang/String;Lio/openmessaging/consumer/MessageListener;)Lio/openmessaging/consumer/PushConsumer;";
-    midAttachQueue = current.env->GetMethodID(classPushConsumer, "attachQueue", attachQueueSignature);
+    midProperties = current.getMethodId(classPushConsumer, "properties", "()Lio/openmessaging/KeyValue;");
+    midResume = current.getMethodId(classPushConsumer, "resume", "()V");
+    midSuspend = current.getMethodId(classPushConsumer, "suspend", "()V");
+    midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", "()Z");
 
-    midDetachQueue = current.env->GetMethodID(classPushConsumer, "detachQueue", "(Ljava/lang/String;)Lio/openmessaging/consumer/PushConsumer;");
+    const char *attachQueueSignature = "(Ljava/lang/String;Lio/openmessaging/consumer/MessageListener;)Lio/openmessaging/consumer/PushConsumer;";
+    midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue", attachQueueSignature);
+
+    midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", "(Ljava/lang/String;)Lio/openmessaging/consumer/PushConsumer;");
 
 }
 
 PushConsumerImpl::~PushConsumerImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(classPushConsumer);
-    current.env->DeleteGlobalRef(classMessageListenerAdaptor);
+    current.deleteRef(classPushConsumer);
+    current.deleteRef(classMessageListenerAdaptor);
 }
 
 boost::shared_ptr<KeyValue> PushConsumerImpl::properties() {
     CurrentEnv ctx;
-    jobject propertiesLocal = ctx.env->CallObjectMethod(_proxy, midProperties);
-    jobject globalRef = ctx.makeGlobal(propertiesLocal);
+    jobject propertiesLocal = ctx.callObjectMethod(_proxy, midProperties);
+    jobject globalRef = ctx.newGlobalRef(propertiesLocal);
     boost::shared_ptr<KeyValue> ret = boost::make_shared<KeyValueImpl>(globalRef);
     return ret;
 }
 
 void PushConsumerImpl::resume() {
     CurrentEnv ctx;
-    ctx.env->CallVoidMethod(_proxy, midResume);
-    ctx.checkAndClearException();
+    ctx.callVoidMethod(_proxy, midResume);
 }
 
 void PushConsumerImpl::suspend() {
     CurrentEnv ctx;
-    ctx.env->CallVoidMethod(_proxy, midSuspend);
-    ctx.checkAndClearException();
+    ctx.callVoidMethod(_proxy, midSuspend);
 }
 
 bool PushConsumerImpl::isSuspended() {
     CurrentEnv ctx;
-    bool suspended = ctx.env->CallBooleanMethod(_proxy, midIsSuspended);
-    ctx.checkAndClearException();
+    bool suspended = ctx.callBooleanMethod(_proxy, midIsSuspended);
     return suspended;
 }
 
@@ -105,28 +105,19 @@ PushConsumer &PushConsumerImpl::attachQueue(std::string &queueName,
     jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
     const char* queueNameChars = queueName.c_str();
     jstring jQueueName = ctx.env->NewStringUTF(queueNameChars);
-    jobject messageListener = ctx.env->NewObject(classMessageListenerAdaptor, ctor, jQueueName);
-    if (ctx.checkAndClearException()) {
-        abort();
-    } else {
-        BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor instance created";
-    }
-
+    jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
+    BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor instance created";
     {
         boost::lock_guard<boost::mutex> lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
-    jobject ret = ctx.env->CallObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
-    if (ctx.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(error) << "Attach queue failed";
-        abort();
-    } else {
-        BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor per queue attached";
-        ctx.env->DeleteLocalRef(ret);
-        ctx.deleteLocalRef(jQueueName);
-        return *this;
-    }
+    jobject ret = ctx.callObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
+    BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor per queue attached";
+    ctx.deleteRef(messageListener);
+    ctx.deleteRef(jQueueName);
+    ctx.deleteRef(ret);
+    return *this;
 }
 
 PushConsumer &PushConsumerImpl::detachQueue(std::string &queueName) {
@@ -139,9 +130,8 @@ PushConsumer &PushConsumerImpl::detachQueue(std::string &queueName) {
     CurrentEnv ctx;
     const char *str = queueName.c_str();
     jstring queue = ctx.env->NewStringUTF(str);
-    jobject ret = ctx.env->CallObjectMethod(_proxy, midDetachQueue, queue);
-    ctx.checkAndClearException();
-    ctx.deleteLocalRef(ret);
+    jobject ret = ctx.callObjectMethod(_proxy, midDetachQueue, queue);
+    ctx.deleteRef(ret);
     ctx.env->ReleaseStringUTFChars(queue, str);
     return *this;
 }

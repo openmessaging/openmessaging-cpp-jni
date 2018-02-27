@@ -1,3 +1,4 @@
+#include <exception>
 #include <jni.h>
 #include "core.h"
 
@@ -30,4 +31,21 @@ bool CurrentEnv::checkAndClearException() {
     }
 
     return false;
+}
+
+
+jobject CurrentEnv::callObjectMethod(jobject obj, jmethodID mid, ...) {
+    jobject result;
+    va_list args;
+    va_start(args, mid);
+    result = env->CallObjectMethodV(obj, mid, args);
+    va_end(args);
+
+    if (checkAndClearException()) {
+        const char* msg = "Exception raised while call Java Methods";
+        BOOST_LOG_TRIVIAL(error) << msg;
+        throw std::runtime_error(msg);
+    }
+
+    return result;
 }

@@ -24,6 +24,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         void deleteLocalRef(jobject localRef) {
             env->DeleteLocalRef(localRef);
         }
+
+        jobject callObjectMethod(jobject obj, jmethodID mid, ...);
+
     private:
         bool attached;
     };

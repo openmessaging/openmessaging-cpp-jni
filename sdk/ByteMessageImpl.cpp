@@ -39,7 +39,7 @@ ByteMessageImpl::~ByteMessageImpl() {
 
 boost::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
     CurrentEnv current;
-    jobject jSysHeader = current.env->CallObjectMethod(objectByteMessage, midSysHeaders);
+    jobject jSysHeader = current.callObjectMethod(objectByteMessage, midSysHeaders);
     if (current.checkAndClearException()) {
         abort();
     }
@@ -49,10 +49,7 @@ boost::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
 
 boost::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     CurrentEnv current;
-    jobject userHeaders = current.env->CallObjectMethod(objectByteMessage, midUserHeaders);
-    if (current.checkAndClearException()) {
-        abort();
-    }
+    jobject userHeaders = current.callObjectMethod(objectByteMessage, midUserHeaders);
     boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.makeGlobal(userHeaders));
     return headers;
 }
@@ -60,12 +57,8 @@ boost::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
 scoped_array<char> ByteMessageImpl::getBody() {
     CurrentEnv current;
 
-    jbyteArray jBody = static_cast<jbyteArray>(current.env->CallObjectMethod(objectByteMessage,
+    jbyteArray jBody = static_cast<jbyteArray>(current.callObjectMethod(objectByteMessage,
                                                                              midGetBody));
-    if (current.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(error) << "JVM throws an exception";
-        abort();
-    }
 
     jbyte *pArray = current.env->GetByteArrayElements(jBody, NULL);
     jsize len = current.env->GetArrayLength(jBody);
@@ -81,7 +74,7 @@ ByteMessage& ByteMessageImpl::setBody(scoped_array<char> &body) {
     CurrentEnv current;
     jbyteArray jBody = current.env->NewByteArray(body.getLength());
     current.env->SetByteArrayRegion(jBody, 0, body.getLength(), reinterpret_cast<const jbyte *>(body.getRawPtr()));
-    jobject ret = current.env->CallObjectMethod(objectByteMessage, midSetBody, jBody);
+    jobject ret = current.callObjectMethod(objectByteMessage, midSetBody, jBody);
     current.env->DeleteLocalRef(ret);
     current.env->DeleteLocalRef(jBody);
     return *this;
@@ -90,7 +83,7 @@ ByteMessage& ByteMessageImpl::setBody(scoped_array<char> &body) {
 ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, int value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutSysHeadersInt, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutSysHeadersInt, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -101,7 +94,7 @@ ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, int valu
 ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, long value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutSysHeadersLong, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutSysHeadersLong, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -113,7 +106,7 @@ ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, long val
 ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, double value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutSysHeadersDouble, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutSysHeadersDouble, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -125,7 +118,7 @@ ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, const st
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
     jstring v = current.env->NewStringUTF(value.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutSysHeadersString, k, v);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutSysHeadersString, k, v);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -137,7 +130,7 @@ ByteMessageImpl &ByteMessageImpl::putSysHeaders(const std::string &key, const st
 ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, int value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutUserHeadersInt, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutUserHeadersInt, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -148,7 +141,7 @@ ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, int val
 ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, long value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutUserHeadersLong, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutUserHeadersLong, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -160,7 +153,7 @@ ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, long va
 ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, double value) {
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutUserHeadersDouble, k, value);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutUserHeadersDouble, k, value);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }
@@ -172,7 +165,7 @@ ByteMessageImpl &ByteMessageImpl::putUserHeaders(const std::string &key, const s
     CurrentEnv current;
     jstring k = current.env->NewStringUTF(key.c_str());
     jstring v = current.env->NewStringUTF(value.c_str());
-    jobject obj = current.env->CallObjectMethod(objectByteMessage, midPutUserHeadersString, k, v);
+    jobject obj = current.callObjectMethod(objectByteMessage, midPutUserHeadersString, k, v);
     if (obj) {
         current.env->DeleteLocalRef(obj);
     }

@@ -7,7 +7,8 @@
 using namespace io::openmessaging;
 
 boost::shared_ptr<MessagingAccessPoint>
-MessagingAccessPointFactory::getMessagingAccessPoint(std::string &url, boost::shared_ptr<KeyValue> properties) {
+MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
+                                                     const boost::shared_ptr<KeyValue> &properties) {
 
     CurrentEnv current;
     const char* klassMessagingAccessPointFactory = "io/openmessaging/MessagingAccessPointFactory";
@@ -48,11 +49,11 @@ MessagingAccessPointFactory::getMessagingAccessPoint(std::string &url, boost::sh
 }
 
 void MessagingAccessPointFactory::addInterceptor(
-        boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor) {
+        const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
 
 }
 
 void MessagingAccessPointFactory::removeInterceptor(
-        boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> interceptor) {
+        const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
 
 }

@@ -10,9 +10,11 @@ END_NAMESPACE_2(io, openmessaging)
 
 boost::shared_ptr<KeyValue> OMS::newKeyValue() {
     CurrentEnv current;
-    jclass classDefaultKeyValue = current.env->FindClass("io/openmessaging/internal/DefaultKeyValue");
+    const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";
+    jclass classDefaultKeyValue = current.findClass(klassDefaultKeyValue);
     jmethodID ctor = current.getMethodId(classDefaultKeyValue, "<init>", "()V");
     jobject objectDefaultKeyValue = current.newObject(classDefaultKeyValue, ctor);
     boost::shared_ptr<KeyValue> ptr = boost::make_shared<KeyValueImpl>(objectDefaultKeyValue);
+    current.deleteRef(classDefaultKeyValue);
     return ptr;
 }

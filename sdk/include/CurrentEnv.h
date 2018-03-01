@@ -11,7 +11,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         CurrentEnv();
 
-        CurrentEnv(JNIEnv *env);
+        CurrentEnv(JNIEnv *ctx);
 
         ~CurrentEnv();
 

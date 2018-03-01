@@ -17,7 +17,7 @@ CurrentEnv::CurrentEnv() : attached(false) {
     this->env->EnsureLocalCapacity(1024);
 }
 
-CurrentEnv::CurrentEnv(JNIEnv *env) : env(env), attached(false) {
+CurrentEnv::CurrentEnv(JNIEnv *ctx) : env(ctx), attached(false) {
 
 }
 

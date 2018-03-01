@@ -1,7 +1,6 @@
 #ifndef OMS_CURRENT_ENV_H
 #define OMS_CURRENT_ENV_H
 
-#include <type_traits>
 #include "Namespace.h"
 #include "Uncopyable.h"
 

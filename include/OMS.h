@@ -1,12 +1,12 @@
 #ifndef OMS_OMS_H
 #define OMS_OMS_H
 
-#include <exception>
 #include <boost/smart_ptr.hpp>
 
 #include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "OMSException.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -54,7 +54,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             T& operator[](int i) {
                 if (i >= length_ || i < 0) {
-                    throw std::runtime_error("IndexOutOfBoundary");
+                    throw OMSException("IndexOutOfBoundary");
                 }
                 return *(ptr_ + i);
             }

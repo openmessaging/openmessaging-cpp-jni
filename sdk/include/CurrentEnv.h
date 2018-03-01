@@ -3,6 +3,7 @@
 
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "OMSException.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
     class CurrentEnv : private Uncopyable {
@@ -42,14 +43,14 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         template <typename T>
         T newGlobalRef(T obj) {
             if (NULL == obj) {
-                throw std::runtime_error("Pass-in object is null");
+                throw OMSException("Pass-in object is null");
             }
 
             T globalRef = NULL;
             if (env->GetObjectRefType(obj) == JNILocalRefType) {
                 globalRef = reinterpret_cast<T>(env->NewGlobalRef(obj));
                 if (NULL == globalRef) {
-                    throw std::runtime_error("Failed to create global reference");
+                    throw OMSException("Failed to create global reference");
                 }
                 env->DeleteLocalRef(obj);
                 // check JNI exception?

@@ -3,9 +3,10 @@
 
 #include <type_traits>
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-    class CurrentEnv {
+    class CurrentEnv : private Uncopyable {
     public:
 
         CurrentEnv();

@@ -33,6 +33,7 @@ void KeyValueImpl::init(CurrentEnv &current) {
 
 KeyValueImpl::~KeyValueImpl() {
     CurrentEnv current;
+
     if (classDefaultKeyValue) {
         current.deleteRef(classDefaultKeyValue);
         classDefaultKeyValue = NULL;
@@ -41,6 +42,8 @@ KeyValueImpl::~KeyValueImpl() {
     if (!current.env->IsSameObject(defaultKeyValueObject, NULL)) {
         current.deleteRef(defaultKeyValueObject);
     }
+
+    std::cout << "Destructed" << std::endl;
 }
 
 KeyValue &KeyValueImpl::put(const std::string &key, int value) {

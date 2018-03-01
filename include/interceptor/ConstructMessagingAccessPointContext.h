@@ -6,10 +6,11 @@
 #include "Namespace.h"
 #include "KeyValue.h"
 #include "MessagingAccessPoint.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
-    class ConstructMessagingAccessPointContext {
+    class ConstructMessagingAccessPointContext : private Uncopyable {
     public:
         virtual boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint() = 0;
 

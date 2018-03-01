@@ -39,7 +39,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             static const std::string TraceId;
 
             static const std::string Stream;
-
         };
 
 END_NAMESPACE_2(io, openmessaging)

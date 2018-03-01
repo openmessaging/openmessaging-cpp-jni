@@ -5,9 +5,10 @@
 
 #include "KeyValue.h"
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, routing)
-    class Operator {
+    class Operator : private Uncopyable {
     public:
         virtual ~Operator() {
 

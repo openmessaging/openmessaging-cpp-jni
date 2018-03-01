@@ -6,10 +6,11 @@
 #include "KeyValue.h"
 #include "Namespace.h"
 #include "OMS.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
-        class Context {
+        class Context : private Uncopyable {
         public:
             virtual ~Context() {
             }

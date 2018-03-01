@@ -1,14 +1,15 @@
 #ifndef OMS_MESSAGING_ACCESS_POINT_INTERCEPTOR_H
 #define OMS_MESSAGING_ACCESS_POINT_INTERCEPTOR_H
 
-#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr.hpp>
 
 #include "Namespace.h"
 #include "MessagingAccessPoint.h"
 #include "ConstructMessagingAccessPointContext.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
-    class MessagingAccessPointInterceptor {
+    class MessagingAccessPointInterceptor : private Uncopyable {
     public:
         virtual boost::shared_ptr<MessagingAccessPoint> constructMessagingAccessPoint(ConstructMessagingAccessPointContext &context) = 0;
     };

@@ -4,10 +4,11 @@
 #include "Context.h"
 #include "Namespace.h"
 #include "Message.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
-    class MessageListener {
+    class MessageListener : private Uncopyable {
     public:
         virtual ~MessageListener() {
 

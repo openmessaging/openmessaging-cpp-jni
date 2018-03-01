@@ -7,10 +7,11 @@
 
 #include "KeyValue.h"
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class SendResult {
+    class SendResult : private Uncopyable {
     public:
         virtual ~SendResult() {
 

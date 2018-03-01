@@ -3,10 +3,11 @@
 
 #include "Namespace.h"
 #include "Message.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class BatchMessageSender {
+    class BatchMessageSender : private Uncopyable {
     public:
         virtual ~BatchMessageSender() {
 

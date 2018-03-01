@@ -2,9 +2,11 @@
 #define OMS_PRODUCER_INTERCEPTOR_H
 
 #include "Namespace.h"
+#include "Uncopyable.h"
+
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
-    class PreSendContext {
+    class PreSendContext : private Uncopyable {
     public:
         virtual ~PreSendContext() {
         }
@@ -16,7 +18,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
         }
     };
 
-    class ProducerInterceptor {
+    class ProducerInterceptor : private Uncopyable {
     public:
         virtual ~ProducerInterceptor() {
 

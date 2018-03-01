@@ -7,6 +7,7 @@
 #include "KeyValue.h"
 #include "BuiltinKeys.h"
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -33,7 +34,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
      * @version OMS 1.0
      * @since OMS 1.0
      */
-    class Message {
+    class Message : private Uncopyable {
     public:
         virtual ~Message() {
 

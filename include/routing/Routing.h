@@ -4,7 +4,6 @@
 #include <string>
 
 #include "ServiceLifecycle.h"
-#include "ServiceLifecycle.h"
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, routing)

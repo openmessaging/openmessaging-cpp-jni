@@ -1,26 +1,27 @@
 #ifndef OMS_PUSH_CONSUMER_INTERCEPTOR_H
 #define OMS_PUSH_CONSUMER_INTERCEPTOR_H
 
+#include <boost/smart_ptr.hpp>
 #include "Namespace.h"
-#include <boost/shared_ptr.hpp>
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
-    class OnMessageBeforeContext {
+    class OnMessageBeforeContext : private Uncopyable {
     public:
         virtual ~OnMessageBeforeContext() {
 
         }
     };
 
-    class OnMessageAfterContext {
+    class OnMessageAfterContext : private Uncopyable {
     public:
         virtual ~OnMessageAfterContext() {
 
         }
     };
 
-    class PushConsumerInterceptor {
+    class PushConsumerInterceptor : private Uncopyable {
     public:
         virtual ~PushConsumerInterceptor() {
 

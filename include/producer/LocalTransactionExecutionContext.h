@@ -2,10 +2,11 @@
 #define OMS_LOCAL_TRANSACTION_EXECUTION_CONTEXT_H
 
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class LocalTransactionExecutionContext {
+    class LocalTransactionExecutionContext : private Uncopyable {
     public:
         virtual ~LocalTransactionExecutionContext() {
 

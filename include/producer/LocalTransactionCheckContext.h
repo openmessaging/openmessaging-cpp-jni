@@ -2,10 +2,11 @@
 #define OMS_LOCAL_TRANSACTION_CHECK_CONTEXT_H
 
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class LocalTransactionCheckContext {
+    class LocalTransactionCheckContext : private Uncopyable {
     public:
         virtual ~LocalTransactionCheckContext() {
 

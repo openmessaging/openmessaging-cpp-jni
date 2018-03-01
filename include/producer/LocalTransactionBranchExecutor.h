@@ -5,10 +5,11 @@
 #include "Message.h"
 #include "producer/LocalTransactionExecutionContext.h"
 #include "producer/LocalTransactionCheckContext.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class LocalTransactionBranchExecutor {
+    class LocalTransactionBranchExecutor : private Uncopyable {
     public:
         virtual ~LocalTransactionBranchExecutor() {
 

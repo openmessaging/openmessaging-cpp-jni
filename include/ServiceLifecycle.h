@@ -2,6 +2,7 @@
 #define OMS_SERVICE_LIFECYCLE_H
 
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -17,7 +18,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
      * @version OMS 1.0
      * @since OMS 1.0
      */
-    class ServiceLifecycle {
+    class ServiceLifecycle : private Uncopyable {
     public:
         virtual void startup() = 0;
 

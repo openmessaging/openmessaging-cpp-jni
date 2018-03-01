@@ -4,12 +4,13 @@
 #include <boost/smart_ptr.hpp>
 
 #include "Namespace.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
     class Future;
 
-    class FutureListener {
+    class FutureListener : private Uncopyable {
     public:
         virtual ~FutureListener() {
 

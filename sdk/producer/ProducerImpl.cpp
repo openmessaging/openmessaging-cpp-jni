@@ -76,7 +76,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
 END_NAMESPACE_3(io, openmessaging, producer)
 
-ProducerImpl::ProducerImpl(jobject proxy, boost::shared_ptr<KeyValue> properties)
+ProducerImpl::ProducerImpl(jobject proxy,
+                           const boost::shared_ptr<KeyValue> &properties)
         : ServiceLifecycleImpl(proxy), _properties(properties) {
     CurrentEnv current;
     const char *clazzProducer = "io/openmessaging/producer/Producer";
@@ -132,8 +133,8 @@ boost::shared_ptr<KeyValue> ProducerImpl::properties() {
     return _properties;
 }
 
-boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> message,
-                                                 boost::shared_ptr<KeyValue> properties) {
+boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
+                                                 const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
 
     boost::shared_ptr<ByteMessageImpl> msg = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
@@ -151,8 +152,8 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
     return sendResult;
 }
 
-boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::string &topic,
-                                                                      scoped_array<char> &body) {
+boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(const std::string &topic,
+                                                                      const scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
     jsize len = static_cast<jint>(body.getLength());
@@ -166,8 +167,8 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(std::strin
     return message;
 }
 
-boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::string &topic,
-                                                                      scoped_array<char> &body) {
+boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(const std::string &topic,
+                                                                      const scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
     jsize len = static_cast<jint>(body.getLength());
@@ -181,10 +182,10 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(std::strin
     return message;
 }
 
-boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> message,
-                                   boost::shared_ptr<LocalTransactionBranchExecutor> executor,
-                                   boost::shared_ptr<void> arg,
-                                   boost::shared_ptr<KeyValue> properties) {
+boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
+                                                 const boost::shared_ptr<LocalTransactionBranchExecutor> &executor,
+                                                 const boost::shared_ptr<void> &arg,
+                                                 const boost::shared_ptr<KeyValue> &properties) {
 
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
     boost::shared_ptr<LocalTransactionBranchExecutorImpl> executorImpl =
@@ -199,8 +200,8 @@ boost::shared_ptr<SendResult> ProducerImpl::send(boost::shared_ptr<Message> mess
 }
 
 boost::shared_ptr<Future>
-ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
-          boost::shared_ptr<KeyValue> properties) {
+ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
+                        const boost::shared_ptr<KeyValue> &properties) {
 
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
 
@@ -233,8 +234,8 @@ ProducerImpl::sendAsync(boost::shared_ptr<Message> message,
     return f_nullptr;
 }
 
-void ProducerImpl::sendOneway(boost::shared_ptr<Message> message,
-                boost::shared_ptr<KeyValue> properties) {
+void ProducerImpl::sendOneway(const boost::shared_ptr<Message> &message,
+                              const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
     if (properties) {
@@ -251,10 +252,10 @@ boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSe
 
 }
 
-void ProducerImpl::addInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) {
+void ProducerImpl::addInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
 
 }
 
-void ProducerImpl::removeInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) {
+void ProducerImpl::removeInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
 
 }

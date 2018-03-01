@@ -2,7 +2,6 @@
 #define OMS_OMS_H
 
 #include <exception>
-
 #include <boost/smart_ptr.hpp>
 
 #include "KeyValue.h"
@@ -16,7 +15,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         template<typename T>
         class scoped_array {
         public:
-            scoped_array(T *ptr, int length) : ptr_(NULL), length_(length) {
+            scoped_array(const T *ptr, int length) : ptr_(NULL), length_(length) {
                 ptr_ = new T[length_];
                 memcpy(ptr_, ptr, length_);
             }
@@ -45,11 +44,11 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                 delete[](ptr_);
             }
 
-            int getLength() {
+            int getLength() const {
                 return length_;
             }
 
-            T* getRawPtr() {
+            const T* getRawPtr() const {
                 return ptr_;
             }
 

@@ -23,13 +23,13 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual boost::shared_ptr<KeyValue> properties() = 0;
 
-        virtual boost::shared_ptr<SendResult> send(boost::shared_ptr<Message> message,
-                                                   boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+        virtual boost::shared_ptr<SendResult> send(const boost::shared_ptr<Message> &message,
+                                                   const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual boost::shared_ptr<SendResult> send(boost::shared_ptr<Message> message,
-                                                   boost::shared_ptr<LocalTransactionBranchExecutor> executor,
-                                                   boost::shared_ptr<void> arg,
-                                                   boost::shared_ptr<KeyValue> properties) = 0;
+        virtual boost::shared_ptr<SendResult> send(const boost::shared_ptr<Message> &message,
+                                                   const boost::shared_ptr<LocalTransactionBranchExecutor> &executor,
+                                                   const boost::shared_ptr<void> &arg,
+                                                   const boost::shared_ptr<KeyValue> &properties) = 0;
 
         /**
          * Asynchronously send a message to its destination, which is specified in system headers.
@@ -43,17 +43,17 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * @return Smart pointer to Future instance.
          */
         virtual boost::shared_ptr<Future>
-        sendAsync(boost::shared_ptr<Message> message,
-                                 boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+        sendAsync(const boost::shared_ptr<Message> &message,
+                  const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual void sendOneway(boost::shared_ptr<Message> message,
-                                boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+        virtual void sendOneway(const boost::shared_ptr<Message> &message,
+                                const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
         virtual boost::shared_ptr<BatchMessageSender> createSequenceBatchMessageSender() = 0;
 
-        virtual void addInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) = 0;
+        virtual void addInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) = 0;
 
-        virtual void removeInterceptor(boost::shared_ptr<interceptor::ProducerInterceptor> interceptor) = 0;
+        virtual void removeInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) = 0;
     };
 END_NAMESPACE_3(io, openmessaging, producer)
 #endif //OMS_PRODUCER_H

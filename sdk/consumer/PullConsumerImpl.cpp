@@ -30,7 +30,7 @@ boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
     return ptr;
 }
 
-boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> properties) {
+boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
 
     jobject jMessageLocal;
@@ -51,7 +51,8 @@ boost::shared_ptr<Message> PullConsumerImpl::poll(boost::shared_ptr<KeyValue> pr
     return msg_nullptr;
 }
 
-void PullConsumerImpl::ack(const std::string &messageId, boost::shared_ptr<KeyValue> properties) {
+void PullConsumerImpl::ack(const std::string &messageId,
+                           const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
 
     jstring msgId = current.newStringUTF(messageId.c_str());

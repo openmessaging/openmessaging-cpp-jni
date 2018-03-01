@@ -97,9 +97,9 @@ bool PushConsumerImpl::isSuspended() {
     return suspended;
 }
 
-PushConsumer &PushConsumerImpl::attachQueue(std::string &queueName,
-                                            boost::shared_ptr<MessageListener> listener,
-                                            boost::shared_ptr<KeyValue> properties) {
+PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
+                                            const boost::shared_ptr<MessageListener> &listener,
+                                            const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv ctx;
 
     jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
@@ -120,7 +120,7 @@ PushConsumer &PushConsumerImpl::attachQueue(std::string &queueName,
     return *this;
 }
 
-PushConsumer &PushConsumerImpl::detachQueue(std::string &queueName) {
+PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
 
     {
         boost::lock_guard<boost::mutex> lk(listener_mutex);
@@ -136,10 +136,10 @@ PushConsumer &PushConsumerImpl::detachQueue(std::string &queueName) {
     return *this;
 }
 
-void PushConsumerImpl::addInterceptor(boost::shared_ptr<PushConsumerInterceptor> interceptor) {
+void PushConsumerImpl::addInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
 
 }
 
-void PushConsumerImpl::removeInterceptor(boost::shared_ptr<PushConsumerInterceptor> interceptor) {
+void PushConsumerImpl::removeInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
 
 }

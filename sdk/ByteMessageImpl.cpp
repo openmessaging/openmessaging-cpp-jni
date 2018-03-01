@@ -71,7 +71,7 @@ scoped_array<char> ByteMessageImpl::getBody() {
     return array;
 }
 
-ByteMessage& ByteMessageImpl::setBody(scoped_array<char> &body) {
+ByteMessage& ByteMessageImpl::setBody(const scoped_array<char> &body) {
     CurrentEnv current;
     jbyteArray jBody = current.env->NewByteArray(body.getLength());
     current.env->SetByteArrayRegion(jBody, 0, body.getLength(), reinterpret_cast<const jbyte *>(body.getRawPtr()));

@@ -63,8 +63,8 @@ std::string MessagingAccessPointImpl::implVersion() {
     return result;
 }
 
-boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
-        boost::shared_ptr<KeyValue> properties) {
+boost::shared_ptr<Producer>
+MessagingAccessPointImpl::createProducer(const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
     jobject producerLocal;
     if (properties) {
@@ -81,7 +81,7 @@ boost::shared_ptr<Producer> MessagingAccessPointImpl::createProducer(
 }
 
 boost::shared_ptr<consumer::PushConsumer>
-MessagingAccessPointImpl::createPushConsumer(boost::shared_ptr<KeyValue> properties) {
+MessagingAccessPointImpl::createPushConsumer(const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
     jobject pushConsumerLocal;
     if (properties) {
@@ -98,7 +98,8 @@ MessagingAccessPointImpl::createPushConsumer(boost::shared_ptr<KeyValue> propert
 }
 
 boost::shared_ptr<consumer::PullConsumer>
-MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties) {
+MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
+                                             const boost::shared_ptr<KeyValue> &properties) {
     CurrentEnv current;
     jobject pullConsumerLocal;
 
@@ -129,7 +130,7 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName, boost
 
 boost::shared_ptr<consumer::StreamingConsumer>
 MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName,
-                                                  boost::shared_ptr<KeyValue> properties) {
+                                                  const boost::shared_ptr<KeyValue> &properties) {
 
 }
 
@@ -137,11 +138,11 @@ boost::shared_ptr<ResourceManager> MessagingAccessPointImpl::getResourceManager(
 
 }
 
-void MessagingAccessPointImpl::addObserver(boost::shared_ptr<observer::Observer> observer) {
+void MessagingAccessPointImpl::addObserver(const boost::shared_ptr<observer::Observer> &observer) {
 
 }
 
-void MessagingAccessPointImpl::removeObserver(boost::shared_ptr<observer::Observer> observer) {
+void MessagingAccessPointImpl::removeObserver(const boost::shared_ptr<observer::Observer> &observer) {
 
 }
 

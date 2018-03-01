@@ -16,22 +16,24 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         std::string implVersion();
 
         boost::shared_ptr<producer::Producer>
-        createProducer(boost::shared_ptr<KeyValue> properties);
+        createProducer(const boost::shared_ptr<KeyValue> &properties);
 
         boost::shared_ptr<consumer::PushConsumer>
-        createPushConsumer(boost::shared_ptr<KeyValue> properties);
+        createPushConsumer(const boost::shared_ptr<KeyValue> &properties);
 
         boost::shared_ptr<consumer::PullConsumer>
-        createPullConsumer(const std::string &queueName, boost::shared_ptr<KeyValue> properties);
+        createPullConsumer(const std::string &queueName,
+                           const boost::shared_ptr<KeyValue> &properties);
 
-        boost::shared_ptr<consumer::StreamingConsumer> createStreamingConsumer(const std::string &queueName,
-                                                                               boost::shared_ptr<KeyValue> properties);
+        boost::shared_ptr<consumer::StreamingConsumer>
+        createStreamingConsumer(const std::string &queueName,
+                                const boost::shared_ptr<KeyValue> &properties);
 
         boost::shared_ptr<ResourceManager> getResourceManager();
 
-        void addObserver(boost::shared_ptr<observer::Observer> observer);
+        void addObserver(const boost::shared_ptr<observer::Observer> &observer);
 
-        void removeObserver(boost::shared_ptr<observer::Observer> observer);
+        void removeObserver(const boost::shared_ptr<observer::Observer> &observer);
 
         std::vector<boost::shared_ptr<producer::Producer> > producers();
 

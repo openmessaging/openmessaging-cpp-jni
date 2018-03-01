@@ -36,7 +36,9 @@ else ()
             boost_date_time-mt
             boost_system-mt
             boost_thread-mt
-            boost_chrono-mt)
+            boost_chrono-mt
+            boost_filesystem-mt
+            )
 endif ()
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES

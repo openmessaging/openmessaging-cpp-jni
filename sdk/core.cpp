@@ -1,13 +1,14 @@
-#include <dirent.h>
 #include <sys/types.h>
-#include <sys/dirent.h>
 #include <pthread.h>
+
+#include <boost/filesystem.hpp>
 
 #include "core.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
 using namespace std;
+using namespace boost::filesystem;
 
 JavaVM *jvm;
 
@@ -133,16 +134,19 @@ bool stringEndsWith(const std::string &s, const std::string &ext) {
 }
 
 std::vector<std::string> list(const std::string &dir, bool (*f)(const std::string&)) {
-    DIR* pDir;
-    struct dirent *entry;
+    path p(dir);
     vector<string> result;
-    if ((pDir = opendir(dir.c_str())) != NULL) {
-        while((entry = readdir(pDir)) != NULL) {
-            if (f(entry->d_name)) {
-                result.push_back(entry->d_name);
+    if (is_directory(p)) {
+        directory_iterator iterator(p);
+        directory_iterator end;
+        while (iterator != end) {
+            directory_entry &entry = *iterator;
+            string full_file_name = entry.path().string();
+            if (f(full_file_name)) {
+                result.push_back(full_file_name);
             }
+            iterator++;
         }
-        closedir(pDir);
     }
     return result;
 }

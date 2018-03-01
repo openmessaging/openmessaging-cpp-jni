@@ -1,6 +1,7 @@
-#include <exception>
 #include <jni.h>
+
 #include "core.h"
+#include "OMSException.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
     extern JavaVM *jvm;
@@ -48,7 +49,7 @@ jobject CurrentEnv::callObjectMethod(jobject obj, jmethodID mid, ...) {
     if (checkAndClearException()) {
         const char* msg = "Exception raised while call Java Methods: callObjectMethod";
         BOOST_LOG_TRIVIAL(error) << msg;
-        throw std::runtime_error(msg);
+        throw OMSException(msg);
     }
 
     return result;
@@ -64,7 +65,7 @@ jobject CurrentEnv::callStaticObjectMethod(jclass clazz, jmethodID mid, ...) {
     if (checkAndClearException()) {
         const char* msg = "Exception raised while call Java Methods: callObjectMethod";
         BOOST_LOG_TRIVIAL(error) << msg;
-        throw std::runtime_error(msg);
+        throw OMSException(msg);
     }
 
     return result;
@@ -79,7 +80,7 @@ void CurrentEnv::callVoidMethod(jobject obj, jmethodID mid, ...) {
     if (checkAndClearException()) {
         const char* msg = "Exception raised while call Java Method: callVoidMethod";
         BOOST_LOG_TRIVIAL(error) << msg;
-        throw std::runtime_error(msg);
+        throw OMSException(msg);
     }
 }
 
@@ -90,7 +91,7 @@ bool CurrentEnv::callBooleanMethod(jobject obj, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        throw std::runtime_error("Exception raised while calling Java Method: callBooleanMethod");
+        throw OMSException("Exception raised while calling Java Method: callBooleanMethod");
     }
 
     return result;
@@ -103,7 +104,7 @@ int CurrentEnv::callIntMethod(jobject obj, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        throw std::runtime_error("Exception raised while calling Java Method: callBooleanMethod");
+        throw OMSException("Exception raised while calling Java Method: callBooleanMethod");
     }
 
     return result;
@@ -116,7 +117,7 @@ long CurrentEnv::callLongMethod(jobject obj, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        throw std::runtime_error("Exception raised while calling Java Method: callBooleanMethod");
+        throw OMSException("Exception raised while calling Java Method: callBooleanMethod");
     }
 
     return result;
@@ -130,7 +131,7 @@ double CurrentEnv::callDoubleMethod(jobject obj, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        throw std::runtime_error("Exception raised while calling Java Method: callBooleanMethod");
+        throw OMSException("Exception raised while calling Java Method: callBooleanMethod");
     }
 
     return result;
@@ -142,19 +143,19 @@ jclass CurrentEnv::findClass(const char *clazz) {
         std::string msg = "Class: ";
         msg += clazz;
         msg += " is not found in classpath";
-        throw std::runtime_error(msg);
+        throw OMSException(msg);
     }
     return newGlobalRef(result);
 }
 
 jclass CurrentEnv::getObjectClass(jobject obj) {
     if (env->IsSameObject(NULL, obj)) {
-        throw std::runtime_error("object is null");
+        throw OMSException("object is null");
     }
 
     jclass clazz = env->GetObjectClass(obj);
     if (checkAndClearException()) {
-        throw std::runtime_error("Fail to execute getObjectClass");
+        throw OMSException("Fail to execute getObjectClass");
     }
 
     return newGlobalRef(clazz);
@@ -171,7 +172,7 @@ jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const char* 
     // For now, we just throw an exception.
     // TODO: log and warn this situation.
     if (NULL == mid) {
-        throw std::runtime_error("Method is not found");
+        throw OMSException("Method is not found");
     }
 
     return mid;
@@ -183,7 +184,7 @@ jobject CurrentEnv::newObject(jclass klass, jmethodID mid, ...) {
     jobject result = env->NewObjectV(klass, mid, args);
     va_end(args);
     if (NULL == result) {
-        throw std::runtime_error("Fail to create new object");
+        throw OMSException("Fail to create new object");
     }
 
     checkAndClearException();
@@ -197,7 +198,7 @@ jstring CurrentEnv::newStringUTF(const char *buf, bool global) {
     if (NULL == result) {
         // Exception must have been raised.
         checkAndClearException();
-        throw std::runtime_error("Fail to create a Java string: it's highly possible that system is running out of memory");
+        throw OMSException("Fail to create a Java string: it's highly possible that system is running out of memory");
     }
 
     if (global) {

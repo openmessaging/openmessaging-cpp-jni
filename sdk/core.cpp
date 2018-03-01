@@ -114,7 +114,7 @@ std::string expand_class_path(const std::string& path_with_wildcard) {
     if (stringEndsWith(path_with_wildcard, wildcard)) {
         const std::string dir = path_with_wildcard.substr(0, path_with_wildcard.size() - wildcard.size());
         std::vector<std::string> files = list(dir, file_name_filter);
-        for (int i = 0; i < files.size(); ++i) {
+        for (std::vector<std::string>::size_type i = 0; i < files.size(); ++i) {
             if (result.empty()) {
                 result = dir + files[i];
             } else {

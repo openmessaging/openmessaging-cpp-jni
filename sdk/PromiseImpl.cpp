@@ -97,8 +97,8 @@ bool PromiseImpl::set(boost::shared_ptr<producer::SendResult> &value) {
         _cv.notify_all();
     }
 
-    for (std::vector<boost::shared_ptr<FutureListener> >::const_iterator it = _listeners.cbegin();
-        it != _listeners.cend();
+    for (std::vector<boost::shared_ptr<FutureListener> >::iterator it = _listeners.begin();
+        it != _listeners.end();
         it++) {
         (*it)->operationComplete(*this);
     }

@@ -65,7 +65,7 @@ TEST_F(KeyValueImplTest, testKeySet) {
     std::set<std::string> keys = kvPtr->keySet();
     ASSERT_EQ(2, keys.size());
 
-    for(std::set<std::string>::const_iterator it = keys.cbegin(); it != keys.cend(); it++) {
+    for(std::set<std::string>::iterator it = keys.begin(); it != keys.end(); it++) {
         std::cout << *it << std::endl;
     }
 }

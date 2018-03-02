@@ -1,6 +1,11 @@
 #ifndef OMS_CURRENT_ENV_H
 #define OMS_CURRENT_ENV_H
 
+#include <jni.h>
+
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+
 #include "Namespace.h"
 #include "Uncopyable.h"
 #include "OMSException.h"
@@ -31,6 +36,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         jobject callStaticObjectMethod(jclass clazz, jmethodID mid, ...);
 
         void callVoidMethod(jobject obj, jmethodID mid, ...);
+
+        void callStaticVoidMethod(jclass clazz, jmethodID mid, ...);
 
         bool callBooleanMethod(jobject obj, jmethodID mid, ...);
 

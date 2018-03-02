@@ -34,7 +34,6 @@ TEST(MessagingAccessPointFactoryTest, testCtor) {
     boost::shared_ptr<producer::SendResult> sendResult = producer->send(message);
 
     cout << sendResult->messageId() << endl;
-
 }
 
 TEST(MessagingAccessPointFactoryTest, testCreatePullConsumer) {

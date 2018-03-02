@@ -18,6 +18,7 @@ add_executable(runUnitTests
         ProducerImplTest.cpp
         PullConsumerImplTest.cpp
         PushConsumerImplTest.cpp
+        ServerTest.cpp
         )
 
 # Standard linking to gtest stuff.

@@ -78,7 +78,20 @@ void CurrentEnv::callVoidMethod(jobject obj, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        const char* msg = "Exception raised while call Java Method: callVoidMethod";
+        const char *msg = "Exception raised while call Java Method: callVoidMethod";
+        BOOST_LOG_TRIVIAL(error) << msg;
+        throw OMSException(msg);
+    }
+}
+
+void CurrentEnv::callStaticVoidMethod(jclass clazz, jmethodID mid, ...) {
+    va_list args;
+    va_start(args, mid);
+    env->CallStaticVoidMethodV(clazz, mid, args);
+    va_end(args);
+
+    if (checkAndClearException()) {
+        const char *msg = "Exception raised while call Java Method: callVoidMethod";
         BOOST_LOG_TRIVIAL(error) << msg;
         throw OMSException(msg);
     }

@@ -13,9 +13,13 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     class BaseTest : public ::testing::Test {
     public:
-
         void SetUp() {
             Initialize();
+
+            static bool started = false;
+            if (started) {
+                return;
+            }
             CurrentEnv context;
             const char* klassNameSrvStartup = "org/apache/rocketmq/namesrv/NamesrvStartup";
             classNamesrvStartup = context.findClass(klassNameSrvStartup);
@@ -44,6 +48,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             boost::this_thread::sleep(boost::posix_time::seconds(30));
 
             std::cout << "Sleep completes" << std::endl;
+
+            started = true;
         }
 
         void TearDown() {

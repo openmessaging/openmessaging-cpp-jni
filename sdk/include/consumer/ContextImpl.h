@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual boost::shared_ptr<KeyValue> properties();
 
-        virtual void ack(boost::shared_ptr<KeyValue> properties);
+        virtual void ack(boost::shared_ptr<KeyValue> props);
 
     private:
         jobject _proxy;

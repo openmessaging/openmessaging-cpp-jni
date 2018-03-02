@@ -24,10 +24,10 @@ boost::shared_ptr<KeyValue> ContextImpl::properties() {
     return boost::make_shared<KeyValueImpl>(jProps);
 }
 
-void ContextImpl::ack(boost::shared_ptr<KeyValue> properties) {
+void ContextImpl::ack(boost::shared_ptr<KeyValue> props) {
     CurrentEnv current;
-    if (properties) {
-        boost::shared_ptr<KeyValueImpl> kvImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    if (props) {
+        boost::shared_ptr<KeyValueImpl> kvImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callVoidMethod(_proxy, midAck2, kvImpl->getProxy());
     } else {
         current.callVoidMethod(_proxy, midAck);

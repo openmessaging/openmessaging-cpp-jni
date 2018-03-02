@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
             virtual boost::shared_ptr<KeyValue> properties() = 0;
 
-            virtual void ack(boost::shared_ptr<KeyValue> properties = kv_nullptr) = 0;
+            virtual void ack(boost::shared_ptr<KeyValue> props = kv_nullptr) = 0;
         };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

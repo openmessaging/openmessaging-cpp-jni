@@ -6,37 +6,37 @@ using namespace io::openmessaging::consumer;
 
 
 StreamImpl::StreamImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
-    CurrentEnv current;
+    CurrentEnv ctx;
     const char *klassStream = "io/openmessaging/consumer/Stream";
-    classStream = current.findClass(klassStream);
-    midProperties = current.getMethodId(classStream, "properties", "()Lio/openmessaging/KeyValue;");
+    classStream = ctx.findClass(klassStream);
+    midProperties = ctx.getMethodId(classStream, "properties", "()Lio/openmessaging/KeyValue;");
 }
 
 StreamImpl::~StreamImpl() {
-    CurrentEnv current;
-    current.deleteRef(classStream);
+    CurrentEnv ctx;
+    ctx.deleteRef(classStream);
 }
 
 boost::shared_ptr<KeyValue> StreamImpl::properties() {
-    CurrentEnv current;
-    jobject kv = current.callObjectMethod(_proxy, midProperties);
-    boost::shared_ptr<KeyValue> pKV = boost::make_shared<KeyValueImpl>(current.env->NewGlobalRef(kv));
-    current.deleteRef(kv);
+    CurrentEnv ctx;
+    jobject kv = ctx.callObjectMethod(_proxy, midProperties);
+    boost::shared_ptr<KeyValue> pKV = boost::make_shared<KeyValueImpl>(ctx.newGlobalRef(kv));
+    ctx.deleteRef(kv);
     return pKV;
 }
 
 boost::shared_ptr<MessageIterator> StreamImpl::current() {
-
+    throw OMSException("Not Implemented");
 }
 
 boost::shared_ptr<MessageIterator> StreamImpl::begin() {
-
+    throw OMSException("Not Implemented");
 }
 
 boost::shared_ptr<MessageIterator> StreamImpl::end() {
-
+    throw OMSException("Not Implemented");
 }
 
 boost::shared_ptr<MessageIterator> StreamImpl::seekByTime(long timestamp) {
-
+    throw OMSException("Not Implemented");
 }

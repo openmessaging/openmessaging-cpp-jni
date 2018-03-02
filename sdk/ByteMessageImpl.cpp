@@ -51,8 +51,8 @@ boost::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
 
 boost::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     CurrentEnv current;
-    jobject userHeaders = current.callObjectMethod(objectByteMessage, midUserHeaders);
-    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.newGlobalRef(userHeaders));
+    jobject jUserHeaders = current.callObjectMethod(objectByteMessage, midUserHeaders);
+    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.newGlobalRef(jUserHeaders));
     return headers;
 }
 

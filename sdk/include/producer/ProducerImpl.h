@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
     public:
 
         ProducerImpl(jobject proxy,
-                     const boost::shared_ptr<KeyValue> &properties);
+                     const boost::shared_ptr<KeyValue> &props);
 
         virtual ~ProducerImpl();
 

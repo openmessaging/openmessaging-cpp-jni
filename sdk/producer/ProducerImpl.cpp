@@ -77,8 +77,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 END_NAMESPACE_3(io, openmessaging, producer)
 
 ProducerImpl::ProducerImpl(jobject proxy,
-                           const boost::shared_ptr<KeyValue> &properties)
-        : ServiceLifecycleImpl(proxy), _properties(properties) {
+                           const boost::shared_ptr<KeyValue> &props)
+        : ServiceLifecycleImpl(proxy), _properties(props) {
     CurrentEnv current;
     const char *clazzProducer = "io/openmessaging/producer/Producer";
     const char *clazzProducerAdaptor = "io/openmessaging/producer/ProducerAdaptor";
@@ -134,13 +134,13 @@ boost::shared_ptr<KeyValue> ProducerImpl::properties() {
 }
 
 boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
-                                                 const boost::shared_ptr<KeyValue> &properties) {
+                                                 const boost::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     boost::shared_ptr<ByteMessageImpl> msg = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
     jobject jSendResult;
-    if (properties) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    if (props) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
         jobject ret = current.callObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
         jSendResult = current.newGlobalRef(ret);
     } else {
@@ -185,12 +185,12 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(const std:
 boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
                                                  const boost::shared_ptr<LocalTransactionBranchExecutor> &executor,
                                                  const boost::shared_ptr<void> &arg,
-                                                 const boost::shared_ptr<KeyValue> &properties) {
+                                                 const boost::shared_ptr<KeyValue> &props) {
 
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
     boost::shared_ptr<LocalTransactionBranchExecutorImpl> executorImpl =
             boost::dynamic_pointer_cast<LocalTransactionBranchExecutorImpl>(executor);
-    boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
     CurrentEnv current;
     jobject jSendResult = current.callObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
                                                         executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
@@ -201,7 +201,7 @@ boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message
 
 boost::shared_ptr<Future>
 ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
-                        const boost::shared_ptr<KeyValue> &properties) {
+                        const boost::shared_ptr<KeyValue> &props) {
 
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
 
@@ -214,8 +214,8 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
             boost::interprocess::scoped_lock<boost::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
-        if (properties) {
-            boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+        if (props) {
+            boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
             if (!propertiesImpl) {
                 BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";
             }
@@ -235,11 +235,11 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
 }
 
 void ProducerImpl::sendOneway(const boost::shared_ptr<Message> &message,
-                              const boost::shared_ptr<KeyValue> &properties) {
+                              const boost::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
     boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
-    if (properties) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    if (props) {
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callVoidMethod(_proxy, midSendOneway2, messageImpl->getProxy(), kv->getProxy());
     } else {
         current.callVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
@@ -249,13 +249,13 @@ void ProducerImpl::sendOneway(const boost::shared_ptr<Message> &message,
 }
 
 boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {
-
+    throw OMSException("Not Implemented");
 }
 
 void ProducerImpl::addInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
-
+    throw OMSException("Not Implemented");
 }
 
 void ProducerImpl::removeInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
-
+    throw OMSException("Not Implemented");
 }

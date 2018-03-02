@@ -32,6 +32,7 @@ void init0() {
     jOptions->addOption("-Xmx1G");
 //    jOptions->addOption("-verbose");
 //    jOptions->addOption("-Xcheck:jni");
+    jOptions->addOption("-Drocketmq.namesrv.addr=localhost:9876");
     jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
 
     int optionCount = jOptions->options.size();

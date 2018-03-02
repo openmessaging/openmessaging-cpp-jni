@@ -1,6 +1,8 @@
 #ifndef OMS_OMS_H
 #define OMS_OMS_H
 
+#include <cstring>
+
 #include <boost/smart_ptr.hpp>
 
 #include "KeyValue.h"
@@ -26,7 +28,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             scoped_array(const scoped_array& other) {
                 ptr_ = new T[other.length_];
                 length_ = other.length_;
-                memcpy(ptr_, other.ptr_, other.length_ * sizeof(T));
+                std::memcpy(ptr_, other.ptr_, other.length_ * sizeof(T));
             }
 
             // copy assignment
@@ -35,7 +37,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                     delete[](ptr_);
                     length_ = other.length_;
                     ptr_ = new T[length_];
-                    memcpy(ptr_, other.ptr_, length_ * sizeof(T));
+                    std::memcpy(ptr_, other.ptr_, length_ * sizeof(T));
                 }
                 return *this;
             }

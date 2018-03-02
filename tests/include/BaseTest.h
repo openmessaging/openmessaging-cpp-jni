@@ -41,7 +41,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             std::cout << "Wait for 30 seconds till MQ cluster is properly setup" << std::endl;
 
-            boost::this_thread::sleep(boost::posix_time::seconds(300));
+            boost::this_thread::sleep(boost::posix_time::seconds(30));
 
             std::cout << "Sleep completes" << std::endl;
         }

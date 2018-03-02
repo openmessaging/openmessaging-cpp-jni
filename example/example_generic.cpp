@@ -10,7 +10,7 @@ public:
 
     template <typename T>
     Example& put(const string& key, T value) {
-        m[key] = to_string(value);
+        m[key] = boost::lexical_cast<std::string>(value);
         return *this;
     }
 

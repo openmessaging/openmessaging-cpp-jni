@@ -65,7 +65,7 @@ Future& PromiseImpl::addListener(boost::shared_ptr<FutureListener> listener) {
 }
 
 std::exception& PromiseImpl::getThrowable() {
-    return e;
+    return m_e;
 }
 
 bool PromiseImpl::cancel(bool interruptIfRunning) {
@@ -110,7 +110,7 @@ bool PromiseImpl::setFailure(std::exception &e) {
     boost::lock_guard<boost::mutex> lk(_mtx);
     done = true;
     failed = true;
-    this->e = e;
+    m_e = e;
     return false;
 }
 

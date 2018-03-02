@@ -16,10 +16,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual boost::shared_ptr<KeyValue> properties();
 
-        virtual boost::shared_ptr<Message> poll(const boost::shared_ptr<KeyValue> &properties);
+        virtual boost::shared_ptr<Message> poll(const boost::shared_ptr<KeyValue> &props);
 
         virtual void ack(const std::string &messageId,
-                         const boost::shared_ptr<KeyValue> &properties);
+                         const boost::shared_ptr<KeyValue> &props);
 
         jobject getProxy();
 

@@ -34,7 +34,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool done;
         bool failed;
         bool cancelled;
-        std::exception e;
+        std::exception m_e;
         std::vector<boost::shared_ptr<FutureListener> > _listeners;
         boost::mutex _mtx;
         boost::condition_variable _cv;

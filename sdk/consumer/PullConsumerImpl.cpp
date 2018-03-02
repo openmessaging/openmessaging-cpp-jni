@@ -30,12 +30,12 @@ boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
     return ptr;
 }
 
-boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyValue> &properties) {
+boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     jobject jMessageLocal;
-    if (properties) {
-        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    if (props) {
+        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(props);
         jMessageLocal = current.callObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
         jMessageLocal = current.callObjectMethod(_proxy, midPoll);
@@ -52,12 +52,12 @@ boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyVal
 }
 
 void PullConsumerImpl::ack(const std::string &messageId,
-                           const boost::shared_ptr<KeyValue> &properties) {
+                           const boost::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     jstring msgId = current.newStringUTF(messageId.c_str());
-    if (properties) {
-        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
+    if (props) {
+        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
         current.callObjectMethod(_proxy, midAck, msgId);

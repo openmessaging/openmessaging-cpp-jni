@@ -43,9 +43,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             context.callStaticVoidMethod(classBrokerStartup, midBrokerStartupMain, args);
 
-            std::cout << "Wait for 30 seconds till MQ cluster is properly setup" << std::endl;
+            std::cout << "Wait for 3 seconds till MQ cluster is properly setup" << std::endl;
 
-            boost::this_thread::sleep(boost::posix_time::seconds(30));
+            boost::this_thread::sleep(boost::posix_time::seconds(3));
 
             std::cout << "Sleep completes" << std::endl;
 

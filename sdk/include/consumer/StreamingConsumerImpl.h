@@ -20,13 +20,13 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual std::vector<std::string> consumers();
 
-        virtual MessageIterator current();
+        virtual boost::shared_ptr<MessageIterator> current();
 
-        virtual MessageIterator begin();
+        virtual boost::shared_ptr<MessageIterator> begin();
 
-        virtual MessageIterator end();
+        virtual boost::shared_ptr<MessageIterator> end();
 
-        virtual MessageIterator seekByTime(long timestamp);
+        virtual boost::shared_ptr<MessageIterator> seekByTime(long timestamp);
 
     private:
         jclass classStreamingConsumer;

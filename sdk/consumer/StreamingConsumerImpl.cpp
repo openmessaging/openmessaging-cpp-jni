@@ -15,29 +15,29 @@ StreamingConsumerImpl::~StreamingConsumerImpl() {
 }
 
 boost::shared_ptr<KeyValue> StreamingConsumerImpl::properties() {
-
+    throw OMSException("Not Implemented");
 }
 
 std::vector<std::string> StreamingConsumerImpl::streams() {
-
+    throw OMSException("Not Implemented");
 }
 
 std::vector<std::string> StreamingConsumerImpl::consumers() {
-
+    throw OMSException("Not Implemented");
 }
 
-consumer::MessageIterator StreamingConsumerImpl::current() {
-
+boost::shared_ptr<MessageIterator> StreamingConsumerImpl::current() {
+    throw OMSException("Not Implemented");
 }
 
-consumer::MessageIterator StreamingConsumerImpl::begin() {
-
+boost::shared_ptr<MessageIterator> StreamingConsumerImpl::begin() {
+    throw OMSException("Not Implemented");
 }
 
-consumer::MessageIterator StreamingConsumerImpl::end() {
-
+boost::shared_ptr<MessageIterator> StreamingConsumerImpl::end() {
+    throw OMSException("Not Implemented");
 }
 
-consumer::MessageIterator StreamingConsumerImpl::seekByTime(long timestamp) {
-
+boost::shared_ptr<MessageIterator> StreamingConsumerImpl::seekByTime(long timestamp) {
+    throw OMSException("Not Implemented");
 }

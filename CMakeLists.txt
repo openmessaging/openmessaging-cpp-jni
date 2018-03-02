@@ -40,7 +40,7 @@ if(TEST)
     add_subdirectory(tests)
 endif()
 
-option(BENCHMARK "Build benchmark test cases" ON)
+option(BENCHMARK "Build benchmark test cases" OFF)
 if (BENCHMARK)
     add_subdirectory(third_party/benchmark)
     include_directories(third_party/benchmark/include)

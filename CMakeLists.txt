@@ -42,5 +42,7 @@ endif()
 
 option(BENCHMARK "Build benchmark test cases" ON)
 if (BENCHMARK)
+    add_subdirectory(third_party/benchmark)
+    include_directories(third_party/benchmark/include)
     add_subdirectory(benchmark)
 endif ()

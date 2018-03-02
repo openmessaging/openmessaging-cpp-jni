@@ -99,7 +99,7 @@ bool PushConsumerImpl::isSuspended() {
 
 PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
                                             const boost::shared_ptr<MessageListener> &listener,
-                                            const boost::shared_ptr<KeyValue> &properties) {
+                                            const boost::shared_ptr<KeyValue> &props) {
     CurrentEnv ctx;
 
     jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
@@ -137,9 +137,9 @@ PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
 }
 
 void PushConsumerImpl::addInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
-
+    throw OMSException("Not Implemented");
 }
 
 void PushConsumerImpl::removeInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
-
+    throw OMSException("Not Implemented");
 }

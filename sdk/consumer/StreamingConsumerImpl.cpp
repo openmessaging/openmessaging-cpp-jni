@@ -4,14 +4,14 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
 
 StreamingConsumerImpl::StreamingConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
-    CurrentEnv current;
+    CurrentEnv ctx;
     const char *klassStreamingConsumer = "io/openmessaging/consumer/StreamingConsumer";
-    classStreamingConsumer = current.findClass(klassStreamingConsumer);
+    classStreamingConsumer = ctx.findClass(klassStreamingConsumer);
 }
 
 StreamingConsumerImpl::~StreamingConsumerImpl() {
-    CurrentEnv current;
-    current.deleteRef(classStreamingConsumer);
+    CurrentEnv ctx;
+    ctx.deleteRef(classStreamingConsumer);
 }
 
 boost::shared_ptr<KeyValue> StreamingConsumerImpl::properties() {

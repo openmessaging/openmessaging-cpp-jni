@@ -31,6 +31,7 @@ add_definitions(-DBOOST_ALL_DYN_LINK=1)
 if (Boost_LIBRARIES)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${Boost_LIBRARIES})
 else ()
+    link_directories(${Boost_LIBRARY_DIRS})
     target_link_libraries(${CMAKE_PROJECT_NAME}
             boost_log-mt
             boost_date_time-mt

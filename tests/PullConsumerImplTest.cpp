@@ -5,55 +5,59 @@
 #include "core.h"
 #include "KeyValueImpl.h"
 #include "NonStandardKeys.h"
+#include "BaseTest.h"
 
-TEST(PullConsumerImplTest, testCreatePullConsumer) {
+BEGIN_NAMESPACE_2(io, openmessaging)
 
-    using namespace io::openmessaging;
     using namespace std;
 
-    string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-    string driverClassKey = "oms.driver.impl";
-    string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
+    class PullConsumerImplTest : public BaseTest {
+    };
 
-    Initialize();
+    TEST_F(PullConsumerImplTest, testCreatePullConsumer) {
+        string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+        string driverClassKey = "oms.driver.impl";
+        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-    boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
-    properties->put(driverClassKey, driverClass);
+        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        properties->put(driverClassKey, driverClass);
 
-    boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
-            MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
+        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+                MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-    // First send a message
-    boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
-    producer->startup();
+        // First send a message
+        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        producer->startup();
 
-    string topic = "TopicTest";
-    const char* data = "HELLO";
-    scoped_array<char> body(const_cast<char *>(data), strlen(data));
-    boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
-    producer->send(message);
-    // Send message OK
+        string topic = "TopicTest";
+        const char* data = "HELLO";
+        scoped_array<char> body(const_cast<char *>(data), strlen(data));
+        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        producer->send(message);
+        // Send message OK
 
-    std::string queueName("TopicTest");
+        std::string queueName("TopicTest");
 
-    boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
-    const std::string value = "OMS_CONSUMER";
-    kv->put(NonStandardKeys::CONSUMER_GROUP, value);
+        boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
+        const std::string value = "OMS_CONSUMER";
+        kv->put(NonStandardKeys::CONSUMER_GROUP, value);
 
-    boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
-    ASSERT_TRUE(pullConsumer);
+        ASSERT_TRUE(pullConsumer);
 
-    pullConsumer->startup();
+        pullConsumer->startup();
 
-    while (true) {
-        boost::shared_ptr<Message> msg = pullConsumer->poll();
-        if (msg) {
-            boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
-            std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
-            ASSERT_TRUE(!msgId.empty());
-            ASSERT_NO_THROW(pullConsumer->ack(msgId));
-            break;
+        while (true) {
+            boost::shared_ptr<Message> msg = pullConsumer->poll();
+            if (msg) {
+                boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
+                std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
+                ASSERT_TRUE(!msgId.empty());
+                ASSERT_NO_THROW(pullConsumer->ack(msgId));
+                break;
+            }
         }
     }
-}
+
+END_NAMESPACE_2(io, openmessaging)

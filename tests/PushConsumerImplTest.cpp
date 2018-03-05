@@ -6,6 +6,7 @@
 #include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
 #include "CountdownLatch.h"
+#include "BaseTest.h"
 
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
@@ -15,7 +16,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         ExampleMessageListener(CountdownLatch &latch_) : latch(latch_) {
         }
 
-        virtual void onMessage(boost::shared_ptr<Message>& message, boost::shared_ptr<Context>& context) {
+        virtual void onMessage(boost::shared_ptr<Message> &message, boost::shared_ptr<Context> &context) {
             std::cout << "A message received" << std::endl;
             latch.countdown();
         }
@@ -26,53 +27,60 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
+BEGIN_NAMESPACE_2(io, openmessaging)
 
-TEST(PushConsumerImplTest, testCreatePushConsumer) {
-
-    using namespace io::openmessaging;
     using namespace io::openmessaging::consumer;
     using namespace std;
 
-    string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-    string driverClassKey = "oms.driver.impl";
-    string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
+    class PushConsumerImplTest : public BaseTest {
 
-    Initialize();
+    };
 
-    boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
-    properties->put(driverClassKey, driverClass);
 
-    boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
-            MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
+    TEST_F(PushConsumerImplTest, testCreatePushConsumer) {
 
-    // First send a message
-    boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
-    producer->startup();
+        string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+        string driverClassKey = "oms.driver.impl";
+        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-    string topic = "TopicTest";
-    const char* data = "HELLO";
-    scoped_array<char> body(const_cast<char *>(data), strlen(data));
-    boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
-    producer->send(message);
-    // Send message OK
+        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        properties->put(driverClassKey, driverClass);
 
-    std::string queueName("TopicTest");
+        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+                MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-    boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
-    const std::string value = "OMS_CONSUMER";
-    kv->put(NonStandardKeys::CONSUMER_GROUP, value);
+        // First send a message
+        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        producer->startup();
 
-    boost::shared_ptr<consumer::PushConsumer> pushConsumer = messagingAccessPoint->createPushConsumer(kv);
+        string topic = "TopicTest";
+        const char *data = "HELLO";
+        scoped_array<char> body(const_cast<char *>(data), strlen(data));
+        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        producer->send(message);
+        // Send message OK
 
-    ASSERT_TRUE(pushConsumer);
+        std::string queueName("TopicTest");
 
-    CountdownLatch latch(1);
+        boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
+        const std::string value = "OMS_CONSUMER";
+        kv->put(NonStandardKeys::CONSUMER_GROUP, value);
 
-    boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>(boost::ref(latch));
-    pushConsumer->attachQueue(queueName, messageListener);
+        boost::shared_ptr<consumer::PushConsumer> pushConsumer = messagingAccessPoint->createPushConsumer(kv);
 
-    pushConsumer->startup();
-    cout << "Push consumer starts OK" << endl;
-    latch.await();
-    pushConsumer->shutdown();
-}
+        ASSERT_TRUE(pushConsumer);
+
+        CountdownLatch latch(1);
+
+        boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>(
+                boost::ref(latch));
+        pushConsumer->attachQueue(queueName, messageListener);
+
+        pushConsumer->startup();
+        cout << "Push consumer starts OK" << endl;
+        latch.await();
+        pushConsumer->shutdown();
+    }
+
+END_NAMESPACE_2(io, openmessaging)
+

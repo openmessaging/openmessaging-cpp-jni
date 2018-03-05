@@ -17,8 +17,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             const char *rocketmq_home = "ROCKETMQ_HOME=/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq";
             const char *namesrv_addr = "NAMESRV_ADDR=localhost:9876";
 
-            putenv(rocketmq_home);
-            putenv(namesrv_addr);
+            putenv(const_cast<char *>(rocketmq_home));
+            putenv(const_cast<char *>(namesrv_addr));
 
             Initialize();
 

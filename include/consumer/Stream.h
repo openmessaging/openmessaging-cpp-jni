@@ -9,7 +9,16 @@
 #include "MessageIterator.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-
+    /**
+     * A {@code Queue} is divided by many streams.
+     * <p>
+     * A {@code Stream} object supports consume messages from a
+     * specified partition like a iterator.
+     *
+     * @version OMS 1.0
+     * @see StreamingConsumer#stream(String)
+     * @since OMS 1.0
+     */
     class Stream : public virtual ServiceLifecycle {
     public:
         virtual ~Stream() {

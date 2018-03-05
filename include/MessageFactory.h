@@ -11,7 +11,10 @@
 #include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-
+    /**
+     * A factory interface for creating {@code Message} objects.
+     *
+     */
     class MessageFactory {
     public:
         virtual ~MessageFactory() {

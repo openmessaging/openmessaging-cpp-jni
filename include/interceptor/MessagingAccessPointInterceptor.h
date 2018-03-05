@@ -9,6 +9,12 @@
 #include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
+    /**
+     * A {@code MessagingAccessPointInterceptor} is used to wrap {@code MessagingAccessPoint}.
+     *
+     * @version OMS 1.0
+     * @since OMS 1.0
+     */
     class MessagingAccessPointInterceptor : private Uncopyable {
     public:
         virtual boost::shared_ptr<MessagingAccessPoint> constructMessagingAccessPoint(ConstructMessagingAccessPointContext &context) = 0;

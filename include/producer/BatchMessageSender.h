@@ -6,7 +6,13 @@
 #include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
-
+    /**
+     * A message sender created through {@link Producer#createSequenceBatchMessageSender()}, to send
+     * messages in batch way, and commit or roll back at the appropriate time.
+     *
+     * @version OMS 1.0
+     * @since OMS 1.0
+     */
     class BatchMessageSender : private Uncopyable {
     public:
         virtual ~BatchMessageSender() {

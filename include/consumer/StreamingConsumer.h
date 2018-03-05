@@ -12,7 +12,16 @@
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-
+    /**
+     * A {@code Queue} is divided by many streams.
+     * <p>
+     * A {@code StreamingConsumer} object supports consume messages from a
+     * specified partition like a iterator.
+     *
+     * @version OMS 1.0
+     * @see Stream
+     * @since OMS 1.0
+     */
     class StreamingConsumer : public virtual ServiceLifecycle {
     public:
         virtual ~StreamingConsumer() {

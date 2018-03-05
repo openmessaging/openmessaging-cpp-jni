@@ -15,6 +15,29 @@
 #include "interceptor/ProducerInterceptor.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
+
+    /**
+     * A {@code Producer} is a simple object used to send messages on behalf
+     * of a {@code MessagingAccessPoint}. An instance of {@code Producer} is
+     * created by calling the {@link MessagingAccessPoint#createProducer()} method.
+     * It provides various {@code send} methods to send a message to a specified destination.
+     * A destination can be a {@link MessageHeader#TOPIC} or a {@link MessageHeader#QUEUE}.
+     * <p>
+     *
+     * {@link Producer#send(Message)} means send a message to destination synchronously,
+     * the calling thread will block until the send request complete.
+     * <p>
+     * {@link Producer#sendAsync(Message)} means send a message to destination asynchronously,
+     * the calling thread won't block and will return immediately. Since the send call is asynchronous
+     * it returns a {@link Promise} for the send result.
+     * <p>
+     * {@link Producer#sendOneway(Message)} means send a message to destination in one way,
+     * the calling thread won't block and will return immediately. The caller won't care about
+     * the send result, while the server has no responsibility for returning the result.
+     *
+     * @version OMS 1.0
+     * @since OMS 1.0
+     */
     class Producer : public virtual MessageFactory, public virtual ServiceLifecycle {
     public:
         virtual ~Producer() {

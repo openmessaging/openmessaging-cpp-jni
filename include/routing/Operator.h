@@ -8,6 +8,16 @@
 #include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, routing)
+
+    /**
+     * A {@code Operator} is used to handle the flowing messages in {@code Routing}.
+     *
+     * There are many kinds of {@code Operator}, expression operator, deduplicate operator,
+     * joiner operator, filter operator, rpc operator, and so on.
+     *
+     * @version OMS 1.0
+     * @since OMS 1.0
+     */
     class Operator : private Uncopyable {
     public:
         virtual ~Operator() {

@@ -6,6 +6,12 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, observer)
 
+    /**
+     * Observable objects can trigger a {@code OMSEvent}, which will be handled in {@link Observer#onEvent(OMSEvent)}
+     *
+     * @version OMS 1.0
+     * @since OMS 1.0
+     */
     class OMSEvent : private Uncopyable {
     public:
         virtual ~OMSEvent() {

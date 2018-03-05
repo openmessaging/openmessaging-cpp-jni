@@ -14,8 +14,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     class BaseTest : public ::testing::Test {
     public:
         void SetUp() {
-            char *rocketmq_home = "ROCKETMQ_HOME=/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq";
-            char *namesrv_addr = "NAMESRV_ADDR=localhost:9876";
+            const char *rocketmq_home = "ROCKETMQ_HOME=/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq";
+            const char *namesrv_addr = "NAMESRV_ADDR=localhost:9876";
 
             putenv(rocketmq_home);
             putenv(namesrv_addr);

@@ -26,44 +26,73 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             if (started) {
                 return;
             }
+
             CurrentEnv context;
+
             const char* klassNameSrvStartup = "org/apache/rocketmq/namesrv/NamesrvStartup";
             classNamesrvStartup = context.findClass(klassNameSrvStartup);
-            const char* sigMain = "([Ljava/lang/String;)V";
-            midNameSrvStartupMain = context.getMethodId(classNamesrvStartup, "main", sigMain, true);
+            const char* sigCreateNamesrvController = "([Ljava/lang/String;)Lorg/apache/rocketmq/namesrv/NamesrvController;";
+            midCreateNamesrvController = context.getMethodId(classNamesrvStartup, "createController", sigCreateNamesrvController, true);
+
+            const char* sigStartNamesrv = "(Lorg/apache/rocketmq/namesrv/NamesrvController;)Lorg/apache/rocketmq/namesrv/NamesrvController;";
+            midStartNamesrv = context.getMethodId(classNamesrvStartup, "start", sigStartNamesrv, true);
+
+            const char* sigShutdownNamesrv = "(Lorg/apache/rocketmq/namesrv/NamesrvController;)V";
+            midShutdownNamesrv = context.getMethodId(classNamesrvStartup, "shutdown", sigShutdownNamesrv, true);
+
+            const char *klassBrokerStartup = "org/apache/rocketmq/broker/BrokerStartup";
+            classBrokerStartup = context.findClass(klassBrokerStartup);
+
+            const char* sigCreateBrokerController = "([Ljava/lang/String;)Lorg/apache/rocketmq/broker/BrokerController;";
+
+            midCreateBrokerController = context.getMethodId(classBrokerStartup, "createBrokerController", sigCreateBrokerController, true);
+
+            const char* sigStartBroker = "(Lorg/apache/rocketmq/broker/BrokerController;)Lorg/apache/rocketmq/broker/BrokerController;";
+            midStartBroker = context.getMethodId(classBrokerStartup, "start", sigStartBroker, true);
+
+            const char* sigShutdownBroker = "(Lorg/apache/rocketmq/broker/BrokerController;)V";
+            midShutdownBroker = context.getMethodId(classBrokerStartup, "shutdown", sigShutdownBroker, true);
+
+
             jclass classString = context.findClass("java/lang/String");
             jobjectArray args = context.env->NewObjectArray(1,
                                                             classString,
                                                             context.newStringUTF(""));
 
-            context.callStaticVoidMethod(classNamesrvStartup, midNameSrvStartupMain, args);
+            namesrvController = context.callStaticObjectMethod(classNamesrvStartup, midCreateNamesrvController, args);
+            context.callStaticObjectMethod(classNamesrvStartup, midStartNamesrv, namesrvController);
 
-            const char *klassBrokerStartup = "org/apache/rocketmq/broker/BrokerStartup";
-            classBrokerStartup = context.findClass(klassBrokerStartup);
-            midBrokerStartupMain = context.getMethodId(classBrokerStartup, "main", sigMain, true);
-
-            context.callStaticVoidMethod(classBrokerStartup, midBrokerStartupMain, args);
-
-            std::cout << "Wait for 3 seconds till MQ cluster is properly setup" << std::endl;
-
-            boost::this_thread::sleep(boost::posix_time::seconds(3));
-
-            std::cout << "Sleep completes" << std::endl;
+            brokerController = context.callStaticObjectMethod(classBrokerStartup, midCreateBrokerController, args);
+            context.callStaticObjectMethod(classBrokerStartup, midStartBroker, brokerController);
 
             started = true;
         }
 
         void TearDown() {
+            CurrentEnv context;
 
+            context.callStaticVoidMethod(classBrokerStartup, midShutdownBroker, brokerController);
+            context.callStaticVoidMethod(classNamesrvStartup, midShutdownNamesrv, namesrvController);
+            context.deleteRef(brokerController);
+            context.deleteRef(namesrvController);
+            context.deleteRef(classBrokerStartup);
+            context.deleteRef(classNamesrvStartup);
+
+            std::cout << "RocketMQ server cluster tears down OK" << std::endl;
         }
 
     protected:
         jclass classNamesrvStartup;
-        jmethodID midNameSrvStartupMain;
+        jmethodID midCreateNamesrvController;
+        jmethodID midStartNamesrv;
+        jmethodID midShutdownNamesrv;
+        jobject namesrvController;
 
         jclass classBrokerStartup;
-        jmethodID  midBrokerStartupMain;
-
+        jmethodID  midCreateBrokerController;
+        jmethodID  midStartBroker;
+        jmethodID  midShutdownBroker;
+        jobject brokerController;
     };
 
 END_NAMESPACE_2(io, openmessaging)

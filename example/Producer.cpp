@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     // Create message by producer, which also plays the role of message factory
     boost::shared_ptr<ByteMessage> message = producer->createByteMessageToTopic(topic, message_body);
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 128; ++i) {
         // Send message
         boost::shared_ptr<SendResult> sendResult = producer->send(message);
 

@@ -8,7 +8,7 @@ add_executable(runUnitTests
         ByteMessageImplTest.cpp
         NonStandardKeys.cpp
         UncopyableTest.cpp
-        CountdownLatchTest.cpp
+#        CountdownLatchTest.cpp
         CoreTest.cpp
         CurrentEnvTest.cpp
         KeyValueImplTest.cpp

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(oms CXX)
 
 set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_BUILD_TYPE Debug)
 
 if (COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)

@@ -1,7 +1,6 @@
 add_library(${CMAKE_PROJECT_NAME} SHARED
         JavaOption.cpp
         CurrentEnv.cpp
-        CountdownLatch.cpp
         core.cpp
         KeyValueImpl.cpp
         OMS.cpp

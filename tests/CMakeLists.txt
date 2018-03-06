@@ -4,6 +4,7 @@ include_directories(include)
 
 add_executable(runUnitTests
         RunAllTest.cpp
+        CountdownLatch.cpp
         scoped_array_test.cpp
         ByteMessageImplTest.cpp
         NonStandardKeys.cpp

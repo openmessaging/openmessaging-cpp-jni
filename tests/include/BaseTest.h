@@ -26,13 +26,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             Initialize();
 
-            static bool started = false;
-            if (started) {
-                return;
-            }
-
             CurrentEnv context;
-
             const char* klassNameSrvStartup = "org/apache/rocketmq/namesrv/NamesrvStartup";
             classNamesrvStartup = context.findClass(klassNameSrvStartup);
             const char* sigCreateNamesrvController = "([Ljava/lang/String;)Lorg/apache/rocketmq/namesrv/NamesrvController;";
@@ -68,8 +62,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             brokerController = context.callStaticObjectMethod(classBrokerStartup, midCreateBrokerController, args);
             context.callStaticObjectMethod(classBrokerStartup, midStartBroker, brokerController);
-
-            started = true;
         }
 
         void TearDown() {

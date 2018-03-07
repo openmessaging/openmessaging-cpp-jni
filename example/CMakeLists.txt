@@ -1,2 +1,6 @@
 add_executable(producer Producer.cpp)
-target_link_libraries(producer oms boost_thread boost_filesystem boost_chrono)
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+    target_link_libraries(producer oms boost_thread-mt boost_filesystem-mt boost_chrono-mt)
+else()
+    target_link_libraries(producer oms boost_thread boost_filesystem boost_chrono)
+endif()

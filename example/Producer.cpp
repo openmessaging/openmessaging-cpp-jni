@@ -1,7 +1,7 @@
-#include <iostream>
-
 #include <boost/smart_ptr.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <plog/Log.h>
 
 #include <MessagingAccessPointFactory.h>
 #include "core.h"
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
         // SendResult instance holds meta data including message id which may be employed to query various info on messaging
         // console
-        cout << "Sending Message OK. Message ID: " << sendResult->messageId() << endl;
+        LOG_INFO << "Sending Message OK. Message ID: " << sendResult->messageId() << endl;
     }
 
 

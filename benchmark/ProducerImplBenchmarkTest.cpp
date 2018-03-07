@@ -10,7 +10,7 @@ using namespace io::openmessaging;
 class ProducerImplBenchmarkTest : public benchmark::Fixture {
 public:
     ProducerImplBenchmarkTest() {
-        std::string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+        std::string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
         std::string driverClassKey = "oms.driver.impl";
         std::string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 

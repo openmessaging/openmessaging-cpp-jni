@@ -11,8 +11,14 @@ using namespace io::openmessaging::producer;
 
 int main(int argc, char *argv[]) {
 
+    int count = 128;
+
+    if (argc > 1) {
+        count = std::stoi(argv[1]);
+    }
+
     // Define access point
-    const string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+    const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
 
     // Define implementation driver class key
     const string driverClassKey = "oms.driver.impl";
@@ -49,7 +55,7 @@ int main(int argc, char *argv[]) {
     // Create message by producer, which also plays the role of message factory
     boost::shared_ptr<ByteMessage> message = producer->createByteMessageToTopic(topic, message_body);
 
-    for (int i = 0; i < 128; ++i) {
+    for (int i = 0; i < count; ++i) {
         // Send message
         boost::shared_ptr<SendResult> sendResult = producer->send(message);
 

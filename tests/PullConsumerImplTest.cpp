@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     };
 
     TEST_F(PullConsumerImplTest, testCreatePullConsumer) {
-        string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+        string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 

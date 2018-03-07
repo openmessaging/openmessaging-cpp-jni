@@ -18,11 +18,9 @@ message("Java include path: ${JAVA_INCLUDE_PATH}")
 
 find_package(Boost REQUIRED)
 
-include_directories(
-        ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/sdk/include
-        ${JNI_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
+
+include_directories(SYSTEM ${JNI_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(sdk)
 
@@ -37,13 +35,13 @@ if(TEST)
     enable_testing()
     option(gtest_build_tests OFF)
     add_subdirectory(third_party/googletest/googletest)
-    include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+    include_directories(SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
     add_subdirectory(tests)
 endif()
 
 option(BENCHMARK "Build benchmark test cases" OFF)
 if (BENCHMARK)
     add_subdirectory(third_party/benchmark)
-    include_directories(third_party/benchmark/include)
+    include_directories(SYSTEM third_party/benchmark/include)
     add_subdirectory(benchmark)
 endif ()

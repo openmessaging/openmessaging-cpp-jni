@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             const char *ROCKETMQ_HOME_VALUE = "/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq";
 
             const char *NAME_SRV_ADDR_KEY = "NAMESRV_ADDR";
-            const char *NAME_SRV_ADDR_VALUE = "localhost:9876";
+            const char *NAME_SRV_ADDR_VALUE = "ons3.dev:9876";
 
             int overwrite = 1;
             setenv(ROCKETMQ_HOME_KEY, ROCKETMQ_HOME_VALUE, overwrite);

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <boost/smart_ptr.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <MessagingAccessPointFactory.h>
 #include "core.h"
@@ -14,7 +15,7 @@ int main(int argc, char *argv[]) {
     int count = 128;
 
     if (argc > 1) {
-        count = std::stoi(argv[1]);
+        count = boost::lexical_cast<int>(argv[1]);
     }
 
     // Define access point

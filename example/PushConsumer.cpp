@@ -61,9 +61,14 @@ int main(int argc, char *argv[]) {
     subKV->put(NonStandardKeys::CONSUMER_GROUP, value);
 
     boost::shared_ptr<consumer::PushConsumer> pushConsumer = accessPoint->createPushConsumer(subKV);
+
+    // Create a listener instance
     boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>();
+
+    // Attach listener to queue
     pushConsumer->attachQueue(queueName, messageListener);
 
+    // Start push consumer
     pushConsumer->startup();
 
     LOG_INFO << "Push consumer starts OK";

@@ -38,7 +38,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const static string driverClass;
     };
 
-    const string ProducerImplTest::accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
+    const string ProducerImplTest::accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
     const string ProducerImplTest::driverClassKey = "oms.driver.impl";
     const string ProducerImplTest::driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 

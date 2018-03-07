@@ -14,6 +14,26 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
+    class Types {
+    public:
+        static const char *void_;
+        static const char *boolean_;
+        static const char *byte_;
+        static const char *char_;
+        static const char *short_;
+        static const char *int_;
+        static const char *long_;
+        static const char *float_;
+        static const char *double_;
+
+        static const char *String_;
+        static const char *KeyValue_;
+        static const char *Set_;
+
+    };
+
+    std::string buildSignature(const std::string &return_type, int n, ...);
+
     void Initialize();
 
     void Shutdown();

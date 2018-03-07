@@ -174,6 +174,10 @@ jclass CurrentEnv::getObjectClass(jobject obj) {
     return newGlobalRef(clazz);
 }
 
+jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const std::string &sig, bool is_static) {
+    return getMethodId(klass, method, sig.c_str(), is_static);
+}
+
 jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const char* sig, bool is_static) {
     jmethodID mid = NULL;
     if (is_static) {

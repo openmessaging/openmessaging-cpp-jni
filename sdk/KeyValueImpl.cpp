@@ -7,7 +7,7 @@ KeyValueImpl::KeyValueImpl() {
     const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";
     classDefaultKeyValue = current.findClass(klassDefaultKeyValue);
     init(current);
-    defaultKeyValueCtor = current.getMethodId(classDefaultKeyValue, "<init>", "()V");
+    defaultKeyValueCtor = current.getMethodId(classDefaultKeyValue, "<init>", buildSignature(Types::void_, 0));
     defaultKeyValueObject = current.newObject(classDefaultKeyValue, defaultKeyValueCtor);
 }
 
@@ -18,17 +18,26 @@ KeyValueImpl::KeyValueImpl(jobject proxy) : defaultKeyValueObject(proxy) {
 }
 
 void KeyValueImpl::init(CurrentEnv &current) {
-    putInt = current.getMethodId(classDefaultKeyValue, "put", "(Ljava/lang/String;I)Lio/openmessaging/KeyValue;");
-    putLong = current.getMethodId(classDefaultKeyValue, "put", "(Ljava/lang/String;J)Lio/openmessaging/KeyValue;");
-    putDouble = current.getMethodId(classDefaultKeyValue, "put", "(Ljava/lang/String;D)Lio/openmessaging/KeyValue;");
-    putString = current.getMethodId(classDefaultKeyValue, "put", "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/KeyValue;");
-    getIntMethod = current.getMethodId(classDefaultKeyValue, "getInt", "(Ljava/lang/String;)I");
-    getLongMethod = current.getMethodId(classDefaultKeyValue, "getLong", "(Ljava/lang/String;)J");
-    getDoubleMethod = current.getMethodId(classDefaultKeyValue, "getDouble", "(Ljava/lang/String;)D");
-    getStringMethod = current.getMethodId(classDefaultKeyValue, "getString", "(Ljava/lang/String;)Ljava/lang/String;");
-    midContainsKey = current.getMethodId(classDefaultKeyValue, "containsKey", "(Ljava/lang/String;)Z");
+    putInt = current.getMethodId(classDefaultKeyValue, "put",
+                                 buildSignature(Types::KeyValue_, 2, Types::String_, Types::int_));
+    putLong = current.getMethodId(classDefaultKeyValue, "put",
+                                  buildSignature(Types::KeyValue_, 2, Types::String_, Types::long_));
+    putDouble = current.getMethodId(classDefaultKeyValue, "put",
+                                    buildSignature(Types::KeyValue_, 2, Types::String_, Types::double_));
+    putString = current.getMethodId(classDefaultKeyValue, "put",
+                                    buildSignature(Types::KeyValue_, 2, Types::String_, Types::String_));
+    getIntMethod = current.getMethodId(classDefaultKeyValue, "getInt",
+                                       buildSignature(Types::int_, 1, Types::String_));
+    getLongMethod = current.getMethodId(classDefaultKeyValue, "getLong",
+                                        buildSignature(Types::long_, 1, Types::String_));
+    getDoubleMethod = current.getMethodId(classDefaultKeyValue, "getDouble",
+                                          buildSignature(Types::double_, 1, Types::String_));
+    getStringMethod = current.getMethodId(classDefaultKeyValue, "getString",
+                                          buildSignature(Types::String_, 1, Types::String_));
+    midContainsKey = current.getMethodId(classDefaultKeyValue, "containsKey",
+                                         buildSignature(Types::boolean_, 1, Types::String_));
 
-    keySetMethod = current.getMethodId(classDefaultKeyValue, "keySet", "()Ljava/util/Set;");
+    keySetMethod = current.getMethodId(classDefaultKeyValue, "keySet", buildSignature(Types::Set_, 0));
 }
 
 KeyValueImpl::~KeyValueImpl() {

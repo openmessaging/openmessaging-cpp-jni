@@ -72,6 +72,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         jmethodID getMethodId(jclass klass, const char *method, const char* sig, bool is_static = false);
 
+        jmethodID getMethodId(jclass klass, const char *method, const std::string &sig, bool is_static = false);
+
         jobject newObject(jclass klass, jmethodID mid, ...);
 
         template <typename T>

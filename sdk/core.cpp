@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <sys/types.h>
 #include <pthread.h>
 
@@ -154,7 +155,14 @@ std::vector<std::string> list(const std::string &dir, bool (*f)(const std::strin
 
 std::string build_class_path_option() {
     std::string option = "-Djava.class.path=";
-    std::string lib_dir = "/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq/lib/*";
+    const char* ROCKETMQ_HOME_KEY = "ROCKETMQ_HOME";
+    char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
+    if (NULL == rocketmqHome) {
+        const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
+        BOOST_LOG_TRIVIAL(error) << msg;
+        throw OMSException(msg);
+    }
+    std::string lib_dir = std::string(rocketmqHome) + "/lib/*";
     std::string expanded_class_path = expand_class_path(lib_dir);
     BOOST_LOG_TRIVIAL(info) << "Class Path: " << expanded_class_path;
     return option + expanded_class_path;

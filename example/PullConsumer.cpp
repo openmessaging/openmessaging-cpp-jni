@@ -1,5 +1,4 @@
 #include <boost/smart_ptr.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <plog/Log.h>
 
@@ -12,12 +11,6 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
 
 int main(int argc, char *argv[]) {
-
-    int count = 128;
-
-    if (argc > 1) {
-        count = boost::lexical_cast<int>(argv[1]);
-    }
 
     // Define access point
     const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";

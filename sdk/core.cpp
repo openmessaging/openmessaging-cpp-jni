@@ -18,7 +18,12 @@ JNIEnv *env;
 pthread_once_t once_flag = PTHREAD_ONCE_INIT;
 
 void init_logging() {
-    boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+    char *home = getenv("HOME");
+    std::string file_name = std::string(home) + "/oms.log";
+    size_t max_file_size = 1024 * 1024 * 100;
+    static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(file_name.c_str(), max_file_size, 10);
+    static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
 }
 
 void init0() {
@@ -53,15 +58,16 @@ void init0() {
     delete[] options;
 
     if (rc != JNI_OK) {
-        cout << "Failed to create JVM" << endl;
+        LOG_ERROR << "Failed to create JVM";
         exit(EXIT_FAILURE);
     }
 
     jint version = env->GetVersion();
-    BOOST_LOG_TRIVIAL(info) << "JVM starts OK. Version: " << ((version >> 16) & 0x0f) << "." << (version & 0x0f);
+    LOG_INFO << "JVM starts OK. Version: " << ((version >> 16) & 0x0f) << "." << (version & 0x0f);
 }
 
 void Initialize() {
+
     pthread_once(&once_flag, init0);
 }
 
@@ -69,7 +75,7 @@ void Shutdown() {
     if (jvm) {
         jvm->DestroyJavaVM();
         jvm = NULL;
-        BOOST_LOG_TRIVIAL(info) << "JVM shutdown OK";
+        LOG_INFO << "JVM shutdown OK";
         return;
     }
 }
@@ -159,12 +165,12 @@ std::string build_class_path_option() {
     char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
     if (NULL == rocketmqHome) {
         const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
-        BOOST_LOG_TRIVIAL(error) << msg;
+        LOG_ERROR << msg;
         throw OMSException(msg);
     }
     std::string lib_dir = std::string(rocketmqHome) + "/lib/*";
     std::string expanded_class_path = expand_class_path(lib_dir);
-    BOOST_LOG_TRIVIAL(info) << "Class Path: " << expanded_class_path;
+    LOG_INFO << "Class Path: " << expanded_class_path;
     return option + expanded_class_path;
 }
 

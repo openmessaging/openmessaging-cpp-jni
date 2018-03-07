@@ -25,7 +25,7 @@ std::string SendResultImpl::messageId() {
     CurrentEnv current;
     jstring msgId = reinterpret_cast<jstring>(current.env->CallObjectMethod(_proxy, midMessageId));
     if (current.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(warning) << "Java SDK throws an exception";
+        LOG_WARNING << "Java SDK throws an exception";
         return "";
     }
     const char *data = current.env->GetStringUTFChars(msgId, NULL);
@@ -39,7 +39,7 @@ boost::shared_ptr<KeyValue> SendResultImpl::properties() {
     CurrentEnv current;
     jobject kvLocal = current.env->CallObjectMethod(_proxy, midProperties);
     if (current.checkAndClearException()) {
-        BOOST_LOG_TRIVIAL(warning) << "Java SDK throws an exception";
+        LOG_WARNING << "Java SDK throws an exception";
         boost::shared_ptr<KeyValue> kv_nullptr;
         return kv_nullptr;
     }

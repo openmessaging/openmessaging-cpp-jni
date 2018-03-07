@@ -51,7 +51,7 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     classMessageListenerAdaptor = current.findClass(klassMessageListenerAdaptor);
 
     if (current.env->RegisterNatives(classMessageListenerAdaptor, methods, 1) < 0) {
-        BOOST_LOG_TRIVIAL(warning) << "Failed to register native methods";
+        LOG_WARNING << "Failed to register native methods";
         abort();
     }
 
@@ -106,14 +106,14 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
     const char* queueNameChars = queueName.c_str();
     jstring jQueueName = ctx.env->NewStringUTF(queueNameChars);
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
-    BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor instance created";
+    LOG_DEBUG << "MessageListenerAdaptor instance created";
     {
         boost::lock_guard<boost::mutex> lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
     jobject ret = ctx.callObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
-    BOOST_LOG_TRIVIAL(debug) << "MessageListenerAdaptor per queue attached";
+    LOG_DEBUG << "MessageListenerAdaptor per queue attached";
     ctx.deleteRef(messageListener);
     ctx.deleteRef(jQueueName);
     ctx.deleteRef(ret);

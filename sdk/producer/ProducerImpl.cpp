@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         if (!promise) {
-            BOOST_LOG_TRIVIAL(warning) << "Cannot find promise of opaque: " << opaque;
+            LOG_WARNING << "Cannot find promise of opaque: " << opaque;
             return;
         }
 
@@ -87,7 +87,7 @@ ProducerImpl::ProducerImpl(jobject proxy,
     classProducerAdaptor = current.findClass(clazzProducerAdaptor);
 
     if (current.env->RegisterNatives(classProducerAdaptor, methods, 1) < 0) {
-        BOOST_LOG_TRIVIAL(error) << "Failed to bind native methods";
+        LOG_ERROR << "Failed to bind native methods";
         abort();
     }
 
@@ -217,7 +217,7 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
         if (props) {
             boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
             if (!propertiesImpl) {
-                BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";
+                LOG_ERROR << "Dynamic casting failed";
             }
             current.callVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, messageImpl->getProxy(),
                                    propertiesImpl->getProxy());
@@ -226,7 +226,7 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
         }
         return ft;
     } else {
-        BOOST_LOG_TRIVIAL(error) << "Dynamic casting failed";
+        LOG_ERROR << "Dynamic casting failed";
         abort();
     }
 

@@ -1,6 +1,2 @@
 add_executable(producer Producer.cpp)
-if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    target_link_libraries(producer oms boost_log-mt)
-elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    target_link_libraries(producer oms boost_log)
-endif ()
+target_link_libraries(producer oms)

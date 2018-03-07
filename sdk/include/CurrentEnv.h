@@ -3,8 +3,7 @@
 
 #include <jni.h>
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
+#include <plog/Log.h>
 
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -90,7 +89,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                 return;
             }
 
-            BOOST_LOG_TRIVIAL(warning) << "Unexpected reference type to delete";
+            LOG_WARNING << "Unexpected reference type to delete";
         }
 
         jstring newStringUTF(const char *buf, bool global = false);

@@ -5,10 +5,8 @@
 #include <string>
 
 #include <boost/smart_ptr.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/support/date_time.hpp>
+#include <plog/Log.h>
+#include <plog/Appenders/ColorConsoleAppender.h>
 
 #include "JavaOption.h"
 #include "Namespace.h"

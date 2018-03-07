@@ -6,7 +6,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         OMS.cpp
         BuiltinKeys.cpp
         ServiceLifecycleImpl.cpp
-
+        NonStandardKeys.cpp
         PromiseImpl.cpp
 
         ByteMessageImpl.cpp

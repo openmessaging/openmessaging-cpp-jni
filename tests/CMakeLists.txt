@@ -7,7 +7,6 @@ add_executable(runUnitTests
         CountdownLatch.cpp
         scoped_array_test.cpp
         ByteMessageImplTest.cpp
-        NonStandardKeys.cpp
         UncopyableTest.cpp
 #        CountdownLatchTest.cpp
         CoreTest.cpp

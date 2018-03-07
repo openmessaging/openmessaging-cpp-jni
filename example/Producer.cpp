@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
         // SendResult instance holds meta data including message id which may be employed to query various info on messaging
         // console
-        LOG_INFO << "Sending Message OK. Message ID: " << sendResult->messageId() << endl;
+        LOG_INFO << "Sending Message OK. Message ID: " << sendResult->messageId();
     }
 
 

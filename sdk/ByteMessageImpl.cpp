@@ -9,29 +9,30 @@ ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
     const char *klassBytesMessage = "io/openmessaging/BytesMessage";
     classByteMessage = current.findClass(klassBytesMessage);
 
-    midSysHeaders = current.getMethodId(classByteMessage, "sysHeaders", "()Lio/openmessaging/KeyValue;");
-    midUserHeaders = current.getMethodId(classByteMessage, "userHeaders", "()Lio/openmessaging/KeyValue;");
+    midSysHeaders = current.getMethodId(classByteMessage, "sysHeaders", buildSignature(Types::KeyValue_, 0));
+    midUserHeaders = current.getMethodId(classByteMessage, "userHeaders", buildSignature(Types::KeyValue_, 0));
 
-    midGetBody = current.getMethodId(classByteMessage, "getBody", "()[B");
+    midGetBody = current.getMethodId(classByteMessage, "getBody", buildSignature(Types::byteArray_, 0));
 
-    midSetBody = current.getMethodId(classByteMessage, "setBody", "([B)Lio/openmessaging/BytesMessage;");
+    midSetBody = current.getMethodId(classByteMessage, "setBody",
+                                     buildSignature(Types::ByteMessage_, 1, Types::byteArray_));
 
     midPutSysHeadersInt = current.getMethodId(classByteMessage, "putSysHeaders",
-                                    "(Ljava/lang/String;I)Lio/openmessaging/Message;");
+                                              buildSignature(Types::Message_, 2, Types::String_, Types::int_));
     midPutSysHeadersLong = current.getMethodId(classByteMessage, "putSysHeaders",
-                                     "(Ljava/lang/String;J)Lio/openmessaging/Message;");
+                                               buildSignature(Types::Message_, 2, Types::String_, Types::long_));
     midPutSysHeadersDouble = current.getMethodId(classByteMessage, "putSysHeaders",
-                                       "(Ljava/lang/String;D)Lio/openmessaging/Message;");
+                                                 buildSignature(Types::Message_, 2, Types::String_, Types::double_));
     midPutSysHeadersString = current.getMethodId(classByteMessage, "putSysHeaders",
-                                       "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/Message;");
+                                                 buildSignature(Types::Message_, 2, Types::String_, Types::String_));
     midPutUserHeadersInt = current.getMethodId(classByteMessage, "putUserHeaders",
-                                     "(Ljava/lang/String;I)Lio/openmessaging/Message;");
+                                               buildSignature(Types::Message_, 2, Types::String_, Types::int_));
     midPutUserHeadersLong = current.getMethodId(classByteMessage, "putUserHeaders",
-                                      "(Ljava/lang/String;J)Lio/openmessaging/Message;");
+                                                buildSignature(Types::Message_, 2, Types::String_, Types::long_));
     midPutUserHeadersDouble = current.getMethodId(classByteMessage, "putUserHeaders",
-                                        "(Ljava/lang/String;D)Lio/openmessaging/Message;");
+                                                  buildSignature(Types::Message_, 2, Types::String_, Types::double_));
     midPutUserHeadersString = current.getMethodId(classByteMessage, "putUserHeaders",
-                                        "(Ljava/lang/String;Ljava/lang/String;)Lio/openmessaging/Message;");
+                                                  buildSignature(Types::Message_, 2, Types::String_, Types::String_));
 }
 
 ByteMessageImpl::~ByteMessageImpl() {

@@ -9,7 +9,7 @@ StreamImpl::StreamImpl(jobject proxy) : ServiceLifecycleImpl(proxy) {
     CurrentEnv ctx;
     const char *klassStream = "io/openmessaging/consumer/Stream";
     classStream = ctx.findClass(klassStream);
-    midProperties = ctx.getMethodId(classStream, "properties", "()Lio/openmessaging/KeyValue;");
+    midProperties = ctx.getMethodId(classStream, "properties", buildSignature(Types::KeyValue_, 0));
 }
 
 StreamImpl::~StreamImpl() {

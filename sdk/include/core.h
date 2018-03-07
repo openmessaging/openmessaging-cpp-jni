@@ -26,9 +26,22 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         static const char *float_;
         static const char *double_;
 
+        static const char *byteArray_;
+
+        static const char *Object_;
         static const char *String_;
         static const char *KeyValue_;
         static const char *Set_;
+        static const char *MessagingAccessPoint_;
+        static const char *Producer_;
+        static const char *PushConsumer_;
+        static const char *PullConsumer_;
+        static const char *Message_;
+        static const char *ByteMessage_;
+        static const char *SendResult_;
+        static const char *LocalTransactionBranchExecutor_;
+        static const char *Context_;
+        static const char *MessageListener_;
 
     };
 

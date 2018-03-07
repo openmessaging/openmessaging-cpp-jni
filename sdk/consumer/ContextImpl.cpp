@@ -12,9 +12,9 @@ ContextImpl::ContextImpl(jobject proxy) : _proxy(proxy) {
     const char *klassContext = "io/openmessaging/consumer/Context";
     classContext = current.findClass(klassContext);
 
-    midProperties = current.getMethodId(classContext, "properties", "()Lio/openmessaging/KeyValue;");
-    midAck = current.getMethodId(classContext, "ack", "()V");
-    midAck2 = current.getMethodId(classContext, "ack", "(Lio/openmessaging/KeyValue;)V");
+    midProperties = current.getMethodId(classContext, "properties", buildSignature(Types::KeyValue_, 0));
+    midAck = current.getMethodId(classContext, "ack", buildSignature(Types::void_, 0));
+    midAck2 = current.getMethodId(classContext, "ack", buildSignature(Types::void_, 1, Types::KeyValue_));
 }
 
 boost::shared_ptr<KeyValue> ContextImpl::properties() {

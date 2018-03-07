@@ -29,10 +29,11 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         }
     }
 
+    const std::string signature = buildSignature(Types::void_, 3, Types::String_, Types::Message_, Types::Context_);
     static JNINativeMethod methods[] = {
             {
                     const_cast<char*>("onMessage"),
-                    const_cast<char*>("(Ljava/lang/String;Lio/openmessaging/Message;Lio/openmessaging/consumer/Context;)V"),
+                    const_cast<char*>(signature.c_str()),
                     (void *)&onMessage
             }
     };
@@ -55,16 +56,15 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
         abort();
     }
 
-    midProperties = current.getMethodId(classPushConsumer, "properties", "()Lio/openmessaging/KeyValue;");
-    midResume = current.getMethodId(classPushConsumer, "resume", "()V");
-    midSuspend = current.getMethodId(classPushConsumer, "suspend", "()V");
-    midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", "()Z");
+    midProperties = current.getMethodId(classPushConsumer, "properties", buildSignature(Types::KeyValue_, 0));
+    midResume = current.getMethodId(classPushConsumer, "resume", buildSignature(Types::void_, 0));
+    midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::void_, 0));
+    midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", buildSignature(Types::boolean_, 0));
 
-    const char *attachQueueSignature = "(Ljava/lang/String;Lio/openmessaging/consumer/MessageListener;)Lio/openmessaging/consumer/PushConsumer;";
-    midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue", attachQueueSignature);
+    midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue",
+                                         buildSignature(Types::PushConsumer_, 2, Types::String_, Types::MessageListener_));
 
-    midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", "(Ljava/lang/String;)Lio/openmessaging/consumer/PushConsumer;");
-
+    midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", buildSignature(Types::PushConsumer_, 1, Types::String_));
 }
 
 PushConsumerImpl::~PushConsumerImpl() {

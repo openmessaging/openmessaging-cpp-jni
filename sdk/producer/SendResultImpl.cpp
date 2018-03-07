@@ -10,8 +10,8 @@ SendResultImpl::SendResultImpl(jobject proxy) : _proxy(proxy) {
     const char *clazzSendResult = "io/openmessaging/producer/SendResult";
     classSendResult = current.findClass(clazzSendResult);
 
-    midMessageId = current.getMethodId(classSendResult, "messageId", "()Ljava/lang/String;");
-    midProperties = current.getMethodId(classSendResult, "properties", "()Lio/openmessaging/KeyValue;");
+    midMessageId = current.getMethodId(classSendResult, "messageId", buildSignature(Types::String_, 0));
+    midProperties = current.getMethodId(classSendResult, "properties", buildSignature(Types::KeyValue_, 0));
 }
 
 

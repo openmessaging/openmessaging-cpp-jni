@@ -20,33 +20,29 @@ MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
     const char *klassMessagingAccessPoint = "io/openmessaging/MessagingAccessPoint";
     classMessagingAccessPoint = current.findClass(klassMessagingAccessPoint);
 
-    midImplVersion = current.getMethodId(classMessagingAccessPoint, "implVersion", "()Ljava/lang/String;");
+    midImplVersion = current.getMethodId(classMessagingAccessPoint, "implVersion",
+                                         buildSignature(Types::String_, 0));
 
-    const char *createProducerSignature = "()Lio/openmessaging/producer/Producer;";
-    midCreateProducer = current.getMethodId(classMessagingAccessPoint, "createProducer", createProducerSignature);
+    midCreateProducer = current.getMethodId(classMessagingAccessPoint, "createProducer",
+                                            buildSignature(Types::Producer_, 0));
 
-    const char *producer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/Producer;";
-    midCreateProducer2 = current.getMethodId(classMessagingAccessPoint, "createProducer", producer2Signature);
+    midCreateProducer2 = current.getMethodId(classMessagingAccessPoint, "createProducer",
+                                             buildSignature(Types::Producer_, 1, Types::KeyValue_));
 
-    const char *pushConsumerSignature = "()Lio/openmessaging/consumer/PushConsumer;";
     midCreatePushConsumer = current.getMethodId(classMessagingAccessPoint, "createPushConsumer",
-                                      pushConsumerSignature);
+                                      buildSignature(Types::PushConsumer_, 0));
 
-    const char *pushConsumer2Signature = "(Lio/openmessaging/KeyValue;)Lio/openmessaging/consumer/PushConsumer;";
     midCreatePushConsumer2 = current.getMethodId(classMessagingAccessPoint, "createPushConsumer",
-                                       pushConsumer2Signature);
+                                       buildSignature(Types::PushConsumer_, 1, Types::KeyValue_));
 
-    const char *pullConsumerSignature = "(Ljava/lang/String;)Lio/openmessaging/consumer/PullConsumer;";
     midCreatePullConsumer = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
-                                      pullConsumerSignature);
+                                      buildSignature(Types::PullConsumer_, 1, Types::String_));
 
-    const char *pullConsumer2Signature =
-            "(Ljava/lang/String;Lio/openmessaging/KeyValue;)Lio/openmessaging/consumer/PullConsumer;";
     midCreatePullConsumer2 = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
-                                       pullConsumer2Signature);
+                                       buildSignature(Types::PullConsumer_, 2, Types::String_, Types::KeyValue_));
 
-    midStartup = current.getMethodId(classMessagingAccessPoint, "startup", "()V");
-    midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", "()V");
+    midStartup = current.getMethodId(classMessagingAccessPoint, "startup", buildSignature(Types::void_, 0));
+    midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", buildSignature(Types::void_, 0));
 }
 
 boost::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {

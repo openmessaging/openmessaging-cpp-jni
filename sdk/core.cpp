@@ -21,9 +21,24 @@ using namespace boost::filesystem;
     const char* Types::long_ = "J";
     const char* Types::float_ = "F";
     const char* Types::double_ = "D";
+
+    const char* Types::byteArray_ = "[B";
+
+    const char* Types::Object_ = "Ljava/lang/Object;";
     const char* Types::String_ = "Ljava/lang/String;";
     const char* Types::KeyValue_ = "Lio/openmessaging/KeyValue;";
     const char* Types::Set_ = "Ljava/util/Set;";
+    const char* Types::MessagingAccessPoint_ = "Lio/openmessaging/MessagingAccessPoint;";
+    const char* Types::Producer_ = "Lio/openmessaging/producer/Producer;";
+    const char* Types::PushConsumer_ = "Lio/openmessaging/consumer/PushConsumer;";
+    const char* Types::PullConsumer_ = "Lio/openmessaging/consumer/PullConsumer;";
+    const char* Types::Message_ = "Lio/openmessaging/Message;";
+    const char* Types::ByteMessage_ = "Lio/openmessaging/BytesMessage;";
+    const char* Types::SendResult_ = "Lio/openmessaging/producer/SendResult;";
+    const char* Types::LocalTransactionBranchExecutor_ = "Lio/openmessaging/producer/LocalTransactionBranchExecutor;";
+    const char* Types::Context_ = "Lio/openmessaging/consumer/Context;";
+    const char* Types::MessageListener_ = "Lio/openmessaging/consumer/MessageListener;";
+
 
 
     string buildSignature(const string &return_type, int n, ...) {

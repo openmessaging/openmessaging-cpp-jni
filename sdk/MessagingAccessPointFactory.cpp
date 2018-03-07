@@ -17,13 +17,13 @@ MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
     bool useKV = false;
     if (properties) {
         useKV = true;
-        const char *signature = "(Ljava/lang/String;Lio/openmessaging/KeyValue;)Lio/openmessaging/MessagingAccessPoint;";
+        std::string sig = buildSignature(Types::MessagingAccessPoint_, 2, Types::String_, Types::KeyValue_);
         midGetMessagingAccessPoint = current.getMethodId(classMessagingAccessPointFactory,
-                                                                    "getMessagingAccessPoint", signature, true);
+                                                                    "getMessagingAccessPoint", sig.c_str(), true);
     } else {
-        const char *signature = "(Ljava/lang/String;)Lio/openmessaging/MessagingAccessPoint;";
+        std::string sig = buildSignature(Types::MessagingAccessPoint_, 1, Types::String_);
         midGetMessagingAccessPoint = current.getMethodId(classMessagingAccessPointFactory,
-                                                                    "getMessagingAccessPoint", signature, true);
+                                                                    "getMessagingAccessPoint", sig.c_str(), true);
     }
 
     jstring accessUrl = current.newStringUTF(url.c_str());

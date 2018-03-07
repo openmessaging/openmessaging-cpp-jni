@@ -10,11 +10,11 @@ PullConsumerImpl::PullConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     const char *klassPullConsumer = "io/openmessaging/consumer/PullConsumer";
     classPullConsumer = current.findClass(klassPullConsumer);
 
-    midProperties = current.getMethodId(classPullConsumer, "properties", "()Lio/openmessaging/KeyValue;");
-    midPoll = current.getMethodId(classPullConsumer, "poll", "()Lio/openmessaging/Message;");
-    midPoll2 = current.getMethodId(classPullConsumer, "poll", "(Lio/openmessaging/KeyValue;)Lio/openmessaging/Message;");
-    midAck = current.getMethodId(classPullConsumer, "ack", "(Ljava/lang/String;)V");
-    midAck2 = current.getMethodId(classPullConsumer, "ack", "(Ljava/lang/String;Lio/openmessaging/KeyValue;)V");
+    midProperties = current.getMethodId(classPullConsumer, "properties", buildSignature(Types::KeyValue_, 0));
+    midPoll = current.getMethodId(classPullConsumer, "poll", buildSignature(Types::Message_, 0));
+    midPoll2 = current.getMethodId(classPullConsumer, "poll", buildSignature(Types::Message_, 1, Types::KeyValue_));
+    midAck = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 1, Types::String_));
+    midAck2 = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 2, Types::String_, Types::KeyValue_));
 }
 
 PullConsumerImpl::~PullConsumerImpl() {

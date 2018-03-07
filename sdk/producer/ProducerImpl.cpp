@@ -91,35 +91,36 @@ ProducerImpl::ProducerImpl(jobject proxy,
         abort();
     }
 
-    jmethodID producerAdaptorCtor = current.getMethodId(classProducerAdaptor, "<init>", "(Lio/openmessaging/producer/Producer;)V");
+    jmethodID producerAdaptorCtor = current.getMethodId(classProducerAdaptor, "<init>",
+                                                        buildSignature(Types::void_, 1, Types::Producer_));
     objectProducerAdaptor = current.newObject(classProducerAdaptor, producerAdaptorCtor, proxy);
 
-    const char *signature = "(Ljava/lang/String;[B)Lio/openmessaging/BytesMessage;";
+    const std::string signature = buildSignature(Types::ByteMessage_, 2, Types::String_, Types::byteArray_);
     midCreateByteMessageToQueue = current.getMethodId(classProducer, "createQueueBytesMessage", signature);
     midCreateByteMessageToTopic = current.getMethodId(classProducer, "createTopicBytesMessage", signature);
-    midStartup = current.getMethodId(classProducer, "startup", "()V");
-    midShutdown = current.getMethodId(classProducer, "shutdown", "()V");
+    midStartup = current.getMethodId(classProducer, "startup", buildSignature(Types::void_, 0));
+    midShutdown = current.getMethodId(classProducer, "shutdown", buildSignature(Types::void_, 0));
 
-    const char *sendSignature = "(Lio/openmessaging/Message;)Lio/openmessaging/producer/SendResult;";
-    midSend = current.getMethodId(classProducer, "send", sendSignature);
+    midSend = current.getMethodId(classProducer, "send", buildSignature(Types::SendResult_, 1, Types::Message_));
 
-    const char *send2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
-    midSend2 = current.getMethodId(classProducer, "send", send2Signature);
+    midSend2 = current.getMethodId(classProducer, "send",
+                                   buildSignature(Types::SendResult_, 2, Types::Message_, Types::KeyValue_));
 
-    const char *send3Signature = "(Lio/openmessaging/Message;Lio/openmessaging/producer/LocalTransactionBranchExecutor;Ljava/lang/Object;Lio/openmessaging/KeyValue;)Lio/openmessaging/producer/SendResult;";
-    midSend3 = current.getMethodId(classProducer, "send", send3Signature);
+    midSend3 = current.getMethodId(classProducer, "send",
+                                   buildSignature(Types::SendResult_, 4, Types::Message_,
+                                                  Types::LocalTransactionBranchExecutor_, Types::Object_,
+                                                  Types::KeyValue_));
 
-    const char *sendAsyncSignature = "(JLio/openmessaging/Message;)V";
-    midSendAsync = current.getMethodId(classProducerAdaptor, "sendAsync", sendAsyncSignature);
+    midSendAsync = current.getMethodId(classProducerAdaptor, "sendAsync",
+                                       buildSignature(Types::void_, 2, Types::long_, Types::Message_));
 
-    const char *sendAsync2Signature = "(JLio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
-    midSendAsync2 = current.getMethodId(classProducerAdaptor, "sendAsync", sendAsync2Signature);
+    midSendAsync2 = current.getMethodId(classProducerAdaptor, "sendAsync",
+                                        buildSignature(Types::void_, 3, Types::long_, Types::Message_, Types::KeyValue_));
 
-    const char *sendOnewaySignature = "(Lio/openmessaging/Message;)V";
-    midSendOneway = current.getMethodId(classProducer, "sendOneway", sendOnewaySignature);
+    midSendOneway = current.getMethodId(classProducer, "sendOneway", buildSignature(Types::void_, 1, Types::Message_));
 
-    const char *sendOneway2Signature = "(Lio/openmessaging/Message;Lio/openmessaging/KeyValue;)V";
-    midSendOneway2 = current.getMethodId(classProducer, "sendOneway", sendOneway2Signature);
+    midSendOneway2 = current.getMethodId(classProducer, "sendOneway",
+                                         buildSignature(Types::void_, 2, Types::Message_, Types::KeyValue_));
 }
 
 ProducerImpl::~ProducerImpl() {

@@ -17,7 +17,12 @@ TEST(CoreTest, testStringEndsWith) {
 }
 
 TEST(CoreTest, testList) {
-    std::string path = "/Users/lizhanhui/work/apache_rocketmq/distribution/target/apache-rocketmq/lib";
+    char *rocketmqHome = getenv("ROCKETMQ_HOME");
+    if (NULL == rocketmqHome) {
+        LOG_ERROR << "Environment variable ROCKETMQ_HOME is not set";
+        FAIL();
+    }
+    std::string path = std::string(rocketmqHome) + "/lib";
     std::vector<std::string> files = io::openmessaging::list(path, io::openmessaging::file_name_filter);
     for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); it++) {
         std::cout << *it << std::endl;

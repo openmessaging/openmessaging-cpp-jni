@@ -1,2 +1,2 @@
 add_executable(producer Producer.cpp)
-target_link_libraries(producer oms)
+target_link_libraries(producer oms boost_thread boost_filesystem boost_chrono)

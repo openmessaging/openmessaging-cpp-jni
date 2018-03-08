@@ -14,7 +14,7 @@
     extern "C" {
 #endif
 
-        boost::shared_ptr<io::openmessaging::KeyValue> newKeyValue();
+        io::openmessaging::KeyValue* newKeyValue();
 
 #ifdef __cplusplus
     }

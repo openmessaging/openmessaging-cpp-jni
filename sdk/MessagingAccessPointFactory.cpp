@@ -6,52 +6,53 @@
 
 using namespace io::openmessaging;
 
-boost::shared_ptr<MessagingAccessPoint>
+MessagingAccessPoint*
 getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyValue> &props) {
-    Initialize();
-    return MessagingAccessPointFactory::getMessagingAccessPoint(url, props);
-}
 
-boost::shared_ptr<MessagingAccessPoint>
-MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
-                                                     const boost::shared_ptr<KeyValue> &properties) {
+    Initialize();
 
     CurrentEnv current;
     const char* klassMessagingAccessPointFactory = "io/openmessaging/MessagingAccessPointFactory";
     jclass classMessagingAccessPointFactory = current.findClass(klassMessagingAccessPointFactory);
     jmethodID midGetMessagingAccessPoint;
     bool useKV = false;
-    if (properties) {
+    if (props) {
         useKV = true;
         std::string sig = buildSignature(Types::MessagingAccessPoint_, 2, Types::String_, Types::KeyValue_);
         midGetMessagingAccessPoint = current.getMethodId(classMessagingAccessPointFactory,
-                                                                    "getMessagingAccessPoint", sig.c_str(), true);
+                                                         "getMessagingAccessPoint", sig.c_str(), true);
     } else {
         std::string sig = buildSignature(Types::MessagingAccessPoint_, 1, Types::String_);
         midGetMessagingAccessPoint = current.getMethodId(classMessagingAccessPointFactory,
-                                                                    "getMessagingAccessPoint", sig.c_str(), true);
+                                                         "getMessagingAccessPoint", sig.c_str(), true);
     }
 
     jstring accessUrl = current.newStringUTF(url.c_str());
 
     jobject messagingAccessPoint;
     if (useKV) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jobject props = kv->getProxy();
+        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        jobject prop = kv->getProxy();
         messagingAccessPoint = current.callStaticObjectMethod(classMessagingAccessPointFactory,
-                                                                   midGetMessagingAccessPoint,
-                                                                   accessUrl,
-                                                                   props);
+                                                              midGetMessagingAccessPoint,
+                                                              accessUrl,
+                                                              prop);
     } else {
         messagingAccessPoint = current.callStaticObjectMethod(classMessagingAccessPointFactory,
-                                                                   midGetMessagingAccessPoint,
-                                                                   accessUrl);
+                                                              midGetMessagingAccessPoint,
+                                                              accessUrl);
     }
 
     current.deleteRef(accessUrl);
     current.deleteRef(classMessagingAccessPointFactory);
     jobject globalRef = current.newGlobalRef(messagingAccessPoint);
-    return boost::make_shared<MessagingAccessPointImpl>(url, properties, globalRef);
+    return new MessagingAccessPointImpl(url, props, globalRef);
+}
+
+boost::shared_ptr<MessagingAccessPoint>
+MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
+                                                     const boost::shared_ptr<KeyValue> &properties) {
+    return boost::shared_ptr<MessagingAccessPoint>(::getMessagingAccessPointImpl(url, properties));
 }
 
 void MessagingAccessPointFactory::addInterceptor(

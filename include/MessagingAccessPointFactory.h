@@ -17,8 +17,9 @@
 extern "C" {
 #endif
 
-    boost::shared_ptr<io::openmessaging::MessagingAccessPoint>
-    getMessagingAccessPoint(const std::string &url, const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
+    static io::openmessaging::MessagingAccessPoint*
+    getMessagingAccessPoint(const std::string &url,
+                            const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
         std::string::size_type begin = url.find(":");
         std::string::size_type end = url.find(":", begin + 1);
         std::string driver = url.substr(begin + 1, end - begin - 1);
@@ -32,7 +33,7 @@ extern "C" {
 
         std::string shared_library_name = "liboms_" + driver + extension;
 
-        void* handle = dlopen(shared_library_name);
+        void* handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
         if (!handle) {
             std::string msg = "Failed to dlopen shared library: ";
             msg += shared_library_name;
@@ -41,15 +42,19 @@ extern "C" {
             throw io::openmessaging::OMSException(msg);
         }
 
-        boost::shared_ptr<io::openmessaging::MessagingAccessPoint> (*fn)(const std::string&, const boost::shared_ptr<io::openmessaging::KeyValue> &);
+        typedef io::openmessaging::MessagingAccessPoint* (*Fn)(const std::string&,
+                                                               const boost::shared_ptr<io::openmessaging::KeyValue> &);
 
-        fn = dlsym(handle, "getMessagingAccessPointImpl");
+        Fn fn;
+
+        fn = (Fn)dlsym(handle, "getMessagingAccessPointImpl");
 
         return fn(url, props);
     }
 
-    boost::shared_ptr<io::openmessaging::MessagingAccessPoint>
-    getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr);
+    io::openmessaging::MessagingAccessPoint*
+    getMessagingAccessPointImpl(const std::string &url,
+                                const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr);
 
 #ifdef __cplusplus
 }

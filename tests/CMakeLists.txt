@@ -34,6 +34,7 @@ if (Boost_LIBRARIES)
     target_link_libraries(runUnitTests ${Boost_LIBRARIES})
 else()
     target_link_libraries(runUnitTests
+            dl
             pthread
             boost_log-mt
             boost_date_time-mt

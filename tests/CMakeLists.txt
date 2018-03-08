@@ -28,7 +28,7 @@ add_definitions(-DBOOST_LOG_DYN_LINK=1)
 add_definitions(-DBOOST_ALL_DYN_LINK=1)
 
 # Extra linking for the project.
-target_link_libraries(runUnitTests ${CMAKE_PROJECT_NAME})
+target_link_libraries(runUnitTests oms_rocketmq)
 
 if (Boost_LIBRARIES)
     target_link_libraries(runUnitTests ${Boost_LIBRARIES})

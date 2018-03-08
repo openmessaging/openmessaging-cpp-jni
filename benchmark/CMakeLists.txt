@@ -8,7 +8,7 @@ target_link_libraries(benchmark_example benchmark)
 target_link_libraries(benchmark_fixture benchmark boost_thread-mt boost_system-mt)
 target_link_libraries(benchmark_producer
         benchmark
-        ${CMAKE_PROJECT_NAME}
+        oms_rocketmq
         boost_log-mt
         boost_date_time-mt
         boost_system-mt

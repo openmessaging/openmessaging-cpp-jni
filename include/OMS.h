@@ -22,7 +22,7 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        extern boost::shared_ptr<KeyValue> kv_nullptr;
+        static boost::shared_ptr<KeyValue> kv_nullptr;
 
         template<typename T>
         class scoped_array {

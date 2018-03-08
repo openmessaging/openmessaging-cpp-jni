@@ -4,10 +4,6 @@
 
 using namespace io::openmessaging;
 
-BEGIN_NAMESPACE_2(io, openmessaging)
-    boost::shared_ptr<KeyValue> kv_nullptr;
-END_NAMESPACE_2(io, openmessaging)
-
 KeyValue* newKeyValueImpl() {
     Initialize();
     CurrentEnv current;

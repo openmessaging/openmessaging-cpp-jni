@@ -27,17 +27,16 @@ int main(int argc, char *argv[]) {
     // Define implementation driver class
     const string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-    // Initialize SDK
-    Initialize();
+    load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = OMS::newKeyValue();
+    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, kv);
+    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     // Create a producer instance via MessageAccessPoint instance
     boost::shared_ptr<Producer> producer = accessPoint->createProducer();

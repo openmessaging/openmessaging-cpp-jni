@@ -14,7 +14,7 @@
     extern "C" {
 #endif
 
-        io::openmessaging::KeyValue* newKeyValue();
+        io::openmessaging::KeyValue* newKeyValueImpl();
 
 #ifdef __cplusplus
     }

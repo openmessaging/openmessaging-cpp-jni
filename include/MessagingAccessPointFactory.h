@@ -17,9 +17,9 @@
 extern "C" {
 #endif
 
-    static io::openmessaging::MessagingAccessPoint*
-    getMessagingAccessPoint(const std::string &url,
-                            const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
+    static void *handle = NULL;
+
+    static void load_library(const std::string &url) {
         std::string::size_type begin = url.find(":");
         std::string::size_type end = url.find(":", begin + 1);
         std::string driver = url.substr(begin + 1, end - begin - 1);
@@ -30,10 +30,9 @@ extern "C" {
 #ifdef __linux__
         std::string extension = ".so";
 #endif
-
         std::string shared_library_name = "liboms_" + driver + extension;
 
-        void* handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
+        handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
         if (!handle) {
             std::string msg = "Failed to dlopen shared library: ";
             msg += shared_library_name;
@@ -41,9 +40,29 @@ extern "C" {
             msg += dlerror();
             throw io::openmessaging::OMSException(msg);
         }
+    }
+
+    static io::openmessaging::KeyValue* newKeyValue() {
+        if (NULL == handle) {
+            throw io::openmessaging::OMSException("Please call load_library first");
+        }
+
+        typedef io::openmessaging::KeyValue* (*Fn)();
+        Fn fn;
+        fn = (Fn)dlsym(handle, "newKeyValueImpl");
+        return fn();
+    }
+
+    static io::openmessaging::MessagingAccessPoint*
+    getMessagingAccessPoint(const std::string &url,
+                            const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
 
         typedef io::openmessaging::MessagingAccessPoint* (*Fn)(const std::string&,
                                                                const boost::shared_ptr<io::openmessaging::KeyValue> &);
+
+        if (NULL == handle) {
+            load_library(url);
+        }
 
         Fn fn;
 

@@ -8,7 +8,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     boost::shared_ptr<KeyValue> kv_nullptr;
 END_NAMESPACE_2(io, openmessaging)
 
-KeyValue* newKeyValue() {
+KeyValue* newKeyValueImpl() {
+    Initialize();
     CurrentEnv current;
     const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";
     jclass classDefaultKeyValue = current.findClass(klassDefaultKeyValue);
@@ -18,6 +19,6 @@ KeyValue* newKeyValue() {
 }
 
 boost::shared_ptr<KeyValue> OMS::newKeyValue() {
-    KeyValue* kv = ::newKeyValue();
+    KeyValue* kv = ::newKeyValueImpl();
     return boost::shared_ptr<KeyValue>(kv);
 }

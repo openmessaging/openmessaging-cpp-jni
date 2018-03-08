@@ -49,8 +49,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     void Initialize();
 
-    void Shutdown();
-
     bool isRunning();
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);

@@ -7,6 +7,12 @@
 using namespace io::openmessaging;
 
 boost::shared_ptr<MessagingAccessPoint>
+getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyValue> &props) {
+    Initialize();
+    return MessagingAccessPointFactory::getMessagingAccessPoint(url, props);
+}
+
+boost::shared_ptr<MessagingAccessPoint>
 MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
                                                      const boost::shared_ptr<KeyValue> &properties) {
 

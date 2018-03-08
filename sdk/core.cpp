@@ -1,9 +1,8 @@
 #include <cstdlib>
 #include <cstdarg>
-#include <sys/types.h>
-#include <pthread.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 
 #include "core.h"
 
@@ -58,7 +57,7 @@ using namespace boost::filesystem;
 
     JNIEnv *env;
 
-    pthread_once_t once_flag = PTHREAD_ONCE_INIT;
+    boost::once_flag once_flag = BOOST_ONCE_INIT;
 
     void init_logging() {
         char *home = getenv("HOME");
@@ -110,17 +109,7 @@ using namespace boost::filesystem;
     }
 
     void Initialize() {
-
-        pthread_once(&once_flag, init0);
-    }
-
-    void Shutdown() {
-        if (jvm) {
-            jvm->DestroyJavaVM();
-            jvm = NULL;
-            LOG_INFO << "JVM shutdown OK";
-            return;
-        }
+        boost::call_once(once_flag, init0);
     }
 
     bool isRunning() {

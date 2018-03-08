@@ -8,6 +8,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     boost::shared_ptr<KeyValue> kv_nullptr;
 END_NAMESPACE_2(io, openmessaging)
 
+boost::shared_ptr<KeyValue> newKeyValue() {
+    return OMS::newKeyValue();
+}
+
 boost::shared_ptr<KeyValue> OMS::newKeyValue() {
     CurrentEnv current;
     const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";

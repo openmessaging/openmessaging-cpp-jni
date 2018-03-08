@@ -10,6 +10,16 @@
 #include "Uncopyable.h"
 #include "OMSException.h"
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
+        boost::shared_ptr<io::openmessaging::KeyValue> newKeyValue();
+
+#ifdef __cplusplus
+    }
+#endif
+
 BEGIN_NAMESPACE_2(io, openmessaging)
 
         extern boost::shared_ptr<KeyValue> kv_nullptr;

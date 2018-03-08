@@ -1,6 +1,7 @@
 #ifndef OMS_MESSAGING_ACCESS_POINT_FACTORY_H
 #define OMS_MESSAGING_ACCESS_POINT_FACTORY_H
 
+#include <dlfcn.h>
 #include <string>
 
 #include <boost/shared_ptr.hpp>
@@ -10,6 +11,49 @@
 #include "interceptor/MessagingAccessPointInterceptor.h"
 #include "Namespace.h"
 #include "OMS.h"
+#include "OMSException.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    boost::shared_ptr<io::openmessaging::MessagingAccessPoint>
+    getMessagingAccessPoint(const std::string &url, const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
+        std::string::size_type begin = url.find(":");
+        std::string::size_type end = url.find(":", begin + 1);
+        std::string driver = url.substr(begin + 1, end - begin - 1);
+
+#ifdef __APPLE__
+        std::string extension = ".dylib";
+#endif
+#ifdef __linux__
+        std::string extension = ".so";
+#endif
+
+        std::string shared_library_name = "liboms_" + driver + extension;
+
+        void* handle = dlopen(shared_library_name);
+        if (!handle) {
+            std::string msg = "Failed to dlopen shared library: ";
+            msg += shared_library_name;
+            msg += ". Reason: ";
+            msg += dlerror();
+            throw io::openmessaging::OMSException(msg);
+        }
+
+        boost::shared_ptr<io::openmessaging::MessagingAccessPoint> (*fn)(const std::string&, const boost::shared_ptr<io::openmessaging::KeyValue> &);
+
+        fn = dlsym(handle, "getMessagingAccessPointImpl");
+
+        return fn(url, props);
+    }
+
+    boost::shared_ptr<io::openmessaging::MessagingAccessPoint>
+    getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 

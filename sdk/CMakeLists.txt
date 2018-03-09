@@ -1,3 +1,4 @@
+link_directories(/home/shutian.lzh/jdk1.8.0_144/jre/lib/amd64 /home/shutian.lzh/jdk1.8.0_144/jre/lib/amd64/server)
 add_library(oms_rocketmq SHARED
         JavaOption.cpp
         CurrentEnv.cpp
@@ -20,10 +21,7 @@ add_library(oms_rocketmq SHARED
 
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
-target_link_libraries(oms_rocketmq ${JNI_LIBRARIES})
 
-message("Boost library directories: ${Boost_LIBRARY_DIRS}")
-link_directories(${Boost_LIBRARY_DIRS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     message("Boost is dynamically linked")
     target_link_libraries(oms_rocketmq
@@ -33,11 +31,12 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
             boost_thread-mt
             boost_chrono-mt
             boost_filesystem-mt
+            jvm
             )
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message("Boost is statically linked")
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS
-            "-Wl,-Bstatic -lboost_date_time -lboost_system -lboost_thread -lboost_filesystem -Wl,-Bdynamic -ldl")
+            "-Wl,-Bstatic -lboost_date_time -lboost_system -lboost_thread -lboost_filesystem -Wl,-Bdynamic -ldl -ljvm")
 else()
     message("Compiler ID is unknown")
 endif ()

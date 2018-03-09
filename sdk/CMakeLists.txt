@@ -1,4 +1,4 @@
-link_directories(/home/shutian.lzh/jdk1.8.0_144/jre/lib/amd64 /home/shutian.lzh/jdk1.8.0_144/jre/lib/amd64/server)
+link_directories(/home/shutian.lzh/oms/jdk8m/lib/amd64 /home/shutian.lzh/oms/jdk8m/lib/amd64/server)
 add_library(oms_rocketmq SHARED
         JavaOption.cpp
         CurrentEnv.cpp

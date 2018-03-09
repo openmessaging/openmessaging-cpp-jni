@@ -27,10 +27,20 @@
 
 1. C++ codes conforms to C++98 language standard;
 1. C++ interfaces should conform to Java counterparts as much as possible;
-1. Boost core modules are preferred;
-1. Avoid raw pointer if possible;
+1. Core Boost libraries are employed and statically linked;
+1. Avoid raw pointer if possible, boost smart_ptr should be used instead. As a result, it's OK to introduce
+ dependency on Boost.smart_ptr in public header files;
 1. GoogleTest for unit tests;
 1. Google micro-benchmark library for core code path;
+
+## Runtime shared library loading
+
+1. To further enhance convenience of replacing one OMS implementation with another, a plugin mechanism is adopted on top
+of dl-series system functions. OMS vendors need to implement a few C-linkage style methods defined in `MessagingAccessPointFactory.h`
+
+2. Due to features mentioned above, application developer does not need to link their application against any vendor 
+specific library; Instead, as long as `ld` may find the implementing library specified in access point url, executables 
+will run without glitches.
 
 ## Thread-Safety and Concurrency
 
@@ -43,8 +53,14 @@
 
 ## Logging
 
-1. We are supposed to have an internal logging system, helping us diagnose all potential issues.
-2. For the sake C++98 standard, Boost.log is used for now.
+1. An efficient logging library is expected, as should conform to C++ 98 standard. At present, 
+[plog](https://github.com/SergiusTheBest/plog) is adopted and included in the SDK module.
+
+2. Key execution path of pubic interface methods are supposed to to logged down employing various levels, in hope of 
+diagnosing any potential problem. 
+
+3. On exception, error level should be used. In case there were Java exception involved, complete stack trace should be
+included.
 
 ## Deployment Constraints
 

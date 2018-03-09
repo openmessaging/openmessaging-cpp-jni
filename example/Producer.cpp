@@ -4,7 +4,6 @@
 #include <plog/Log.h>
 
 #include <MessagingAccessPointFactory.h>
-#include "core.h"
 
 using namespace std;
 using namespace io::openmessaging;

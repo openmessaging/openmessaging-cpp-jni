@@ -1,9 +1,6 @@
 #include <boost/smart_ptr.hpp>
-
 #include <plog/Log.h>
-
 #include "MessagingAccessPointFactory.h"
-#include "core.h"
 #include "NonStandardKeys.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)

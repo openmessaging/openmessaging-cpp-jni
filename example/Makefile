@@ -1,5 +1,10 @@
+all:producer pullConsumer pushConsumer
 producer:Producer.cpp
-	c++ -I ../include  -rdynamic -lboost_thread -lboost_filesystem -lboost_chrono -o producer Producer.cpp -ldl
+	c++ -I ../include  -rdynamic -lboost_thread -lboost_filesystem -lboost_chrono -o producer Producer.cpp -ldl -Wl,-rpath,\$$ORIGIN/..
+pullConsumer:PullConsumer.cpp
+	c++ -I ../include  -rdynamic -lboost_thread -lboost_filesystem -lboost_chrono -o pullConsumer PullConsumer.cpp -ldl -Wl,-rpath,\$$ORIGIN/..
+pushConsumer:PushConsumer.cpp
+	c++ -I ../include  -rdynamic -lboost_thread -lboost_filesystem -lboost_chrono -o pushConsumer PushConsumer.cpp -ldl -Wl,-rpath,\$$ORIGIN/..
 
 clean:
-	rm -f producer
+	rm -f producer pushConsumer pullConsumer

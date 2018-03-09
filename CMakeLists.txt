@@ -11,13 +11,14 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
-
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/'")
 
 # set(JAVA_HOME "/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home")
 find_package(JNI REQUIRED)
 message("Java include path: ${JAVA_INCLUDE_PATH}")
-
+message("JAVA_JVM_LIBRARY: ${JAVA_JVM_LIBRARY}")
+message("JNI_LIBRARIES: ${JNI_LIBRARIES}")
 find_package(Boost REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)

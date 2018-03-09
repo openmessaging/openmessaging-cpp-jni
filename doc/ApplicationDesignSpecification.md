@@ -1,8 +1,14 @@
 ## Design
-    We are building a thin layer shared C/C++ library, allowing C/C++ users to make best of existing Java client SDK
-    with ease. This brings about three significat strengths: 1) Application developers are accessible to latest features 
-    which were available to Java SDK at first and propogated to other languages later on; 2) We, the library developers,
-    only need to maintain core client business code at one place; 3) It's basically even cheaper to build SDKs for the
+
+   We are building a thin layer shared C/C++ library, allowing C/C++ users to make best of existing Java client SDK
+    with ease. This brings about three significant strengths: 
+    
+   1. Application developers are accessible to latest features which were available to Java SDK at first and then 
+   propagated to other languages later on; 
+    
+   2. We, the library developers, only need to maintain core client business code at one place; 
+    
+   3. It's basically even cheaper to build SDKs for the
     rest languages on top of this thin library.
     
 ## Overview

@@ -49,8 +49,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     void Initialize();
 
-    bool isRunning();
-
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
 
     std::string expand_class_path(const std::string& wildcard);

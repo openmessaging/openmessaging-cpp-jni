@@ -2,7 +2,7 @@
 
 #include <plog/Log.h>
 
-#include <MessagingAccessPointFactory.h>
+#include "MessagingAccessPointFactory.h"
 #include "core.h"
 #include "NonStandardKeys.h"
 
@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual void onMessage(boost::shared_ptr<Message> &message, boost::shared_ptr<Context> &context) {
             boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
-            std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
+            std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "A new message received. MsgId: " << msgId;
         }
     };
@@ -35,23 +35,22 @@ int main(int argc, char *argv[]) {
     // Define implementation driver class
     const string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-    // Initialize SDK
-    Initialize();
+    load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = OMS::newKeyValue();
+    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, kv);
+    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     std::string queueName("TopicTest");
 
-    boost::shared_ptr<KeyValue> subKV = OMS::newKeyValue();
+    boost::shared_ptr<KeyValue> subKV = boost::shared_ptr<KeyValue>(newKeyValue());
     const std::string value = "OMS_CONSUMER";
-    subKV->put(NonStandardKeys::CONSUMER_GROUP, value);
+    subKV->put(CONSUMER_GROUP, value);
 
     boost::shared_ptr<consumer::PushConsumer> pushConsumer = accessPoint->createPushConsumer(subKV);
 

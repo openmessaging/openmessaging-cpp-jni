@@ -4,9 +4,7 @@ add_library(oms_rocketmq SHARED
         core.cpp
         KeyValueImpl.cpp
         OMS.cpp
-        BuiltinKeys.cpp
         ServiceLifecycleImpl.cpp
-        NonStandardKeys.cpp
         PromiseImpl.cpp
 
         ByteMessageImpl.cpp

@@ -40,7 +40,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
         const std::string value = "OMS_CONSUMER";
-        kv->put(NonStandardKeys::CONSUMER_GROUP, value);
+        kv->put(CONSUMER_GROUP, value);
 
         boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
@@ -52,7 +52,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             boost::shared_ptr<Message> msg = pullConsumer->poll();
             if (msg) {
                 boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
-                std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
+                std::string msgId = sysHeaders->getString(MessageId);
                 ASSERT_TRUE(!msgId.empty());
                 ASSERT_NO_THROW(pullConsumer->ack(msgId));
                 break;

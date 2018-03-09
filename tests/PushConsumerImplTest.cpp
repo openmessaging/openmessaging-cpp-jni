@@ -7,6 +7,7 @@
 #include "NonStandardKeys.h"
 #include "CountdownLatch.h"
 #include "BaseTest.h"
+#include "NonStandardKeys.h"
 
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
@@ -64,7 +65,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
         const std::string value = "OMS_CONSUMER";
-        kv->put(NonStandardKeys::CONSUMER_GROUP, value);
+        kv->put(CONSUMER_GROUP, value);
 
         boost::shared_ptr<consumer::PushConsumer> pushConsumer = messagingAccessPoint->createPushConsumer(kv);
 

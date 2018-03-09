@@ -112,10 +112,6 @@ using namespace boost::filesystem;
         boost::call_once(once_flag, init0);
     }
 
-    bool isRunning() {
-        return jvm != NULL;
-    }
-
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {
         const char *klassIterable = "java/lang/Iterable";
         const char *klassIterator = "java/util/Iterator";

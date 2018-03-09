@@ -2,8 +2,7 @@
 
 #include <plog/Log.h>
 
-#include <MessagingAccessPointFactory.h>
-#include "core.h"
+#include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
 
 using namespace std;
@@ -21,23 +20,22 @@ int main(int argc, char *argv[]) {
     // Define implementation driver class
     const string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-    // Initialize SDK
-    Initialize();
+    load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = OMS::newKeyValue();
+    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, kv);
+    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     std::string queueName("TopicTest");
 
-    boost::shared_ptr<KeyValue> subKV = OMS::newKeyValue();
-    const std::string value = "OMS_CONSUMER";
-    subKV->put(NonStandardKeys::CONSUMER_GROUP, value);
+    boost::shared_ptr<KeyValue> subKV = boost::shared_ptr<KeyValue>(newKeyValue());
+    const std::string consumer_group_value = "OMS_CONSUMER";
+    subKV->put(CONSUMER_GROUP, consumer_group_value);
 
 
     boost::shared_ptr<consumer::PullConsumer> pullConsumer = accessPoint->createPullConsumer(queueName, subKV);
@@ -48,7 +46,7 @@ int main(int argc, char *argv[]) {
         boost::shared_ptr<Message> msg = pullConsumer->poll();
         if (msg) {
             boost::shared_ptr<KeyValue> sysHeaders = msg->sysHeaders();
-            std::string msgId = sysHeaders->getString(BuiltinKeys::MessageId);
+            std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "Receive a new message. MsgId: " << msgId;
             pullConsumer->ack(msgId);
             LOG_INFO << "Acknowledging " << msgId << " OK";

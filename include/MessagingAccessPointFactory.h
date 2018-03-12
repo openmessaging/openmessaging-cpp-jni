@@ -34,11 +34,17 @@ extern "C" {
 
         handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
         if (!handle) {
-            std::string msg = "Failed to dlopen shared library: ";
-            msg += shared_library_name;
-            msg += ". Reason: ";
-            msg += dlerror();
-            throw io::openmessaging::OMSException(msg);
+            std::string default_library = "liboms_jni";
+            shared_library_name = default_library + extension;
+            handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
+
+            if (!handle) {
+                std::string msg = "Failed to dlopen shared library: ";
+                msg += shared_library_name;
+                msg += ". Reason: ";
+                msg += dlerror();
+                throw io::openmessaging::OMSException(msg);
+            }
         }
     }
 

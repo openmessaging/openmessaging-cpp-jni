@@ -3,6 +3,7 @@
 
 #include <dlfcn.h>
 #include <string>
+#include <iostream>
 
 #include <boost/shared_ptr.hpp>
 
@@ -31,9 +32,13 @@ extern "C" {
         std::string extension = ".so";
 #endif
         std::string shared_library_name = "liboms_" + driver + extension;
-
+        // clean previous error
+        dlerror();
         handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
         if (!handle) {
+            char * error = dlerror();
+            std::cerr << "Failed to load shared library: " << shared_library_name
+                      << "; Error Message:" << error << std::endl;
             std::string default_library = "liboms_jni";
             shared_library_name = default_library + extension;
             handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
@@ -43,6 +48,7 @@ extern "C" {
                 msg += shared_library_name;
                 msg += ". Reason: ";
                 msg += dlerror();
+                std::cout << msg << std::endl;
                 throw io::openmessaging::OMSException(msg);
             }
         }

@@ -1,0 +1,10 @@
+// linux:
+sudo ./bootstrap.sh --with-toolset=clang
+sudo ./b2 --reconfigure stage toolset=clang cxxflags="-std=c++1z -fPIC -O3 -Werror -Wno-unused-local-typedef -Wno-deprecated-declarations -Wno-unused-function" link=static,shared variant=release threading=multi linkflags="-fPIC" define=BOOST_SYSTEM_NO_DEPRECATED -q toolset=clang -fPIC" define=BOOST_SYSTEM_NO_DEPRECATED -q
+
+
+// windows:
+bootstrap
+b2 headers
+b2 --reconfigure stage --without-mpi --build-type=complete --layout=versioned variant=debug,release link=static,shared threading=single,multi runtime-link=static,shared define=BOOST_SYSTEM_NO_DEPRECATED address-model=32 -q
+b2 --reconfigure stage --without-mpi --build-type=complete --layout=versioned variant=debug,release link=static,shared threading=single,multi runtime-link=static,shared define=BOOST_SYSTEM_NO_DEPRECATED address-model=64 -q

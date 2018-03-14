@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         T makeGlobal(T localRef) {
             T globalRef = static_cast<T>(env->NewGlobalRef(localRef));
             env->DeleteLocalRef(localRef);
-            return boost::move(globalRef);
+            return globalRef;
         }
 
         bool checkAndClearException();

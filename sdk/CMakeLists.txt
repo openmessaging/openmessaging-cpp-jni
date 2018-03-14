@@ -35,7 +35,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message("Boost will be statically linked")
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS
-            "-Wl,-Bstatic -lboost_date_time -lboost_system -lboost_thread -lboost_filesystem -Wl,-Bdynamic -ldl -ljvm")
+            "-Wl,-Bstatic -lboost_date_time -lboost_thread -lboost_filesystem -lboost_system -Wl,-Bdynamic -ldl -ljvm")
 else()
     message("Compiler ID is unknown")
 endif ()

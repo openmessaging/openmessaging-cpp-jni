@@ -13,18 +13,13 @@ endif (COMMAND cmake_policy)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
-
-find_package(JNI REQUIRED)
-message("Java include path: ${JAVA_INCLUDE_PATH}")
-message("JAVA_JVM_LIBRARY: ${JAVA_JVM_LIBRARY}")
-message("JNI_LIBRARIES: ${JNI_LIBRARIES}")
-link_directories(/home/shutian.lzh/oms/jdk8m/lib/amd64 /home/shutian.lzh/oms/jdk8m/lib/amd64/server)
+link_directories(third_party/jdk8m/lib/amd64 third_party/jdk8m/lib/amd64/server)
 
 find_package(Boost REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
 
-include_directories(SYSTEM ${JNI_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM third_party/jdk8m/include third_party/jdk8m/include/linux ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(sdk)
 

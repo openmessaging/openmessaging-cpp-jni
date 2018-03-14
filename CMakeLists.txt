@@ -29,7 +29,7 @@ if (BUILD_EXAMPLE)
     add_subdirectory(example)
 endif ()
 
-option(TEST "Build test cases" ON)
+option(TEST "Build test cases" OFF)
 if(TEST)
     enable_testing()
     option(gtest_build_tests OFF)

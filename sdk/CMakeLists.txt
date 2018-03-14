@@ -22,7 +22,7 @@ add_library(oms_rocketmq SHARED
         MessagingAccessPointFactory.cpp)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    message("Boost is dynamically linked")
+    message("Boost will be dynamically linked")
     target_link_libraries(oms_rocketmq
             dl
             boost_date_time-mt
@@ -33,7 +33,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
             jvm
             )
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    message("Boost is statically linked")
+    message("Boost will be statically linked")
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS
             "-Wl,-Bstatic -lboost_date_time -lboost_system -lboost_thread -lboost_filesystem -Wl,-Bdynamic -ldl -ljvm")
 else()

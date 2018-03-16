@@ -4,11 +4,17 @@ project(oms CXX)
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_BUILD_TYPE Debug)
 
-if (COMMAND cmake_policy)
+if (POLICY CMP0003)
     cmake_policy(SET CMP0003 NEW)
+endif ()
+
+if (POLICY CMP0042)
     cmake_policy(SET CMP0042 NEW)
+endif ()
+
+if (POLICY CMP0064)
     cmake_policy(SET CMP0064 NEW)
-endif (COMMAND cmake_policy)
+endif ()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -16,6 +22,11 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/
 link_directories(third_party/jdk8m/lib/amd64 third_party/jdk8m/lib/amd64/server)
 
 find_package(Boost REQUIRED)
+
+find_library(BOOST_date_time_LIBRARY NAMES libboost_date_time.a libboost_date_time-mt.a)
+find_library(BOOST_thread_LIBRARY NAMES libboost_thread.a libboost_thread-mt.a)
+find_library(BOOST_filesystem_LIBRARY NAMES libboost_filesystem.a libboost_filesystem-mt.a)
+find_library(BOOST_system_LIBRARY NAMES libboost_system.a libboost_system-mt.a)
 
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
 

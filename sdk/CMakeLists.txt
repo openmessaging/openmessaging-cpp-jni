@@ -21,24 +21,13 @@ add_library(oms_rocketmq SHARED
         MessagingAccessPointImpl.cpp
         MessagingAccessPointFactory.cpp)
 
-if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    message("Boost will be dynamically linked")
-    target_link_libraries(oms_rocketmq
-            dl
-            boost_date_time-mt
-            boost_system-mt
-            boost_thread-mt
-            boost_chrono-mt
-            boost_filesystem-mt
-            jvm
-            )
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    message("Boost will be statically linked")
-    set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS
-            "-Wl,-Bstatic -lboost_date_time -lboost_thread -lboost_filesystem -lboost_system -Wl,-Bdynamic -ldl -ljvm")
-else()
-    message("Compiler ID is unknown")
-endif ()
+target_link_libraries(oms_rocketmq
+        dl
+        jvm
+        ${BOOST_date_time_LIBRARY}
+        ${BOOST_thread_LIBRARY}
+        ${BOOST_filesystem_LIBRARY}
+        ${BOOST_system_LIBRARY})
 
 set_target_properties(oms_rocketmq PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 

@@ -23,6 +23,7 @@ link_directories(third_party/jdk8m/lib/amd64 third_party/jdk8m/lib/amd64/server)
 
 find_package(Boost REQUIRED)
 
+find_library(BOOST_chrono_LIBRARY NAMES libboost_chrono.a libboost_chrono-mt.a)
 find_library(BOOST_date_time_LIBRARY NAMES libboost_date_time.a libboost_date_time-mt.a)
 find_library(BOOST_thread_LIBRARY NAMES libboost_thread.a libboost_thread-mt.a)
 find_library(BOOST_filesystem_LIBRARY NAMES libboost_filesystem.a libboost_filesystem-mt.a)

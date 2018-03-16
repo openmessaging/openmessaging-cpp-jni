@@ -24,6 +24,7 @@ add_library(oms_rocketmq SHARED
 target_link_libraries(oms_rocketmq
         dl
         jvm
+        ${BOOST_chrono_LIBRARY}
         ${BOOST_date_time_LIBRARY}
         ${BOOST_thread_LIBRARY}
         ${BOOST_filesystem_LIBRARY}

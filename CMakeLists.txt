@@ -19,7 +19,6 @@ endif ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
-link_directories(third_party/jdk8m/lib/amd64 third_party/jdk8m/lib/amd64/server)
 
 find_package(Boost REQUIRED)
 
@@ -31,7 +30,14 @@ find_library(BOOST_system_LIBRARY NAMES libboost_system.a libboost_system-mt.a)
 
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
 
-include_directories(SYSTEM third_party/jdk8m/include third_party/jdk8m/include/linux ${Boost_INCLUDE_DIRS})
+if (UNIX AND NOT APPLE)
+    set(JNI_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/jdk8m/include ${CMAKE_SOURCE_DIR}/third_party/jdk8m/include/linux")
+    set(JAVA_JVM_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/jdk8m/lib/amd64/server/libjvm.so")
+else()
+    find_package(JNI REQUIRED)
+endif ()
+
+include_directories(SYSTEM ${JNI_INCLUDE_DIRS})
 
 add_subdirectory(sdk)
 

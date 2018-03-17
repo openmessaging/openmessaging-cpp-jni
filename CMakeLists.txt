@@ -18,7 +18,7 @@ endif ()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
+#set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
 link_directories(third_party/jdk8m/lib/amd64 third_party/jdk8m/lib/amd64/server)
 
 find_package(Boost REQUIRED)

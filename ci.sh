@@ -13,5 +13,3 @@ WORK_DIR=`pwd`
 mkdir build
 cd build
 cmake ..
-make VERBOSE=1
-./runUnitTests

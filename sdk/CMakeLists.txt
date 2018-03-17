@@ -34,6 +34,9 @@ if (UNIX AND NOT APPLE)
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS "-Wl,-rpath,'$ORIGIN/vm/lib/amd64/server/'")
 endif ()
 
-set_target_properties(oms_rocketmq PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set_target_properties(oms_rocketmq PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        OUTPUT_NAME oms_jni
+        )
 
 install(TARGETS oms_rocketmq LIBRARY DESTINATION lib)

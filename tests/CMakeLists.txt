@@ -20,12 +20,12 @@ add_executable(runUnitTests
 
 target_link_libraries(runUnitTests
         dl
-        pthread
-        boost_log-mt
-        boost_date_time-mt
-        boost_system-mt
-        boost_thread-mt
-        boost_chrono-mt
+        ${JAVA_JVM_LIBRARY}
+        ${BOOST_chrono_LIBRARY}
+        ${BOOST_date_time_LIBRARY}
+        ${BOOST_thread_LIBRARY}
+        ${BOOST_filesystem_LIBRARY}
+        ${BOOST_system_LIBRARY}
         gtest
         oms_rocketmq)
 

@@ -31,8 +31,11 @@ find_library(BOOST_system_LIBRARY NAMES libboost_system.a libboost_system-mt.a)
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
 
 if (UNIX AND NOT APPLE)
-    set(JNI_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/jdk8m/include ${CMAKE_SOURCE_DIR}/third_party/jdk8m/include/linux")
-    set(JAVA_JVM_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/jdk8m/lib/amd64/server/libjvm.so")
+    set(JNI_INCLUDE_DIRS
+        ${CMAKE_SOURCE_DIR}/third_party/jdk8m/include
+        ${CMAKE_SOURCE_DIR}/third_party/jdk8m/include/linux)
+    set(JAVA_JVM_LIBRARY
+        ${CMAKE_SOURCE_DIR}/third_party/jdk8m/lib/amd64/server/libjvm.so)
 else()
     find_package(JNI REQUIRED)
 endif ()

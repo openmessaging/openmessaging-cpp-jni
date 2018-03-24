@@ -190,11 +190,17 @@ using namespace boost::filesystem;
     std::string build_class_path_option() {
         std::string option = "-Djava.class.path=";
         const char* ROCKETMQ_HOME_KEY = "ROCKETMQ_HOME";
-        char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
+        const char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
         if (NULL == rocketmqHome) {
-            const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
-            LOG_ERROR << msg;
-            throw OMSException(msg);
+            const char *vendor = "/usr/local/lib/oms/vendor";
+            path vendor_jar_dir(vendor);
+            if (exists(vendor_jar_dir)) {
+                rocketmqHome = vendor;
+            } else {
+                const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
+                LOG_ERROR << msg;
+                throw OMSException(msg);
+            }
         }
         std::string lib_dir = std::string(rocketmqHome) + "/lib/*";
         std::string expanded_class_path = expand_class_path(lib_dir);

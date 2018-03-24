@@ -14,18 +14,11 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     class BaseTest : public ::testing::Test {
     public:
         void SetUp() {
-            const char *ROCKETMQ_HOME_KEY = "ROCKETMQ_HOME";
 
-            if (NULL == getenv(ROCKETMQ_HOME_KEY)) {
-                const char* msg = "Environment variable: ROCKETMQ_HOME is not set";
-                std::cerr << msg << std::endl;
-                throw OMSException(msg);
-            }
-
+            int overwrite = 1;
             const char *NAME_SRV_ADDR_KEY = "NAMESRV_ADDR";
             const char *NAME_SRV_ADDR_VALUE = "localhost:9876";
 
-            int overwrite = 1;
             setenv(NAME_SRV_ADDR_KEY, NAME_SRV_ADDR_VALUE, overwrite);
 
             Initialize();

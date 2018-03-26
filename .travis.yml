@@ -1,4 +1,5 @@
 language: cpp
+
 script: ./ci.sh
 
 matrix:
@@ -62,7 +63,7 @@ matrix:
             - libboost-all-dev
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-    # Test Clang
+    # Clang 3.6
     - os: linux
       addons:
         apt:

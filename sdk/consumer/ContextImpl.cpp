@@ -1,4 +1,4 @@
-#include <boost/smart_ptr.hpp>
+#include "core.h"
 #include "KeyValueImpl.h"
 #include "consumer/ContextImpl.h"
 
@@ -17,17 +17,17 @@ ContextImpl::ContextImpl(jobject proxy) : _proxy(proxy) {
     midAck2 = current.getMethodId(classContext, "ack", buildSignature(Types::void_, 1, Types::KeyValue_));
 }
 
-boost::shared_ptr<KeyValue> ContextImpl::properties() {
+NS::shared_ptr<KeyValue> ContextImpl::properties() {
     CurrentEnv current;
     jobject jPropertiesLocal = current.callObjectMethod(_proxy, midProperties);
     jobject jProps = current.newGlobalRef(jPropertiesLocal);
-    return boost::make_shared<KeyValueImpl>(jProps);
+    return NS::make_shared<KeyValueImpl>(jProps);
 }
 
-void ContextImpl::ack(boost::shared_ptr<KeyValue> props) {
+void ContextImpl::ack(NS::shared_ptr<KeyValue> props) {
     CurrentEnv current;
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kvImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kvImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callVoidMethod(_proxy, midAck2, kvImpl->getProxy());
     } else {
         current.callVoidMethod(_proxy, midAck);

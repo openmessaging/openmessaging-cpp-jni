@@ -1,5 +1,3 @@
-#include <boost/smart_ptr.hpp>
-
 #include <plog/Log.h>
 
 #include "MessagingAccessPointFactory.h"
@@ -23,29 +21,29 @@ int main(int argc, char *argv[]) {
     load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
+    NS::shared_ptr<KeyValue> kv = NS::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
+    NS::shared_ptr<MessagingAccessPoint> accessPoint = NS::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     std::string queueName("TopicTest");
 
-    boost::shared_ptr<KeyValue> subKV = boost::shared_ptr<KeyValue>(newKeyValue());
+    NS::shared_ptr<KeyValue> subKV = NS::shared_ptr<KeyValue>(newKeyValue());
     const std::string consumer_group_value = "OMS_CONSUMER";
     subKV->put(CONSUMER_GROUP, consumer_group_value);
 
 
-    boost::shared_ptr<consumer::PullConsumer> pullConsumer = accessPoint->createPullConsumer(queueName, subKV);
+    NS::shared_ptr<consumer::PullConsumer> pullConsumer = accessPoint->createPullConsumer(queueName, subKV);
 
     pullConsumer->startup();
 
     while (true) {
-        boost::shared_ptr<Message> msg = pullConsumer->poll();
+        NS::shared_ptr<Message> msg = pullConsumer->poll();
         if (msg) {
-            boost::shared_ptr<KeyValue> sysHeaders = msg->sysHeaders();
+            NS::shared_ptr<KeyValue> sysHeaders = msg->sysHeaders();
             std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "Receive a new message. MsgId: " << msgId;
             pullConsumer->ack(msgId);

@@ -22,20 +22,20 @@ PullConsumerImpl::~PullConsumerImpl() {
     current.deleteRef(classPullConsumer);
 }
 
-boost::shared_ptr<KeyValue> PullConsumerImpl::properties() {
+NS::shared_ptr<KeyValue> PullConsumerImpl::properties() {
     CurrentEnv current;
     jobject kv = current.callObjectMethod(_proxy, midProperties);
-    boost::shared_ptr<KeyValueImpl> ptr = boost::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
+    NS::shared_ptr<KeyValueImpl> ptr = NS::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
     current.deleteRef(kv);
     return ptr;
 }
 
-boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<Message> PullConsumerImpl::poll(const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     jobject jMessageLocal;
     if (props) {
-        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         jMessageLocal = current.callObjectMethod(_proxy, midPoll2, ptr->getProxy());
     } else {
         jMessageLocal = current.callObjectMethod(_proxy, midPoll);
@@ -43,21 +43,21 @@ boost::shared_ptr<Message> PullConsumerImpl::poll(const boost::shared_ptr<KeyVal
 
     if (jMessageLocal) {
         jobject jMessage = current.newGlobalRef(jMessageLocal);
-        boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(jMessage);
+        NS::shared_ptr<Message> messagePtr = NS::make_shared<ByteMessageImpl>(jMessage);
         return messagePtr;
     }
 
-    boost::shared_ptr<Message> msg_nullptr;
+    NS::shared_ptr<Message> msg_nullptr;
     return msg_nullptr;
 }
 
 void PullConsumerImpl::ack(const std::string &messageId,
-                           const boost::shared_ptr<KeyValue> &props) {
+                           const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     jstring msgId = current.newStringUTF(messageId.c_str());
     if (props) {
-        boost::shared_ptr<KeyValueImpl> ptr = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
         current.callObjectMethod(_proxy, midAck, msgId);

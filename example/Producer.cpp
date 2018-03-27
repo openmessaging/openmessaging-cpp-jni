@@ -1,9 +1,7 @@
-#include <boost/smart_ptr.hpp>
 #include <boost/lexical_cast.hpp>
-
 #include <plog/Log.h>
 
-#include <MessagingAccessPointFactory.h>
+#include "MessagingAccessPointFactory.h"
 
 using namespace std;
 using namespace io::openmessaging;
@@ -29,16 +27,16 @@ int main(int argc, char *argv[]) {
     load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
+    NS::shared_ptr<KeyValue> kv = NS::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
+    NS::shared_ptr<MessagingAccessPoint> accessPoint = NS::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     // Create a producer instance via MessageAccessPoint instance
-    boost::shared_ptr<Producer> producer = accessPoint->createProducer();
+    NS::shared_ptr<Producer> producer = accessPoint->createProducer();
 
     // Start producer and hereafter be prepared to send message to brokers
     producer->startup();
@@ -52,11 +50,11 @@ int main(int argc, char *argv[]) {
     const scoped_array<char> message_body(buffer, strlen(buffer));
 
     // Create message by producer, which also plays the role of message factory
-    boost::shared_ptr<ByteMessage> message = producer->createByteMessageToTopic(topic, message_body);
+    NS::shared_ptr<ByteMessage> message = producer->createByteMessageToTopic(topic, message_body);
 
     for (int i = 0; i < count; ++i) {
         // Send message
-        boost::shared_ptr<SendResult> sendResult = producer->send(message);
+        NS::shared_ptr<SendResult> sendResult = producer->send(message);
 
         // SendResult instance holds meta data including message id which may be employed to query various info on messaging
         // console

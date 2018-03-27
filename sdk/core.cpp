@@ -3,10 +3,13 @@
 
 #include "core.h"
 
+#include <boost/filesystem.hpp>
+
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-using namespace std;
-using namespace boost::filesystem;
+
+    using namespace std;
+    using namespace boost::filesystem;
 
     const char* Types::void_ = "V";
     const char* Types::boolean_ = "Z";
@@ -54,7 +57,11 @@ using namespace boost::filesystem;
 
     JNIEnv *env;
 
+#if __cplusplus >= 201103L
+        NS::once_flag once_flag;
+#else
     NS::once_flag once_flag = BOOST_ONCE_INIT;
+#endif
 
     void init_logging() {
         char *home = getenv("HOME");

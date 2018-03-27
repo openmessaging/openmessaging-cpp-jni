@@ -17,26 +17,26 @@ StreamImpl::~StreamImpl() {
     ctx.deleteRef(classStream);
 }
 
-boost::shared_ptr<KeyValue> StreamImpl::properties() {
+NS::shared_ptr<KeyValue> StreamImpl::properties() {
     CurrentEnv ctx;
     jobject kv = ctx.callObjectMethod(_proxy, midProperties);
-    boost::shared_ptr<KeyValue> pKV = boost::make_shared<KeyValueImpl>(ctx.newGlobalRef(kv));
+    NS::shared_ptr<KeyValue> pKV = NS::make_shared<KeyValueImpl>(ctx.newGlobalRef(kv));
     ctx.deleteRef(kv);
     return pKV;
 }
 
-boost::shared_ptr<MessageIterator> StreamImpl::current() {
+NS::shared_ptr<MessageIterator> StreamImpl::current() {
     throw OMSException("Not Implemented");
 }
 
-boost::shared_ptr<MessageIterator> StreamImpl::begin() {
+NS::shared_ptr<MessageIterator> StreamImpl::begin() {
     throw OMSException("Not Implemented");
 }
 
-boost::shared_ptr<MessageIterator> StreamImpl::end() {
+NS::shared_ptr<MessageIterator> StreamImpl::end() {
     throw OMSException("Not Implemented");
 }
 
-boost::shared_ptr<MessageIterator> StreamImpl::seekByTime(long timestamp) {
+NS::shared_ptr<MessageIterator> StreamImpl::seekByTime(long timestamp) {
     throw OMSException("Not Implemented");
 }

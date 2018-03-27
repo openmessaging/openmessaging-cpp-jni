@@ -1,4 +1,3 @@
-#include <boost/smart_ptr.hpp>
 #include <plog/Log.h>
 #include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
@@ -8,8 +7,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     class ExampleMessageListener : virtual public MessageListener {
     public:
 
-        virtual void onMessage(boost::shared_ptr<Message> &message, boost::shared_ptr<Context> &context) {
-            boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
+        virtual void onMessage(NS::shared_ptr<Message> &message, NS::shared_ptr<Context> &context) {
+            NS::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
             std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "A new message received. MsgId: " << msgId;
         }
@@ -35,24 +34,24 @@ int main(int argc, char *argv[]) {
     load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    boost::shared_ptr<KeyValue> kv = boost::shared_ptr<KeyValue>(newKeyValue());
+    NS::shared_ptr<KeyValue> kv = NS::shared_ptr<KeyValue>(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    boost::shared_ptr<MessagingAccessPoint> accessPoint = boost::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
+    NS::shared_ptr<MessagingAccessPoint> accessPoint = NS::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
 
     std::string queueName("TopicTest");
 
-    boost::shared_ptr<KeyValue> subKV = boost::shared_ptr<KeyValue>(newKeyValue());
+    NS::shared_ptr<KeyValue> subKV = NS::shared_ptr<KeyValue>(newKeyValue());
     const std::string value = "OMS_CONSUMER";
     subKV->put(CONSUMER_GROUP, value);
 
-    boost::shared_ptr<consumer::PushConsumer> pushConsumer = accessPoint->createPushConsumer(subKV);
+    NS::shared_ptr<consumer::PushConsumer> pushConsumer = accessPoint->createPushConsumer(subKV);
 
     // Create a listener instance
-    boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>();
+    NS::shared_ptr<MessageListener> messageListener = NS::make_shared<ExampleMessageListener>();
 
     // Attach listener to queue
     pushConsumer->attachQueue(queueName, messageListener);

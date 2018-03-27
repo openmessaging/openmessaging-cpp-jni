@@ -1,6 +1,6 @@
 #include <map>
-#include <boost/thread.hpp>
 
+#include "core.h"
 #include "consumer/PushConsumerImpl.h"
 #include "KeyValueImpl.h"
 #include "ByteMessageImpl.h"
@@ -10,21 +10,21 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-    boost::mutex listener_mutex;
-    std::map<std::string, boost::shared_ptr<MessageListener> > queue_listener_map;
+    NS::mutex listener_mutex;
+    std::map<std::string, NS::shared_ptr<MessageListener> > queue_listener_map;
 
     void onMessage(JNIEnv *env, jobject object, jstring queue, jobject message, jobject context) {
         const char* queue_name_char_ptr = env->GetStringUTFChars(queue, NULL);
         std::string queue_name(queue_name_char_ptr);
-        boost::shared_ptr<MessageListener> messageListenerPtr;
+        NS::shared_ptr<MessageListener> messageListenerPtr;
         {
-            boost::lock_guard<boost::mutex> lk(listener_mutex);
+            NS::lock_guard<NS::mutex> lk(listener_mutex);
             messageListenerPtr = queue_listener_map[queue_name];
         }
 
         if (messageListenerPtr) {
-            boost::shared_ptr<Message> messagePtr = boost::make_shared<ByteMessageImpl>(message);
-            boost::shared_ptr<Context> contextPtr = boost::make_shared<ContextImpl>(context);
+            NS::shared_ptr<Message> messagePtr = NS::make_shared<ByteMessageImpl>(message);
+            NS::shared_ptr<Context> contextPtr = NS::make_shared<ContextImpl>(context);
             messageListenerPtr->onMessage(messagePtr, contextPtr);
         }
     }
@@ -73,11 +73,11 @@ PushConsumerImpl::~PushConsumerImpl() {
     current.deleteRef(classMessageListenerAdaptor);
 }
 
-boost::shared_ptr<KeyValue> PushConsumerImpl::properties() {
+NS::shared_ptr<KeyValue> PushConsumerImpl::properties() {
     CurrentEnv ctx;
     jobject propertiesLocal = ctx.callObjectMethod(_proxy, midProperties);
     jobject globalRef = ctx.newGlobalRef(propertiesLocal);
-    boost::shared_ptr<KeyValue> ret = boost::make_shared<KeyValueImpl>(globalRef);
+    NS::shared_ptr<KeyValue> ret = NS::make_shared<KeyValueImpl>(globalRef);
     return ret;
 }
 
@@ -98,8 +98,8 @@ bool PushConsumerImpl::isSuspended() {
 }
 
 PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
-                                            const boost::shared_ptr<MessageListener> &listener,
-                                            const boost::shared_ptr<KeyValue> &props) {
+                                            const NS::shared_ptr<MessageListener> &listener,
+                                            const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv ctx;
 
     jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
@@ -108,7 +108,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
     LOG_DEBUG << "MessageListenerAdaptor instance created";
     {
-        boost::lock_guard<boost::mutex> lk(listener_mutex);
+        NS::lock_guard<NS::mutex> lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
@@ -123,7 +123,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
 PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
 
     {
-        boost::lock_guard<boost::mutex> lk(listener_mutex);
+        NS::lock_guard<NS::mutex> lk(listener_mutex);
         queue_listener_map.erase(queueName);
     }
 
@@ -136,10 +136,10 @@ PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
     return *this;
 }
 
-void PushConsumerImpl::addInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
+void PushConsumerImpl::addInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) {
     throw OMSException("Not Implemented");
 }
 
-void PushConsumerImpl::removeInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) {
+void PushConsumerImpl::removeInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) {
     throw OMSException("Not Implemented");
 }

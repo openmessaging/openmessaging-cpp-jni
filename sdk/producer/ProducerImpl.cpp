@@ -12,14 +12,14 @@ using namespace io::openmessaging::producer;
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     long long sendOpaque = 0;
-    boost::mutex sendAsyncMutex;
-    std::map<long long, boost::shared_ptr<Promise> > sendAsyncMap;
+    NS::mutex sendAsyncMutex;
+    std::map<long long, NS::shared_ptr<Promise> > sendAsyncMap;
 
     void sendAsyncCallback(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
 
-        boost::shared_ptr<Promise> promise;
+        NS::shared_ptr<Promise> promise;
         {
-            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
+            NS::lock_guard<NS::mutex> lk(sendAsyncMutex);
             promise = sendAsyncMap[opaque];
             sendAsyncMap.erase(opaque);
         }
@@ -53,7 +53,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
             jobject objectSendResultLocal = current.callObjectMethod(jFuture, midGet);
             jobject objectSendResult = current.newGlobalRef(objectSendResultLocal);
             if (objectSendResult) {
-                boost::shared_ptr<SendResult> sendResultPtr = boost::make_shared<SendResultImpl>(objectSendResult);
+                NS::shared_ptr<SendResult> sendResultPtr = NS::make_shared<SendResultImpl>(objectSendResult);
                 promise->set(sendResultPtr);
             }
         }
@@ -75,7 +75,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 END_NAMESPACE_3(io, openmessaging, producer)
 
 ProducerImpl::ProducerImpl(jobject proxy,
-                           const boost::shared_ptr<KeyValue> &props)
+                           const NS::shared_ptr<KeyValue> &props)
         : ServiceLifecycleImpl(proxy), _properties(props) {
     CurrentEnv current;
     const char *clazzProducer = "io/openmessaging/producer/Producer";
@@ -128,18 +128,18 @@ ProducerImpl::~ProducerImpl() {
     current.env->DeleteGlobalRef(objectProducerAdaptor);
 }
 
-boost::shared_ptr<KeyValue> ProducerImpl::properties() {
+NS::shared_ptr<KeyValue> ProducerImpl::properties() {
     return _properties;
 }
 
-boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
-                                                 const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<SendResult> ProducerImpl::send(const NS::shared_ptr<Message> &message,
+                                                 const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
-    boost::shared_ptr<ByteMessageImpl> msg = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
+    NS::shared_ptr<ByteMessageImpl> msg = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
     jobject jSendResult;
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         jobject ret = current.callObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
         jSendResult = current.newGlobalRef(ret);
     } else {
@@ -147,11 +147,11 @@ boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message
         jSendResult = current.newGlobalRef(ret);
     }
 
-    boost::shared_ptr<SendResult> sendResult = boost::make_shared<SendResultImpl>(jSendResult);
+    NS::shared_ptr<SendResult> sendResult = NS::make_shared<SendResultImpl>(jSendResult);
     return sendResult;
 }
 
-boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(const std::string &topic,
+NS::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(const std::string &topic,
                                                                       const scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
@@ -162,11 +162,11 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToTopic(const std:
     current.deleteRef(pBody);
     current.deleteRef(pTopic);
 
-    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
+    NS::shared_ptr<ByteMessage> message = NS::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
-boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(const std::string &topic,
+NS::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(const std::string &topic,
                                                                       const scoped_array<char> &body) {
     CurrentEnv current;
     jstring pTopic = current.env->NewStringUTF(topic.c_str());
@@ -177,44 +177,44 @@ boost::shared_ptr<ByteMessage> ProducerImpl::createByteMessageToQueue(const std:
     current.env->DeleteLocalRef(pBody);
     current.env->DeleteLocalRef(pTopic);
 
-    boost::shared_ptr<ByteMessage> message = boost::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
+    NS::shared_ptr<ByteMessage> message = NS::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
-boost::shared_ptr<SendResult> ProducerImpl::send(const boost::shared_ptr<Message> &message,
-                                                 const boost::shared_ptr<LocalTransactionBranchExecutor> &executor,
-                                                 const boost::shared_ptr<void> &arg,
-                                                 const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<SendResult> ProducerImpl::send(const NS::shared_ptr<Message> &message,
+                                                 const NS::shared_ptr<LocalTransactionBranchExecutor> &executor,
+                                                 const NS::shared_ptr<void> &arg,
+                                                 const NS::shared_ptr<KeyValue> &props) {
 
-    boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
-    boost::shared_ptr<LocalTransactionBranchExecutorImpl> executorImpl =
-            boost::dynamic_pointer_cast<LocalTransactionBranchExecutorImpl>(executor);
-    boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+    NS::shared_ptr<ByteMessageImpl> messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
+    NS::shared_ptr<LocalTransactionBranchExecutorImpl> executorImpl =
+            NS::dynamic_pointer_cast<LocalTransactionBranchExecutorImpl>(executor);
+    NS::shared_ptr<KeyValueImpl> propertiesImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
     CurrentEnv current;
     jobject jSendResult = current.callObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
                                                         executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
 
-    boost::shared_ptr<SendResultImpl> ret = boost::make_shared<SendResultImpl>(current.newGlobalRef(jSendResult));
+    NS::shared_ptr<SendResultImpl> ret = NS::make_shared<SendResultImpl>(current.newGlobalRef(jSendResult));
     return ret;
 }
 
-boost::shared_ptr<Future>
-ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
-                        const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<Future>
+ProducerImpl::sendAsync(const NS::shared_ptr<Message> &message,
+                        const NS::shared_ptr<KeyValue> &props) {
 
-    boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
+    NS::shared_ptr<ByteMessageImpl> messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
 
     if (messageImpl) {
         CurrentEnv current;
-        boost::shared_ptr<Promise> ft = boost::make_shared<PromiseImpl>();
+        NS::shared_ptr<Promise> ft = NS::make_shared<PromiseImpl>();
         long long opaque;
         {
             opaque = ++sendOpaque;
-            NS::lock_guard<boost::mutex> lk(sendAsyncMutex);
+            NS::lock_guard<NS::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
         if (props) {
-            boost::shared_ptr<KeyValueImpl> propertiesImpl = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+            NS::shared_ptr<KeyValueImpl> propertiesImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
             if (!propertiesImpl) {
                 LOG_ERROR << "Dynamic casting failed";
             }
@@ -228,17 +228,14 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
         LOG_ERROR << "Dynamic casting failed";
         abort();
     }
-
-    boost::shared_ptr<Future> f_nullptr;
-    return f_nullptr;
 }
 
-void ProducerImpl::sendOneway(const boost::shared_ptr<Message> &message,
-                              const boost::shared_ptr<KeyValue> &props) {
+void ProducerImpl::sendOneway(const NS::shared_ptr<Message> &message,
+                              const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
-    boost::shared_ptr<ByteMessageImpl> messageImpl = boost::dynamic_pointer_cast<ByteMessageImpl>(message);
+    NS::shared_ptr<ByteMessageImpl> messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callVoidMethod(_proxy, midSendOneway2, messageImpl->getProxy(), kv->getProxy());
     } else {
         current.callVoidMethod(_proxy, midSendOneway, messageImpl->getProxy());
@@ -247,14 +244,14 @@ void ProducerImpl::sendOneway(const boost::shared_ptr<Message> &message,
     current.checkAndClearException();
 }
 
-boost::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {
+NS::shared_ptr<BatchMessageSender> ProducerImpl::createSequenceBatchMessageSender() {
     throw OMSException("Not Implemented");
 }
 
-void ProducerImpl::addInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
+void ProducerImpl::addInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
     throw OMSException("Not Implemented");
 }
 
-void ProducerImpl::removeInterceptor(const boost::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
+void ProducerImpl::removeInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor) {
     throw OMSException("Not Implemented");
 }

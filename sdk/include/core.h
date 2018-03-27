@@ -12,7 +12,6 @@
     #include <condition_variable>
 #else
     #include <boost/thread.hpp>
-    #include <boost/filesystem.hpp>
 #endif
 
 #include <plog/Log.h>

@@ -41,13 +41,13 @@ protected:
 };
 
 TEST_F(ByteMessageImplTest, testUserHeaders) {
-    boost::shared_ptr<KeyValue> userHeaders = byteMessage->userHeaders();
+    NS::shared_ptr<KeyValue> userHeaders = byteMessage->userHeaders();
     ASSERT_TRUE(userHeaders != NULL);
 }
 
 
 TEST_F(ByteMessageImplTest, testSysHeaders) {
-    boost::shared_ptr<KeyValue> userHeaders = byteMessage->sysHeaders();
+    NS::shared_ptr<KeyValue> userHeaders = byteMessage->sysHeaders();
     ASSERT_TRUE(userHeaders != NULL);
 }
 

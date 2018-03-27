@@ -1,8 +1,7 @@
 #ifndef OMS_COUNTDOWN_LATCH_H
 #define OMS_COUNTDOWN_LATCH_H
 
-#include <boost/thread.hpp>
-
+#include "core.h"
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -17,9 +16,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool await(long long timeout);
 
     private:
-        boost::mutex _mtx;
+        NS::mutex _mtx;
         unsigned int _count;
-        boost::condition_variable cv;
+        NS::condition_variable cv;
 
         bool predicate();
     };

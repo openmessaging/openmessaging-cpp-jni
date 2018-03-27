@@ -10,8 +10,10 @@
     #include <thread>
     #include <mutex>
     #include <condition_variable>
+    #include <chrono>
 #else
     #include <boost/thread.hpp>
+    #include <boost/date_time.hpp>
 #endif
 
 #include <plog/Log.h>

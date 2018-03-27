@@ -15,10 +15,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(OMSTest, testNewKeyValue) {
         using namespace io::openmessaging;
 
-        boost::shared_ptr<KeyValue> kv = OMS::newKeyValue();
+        NS::shared_ptr<KeyValue> kv = OMS::newKeyValue();
         ASSERT_TRUE(kv);
 
-        boost::shared_ptr<KeyValueImpl> impl = boost::dynamic_pointer_cast<KeyValueImpl>(kv);
+        NS::shared_ptr<KeyValueImpl> impl = NS::dynamic_pointer_cast<KeyValueImpl>(kv);
         ASSERT_TRUE(impl);
 
         jobject  proxy = impl->getProxy();

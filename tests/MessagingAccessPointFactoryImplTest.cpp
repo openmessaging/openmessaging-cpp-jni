@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <gtest/gtest.h>
 
 #include "MessagingAccessPoint.h"
@@ -23,20 +22,20 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
-        boost::shared_ptr<producer::SendResult> sendResult = producer->send(message);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<producer::SendResult> sendResult = producer->send(message);
 
         cout << sendResult->messageId() << endl;
 
@@ -49,20 +48,20 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
         std::string queueName("TopicTest");
 
 
-        boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> kv = NS::make_shared<KeyValueImpl>();
         const std::string key = "rmq.consumer.group";
         const std::string value = "OMS_CONSUMER";
         kv->put(key, value);
 
-        boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        NS::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
         ASSERT_TRUE(pullConsumer);
 

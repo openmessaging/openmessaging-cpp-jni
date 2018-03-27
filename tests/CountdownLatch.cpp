@@ -1,7 +1,5 @@
 #include "CountdownLatch.h"
 
-#include <boost/date_time.hpp>
-
 using namespace io::openmessaging;
 
 CountdownLatch::CountdownLatch(unsigned int count)  : _count(count) {
@@ -9,7 +7,7 @@ CountdownLatch::CountdownLatch(unsigned int count)  : _count(count) {
 }
 
 void CountdownLatch::countdown() {
-    boost::unique_lock<boost::mutex> lk(_mtx);
+    NS::unique_lock<NS::mutex> lk(_mtx);
     if (_count <= 0) {
         return;
     }
@@ -27,9 +25,9 @@ void CountdownLatch::await() {
     }
 
     {
-        boost::unique_lock<boost::mutex> lk(_mtx);
+        NS::unique_lock<NS::mutex> lk(_mtx);
         if(_count) {
-            cv.wait(lk, boost::bind(&CountdownLatch::predicate, this));
+            cv.wait(lk, NS::bind(&CountdownLatch::predicate, this));
         }
     }
 }
@@ -40,11 +38,17 @@ bool CountdownLatch::await(long long timeout) {
     }
 
     {
-        boost::unique_lock<boost::mutex> lk(_mtx);
+        NS::unique_lock<NS::mutex> lk(_mtx);
         if (_count) {
-            const boost::system_time timeout_point =
-                    boost::get_system_time() + boost::posix_time::milliseconds(timeout);
-            cv.timed_wait(lk, timeout_point, boost::bind(&CountdownLatch::predicate, this));
+
+#if __cplusplus >= 201103L
+            auto timeout_point = NS::chrono::system_clock::now() + NS::chrono::milliseconds(timeout);
+            cv.wait_until(lk, timeout_point, NS::bind(&CountdownLatch::predicate, this));
+#else
+            const NS::system_time timeout_point =
+                    NS::get_system_time() + NS::posix_time::milliseconds(timeout);
+            cv.timed_wait(lk, timeout_point, NS::bind(&CountdownLatch::predicate, this));
+#endif
             if (_count) {
                 return false;
             }

@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         ExampleMessageListener(CountdownLatch &latch_) : latch(latch_) {
         }
 
-        virtual void onMessage(boost::shared_ptr<Message> &message, boost::shared_ptr<Context> &context) {
+        virtual void onMessage(NS::shared_ptr<Message> &message, NS::shared_ptr<Context> &context) {
             std::cout << "A message received" << std::endl;
             latch.countdown();
         }
@@ -44,37 +44,37 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
         // First send a message
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char *data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
         producer->send(message);
         // Send message OK
 
         std::string queueName("TopicTest");
 
-        boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> kv = NS::make_shared<KeyValueImpl>();
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_GROUP, value);
 
-        boost::shared_ptr<consumer::PushConsumer> pushConsumer = messagingAccessPoint->createPushConsumer(kv);
+        NS::shared_ptr<consumer::PushConsumer> pushConsumer = messagingAccessPoint->createPushConsumer(kv);
 
         ASSERT_TRUE(pushConsumer);
 
         CountdownLatch latch(1);
 
-        boost::shared_ptr<MessageListener> messageListener = boost::make_shared<ExampleMessageListener>(
-                boost::ref(latch));
+        NS::shared_ptr<MessageListener> messageListener = NS::make_shared<ExampleMessageListener>(
+                NS::ref(latch));
         pushConsumer->attachQueue(queueName, messageListener);
 
         pushConsumer->startup();

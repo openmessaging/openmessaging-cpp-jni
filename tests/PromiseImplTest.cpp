@@ -58,10 +58,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PromiseImplTest, testAddListener) {
         PromiseImpl promise;
         CountdownLatch countdownLatch(1);
-        boost::shared_ptr<FutureListener> listener = boost::make_shared<FutureListenerExample>(boost::ref(countdownLatch));
+        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(NS::ref(countdownLatch));
         promise.addListener(listener);
-        boost::shared_ptr<producer::SendResult> pSendResult =
-                boost::make_shared<producer::SendResultImpl>(objectSendResult);
+        NS::shared_ptr<producer::SendResult> pSendResult =
+                NS::make_shared<producer::SendResultImpl>(objectSendResult);
         promise.set(pSendResult);
         ASSERT_TRUE(countdownLatch.await(10000));
     }
@@ -69,9 +69,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PromiseImplTest, testAddListener2) {
         PromiseImpl promise;
         CountdownLatch countdownLatch(1);
-        boost::shared_ptr<FutureListener> listener = boost::make_shared<FutureListenerExample>(boost::ref(countdownLatch));
-        boost::shared_ptr<producer::SendResult> pSendResult =
-                boost::make_shared<producer::SendResultImpl>(objectSendResult);
+        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(NS::ref(countdownLatch));
+        NS::shared_ptr<producer::SendResult> pSendResult =
+                NS::make_shared<producer::SendResultImpl>(objectSendResult);
         promise.set(pSendResult);
         promise.addListener(listener); // Should execute listener immediately
         ASSERT_TRUE(countdownLatch.await(10000));

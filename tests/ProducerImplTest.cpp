@@ -44,51 +44,51 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 
     TEST_F(ProducerImplTest, testSendOneway) {
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
         producer->sendOneway(message);
     }
 
     TEST_F(ProducerImplTest, testSend_accuracy) {
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
         for (int i = 0; i < 10000; ++i) {
             producer->send(message);
         }
     }
 
     TEST_F(ProducerImplTest, testAsynchrousSend) {
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
@@ -96,10 +96,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
         CountdownLatch latch(1);
-        boost::shared_ptr<FutureListener> listener = boost::make_shared<FutureListenerTest>(boost::ref(latch));
+        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerTest>(NS::ref(latch));
 
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
-        boost::shared_ptr<Future> future = producer->sendAsync(message);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<Future> future = producer->sendAsync(message);
         future->addListener(listener);
         latch.await();
     }

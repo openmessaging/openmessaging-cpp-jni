@@ -19,39 +19,39 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        boost::shared_ptr<KeyValue> properties = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        boost::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
                 MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
 
         // First send a message
-        boost::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
-        boost::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
         producer->send(message);
         // Send message OK
 
         std::string queueName("TopicTest");
 
-        boost::shared_ptr<KeyValue> kv = boost::make_shared<KeyValueImpl>();
+        NS::shared_ptr<KeyValue> kv = NS::make_shared<KeyValueImpl>();
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_GROUP, value);
 
-        boost::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        NS::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
         ASSERT_TRUE(pullConsumer);
 
         pullConsumer->startup();
 
         while (true) {
-            boost::shared_ptr<Message> msg = pullConsumer->poll();
+            NS::shared_ptr<Message> msg = pullConsumer->poll();
             if (msg) {
-                boost::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
+                NS::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
                 std::string msgId = sysHeaders->getString(MessageId);
                 ASSERT_TRUE(!msgId.empty());
                 ASSERT_NO_THROW(pullConsumer->ack(msgId));

@@ -14,7 +14,7 @@ KeyValue* newKeyValueImpl() {
     return new KeyValueImpl(objectDefaultKeyValue);
 }
 
-boost::shared_ptr<KeyValue> OMS::newKeyValue() {
+NS::shared_ptr<KeyValue> OMS::newKeyValue() {
     KeyValue* kv = ::newKeyValueImpl();
-    return boost::shared_ptr<KeyValue>(kv);
+    return NS::shared_ptr<KeyValue>(kv);
 }

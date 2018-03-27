@@ -4,8 +4,6 @@
 #include "producer/LocalTransactionBranchExecutorImpl.h"
 #include "KeyValueImpl.h"
 #include "producer/SendResultImpl.h"
-#include <boost/thread/mutex.hpp>
-#include <boost/interprocess/sync/scoped_lock.hpp>
 #include "PromiseImpl.h"
 
 using namespace io::openmessaging;
@@ -212,7 +210,7 @@ ProducerImpl::sendAsync(const boost::shared_ptr<Message> &message,
         long long opaque;
         {
             opaque = ++sendOpaque;
-            boost::interprocess::scoped_lock<boost::mutex> lk(sendAsyncMutex);
+            NS::lock_guard<boost::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
         if (props) {

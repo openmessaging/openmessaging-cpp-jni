@@ -3,8 +3,7 @@
 
 #include <string>
 
-#include <boost/shared_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "ServiceLifecycle.h"
 #include "PushConsumerInterceptor.h"
 #include "MessageListener.h"
@@ -26,7 +25,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
         virtual void resume() = 0;
 
@@ -35,14 +34,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual bool isSuspended() = 0;
 
         virtual PushConsumer &attachQueue(const std::string &queueName,
-                                          const boost::shared_ptr<MessageListener> &listener,
-                                          const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+                                          const NS::shared_ptr<MessageListener> &listener,
+                                          const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
         virtual PushConsumer &detachQueue(const std::string &queueName) = 0;
 
-        virtual void addInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
+        virtual void addInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
 
-        virtual void removeInterceptor(const boost::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
+        virtual void removeInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

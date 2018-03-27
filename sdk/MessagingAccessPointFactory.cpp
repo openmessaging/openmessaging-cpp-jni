@@ -1,5 +1,3 @@
-#include <boost/make_shared.hpp>
-
 #include "MessagingAccessPointFactory.h"
 #include "MessagingAccessPointImpl.h"
 #include "KeyValueImpl.h"
@@ -7,7 +5,7 @@
 using namespace io::openmessaging;
 
 MessagingAccessPoint*
-getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyValue> &props) {
+getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValue> &props) {
 
     Initialize();
 
@@ -31,7 +29,7 @@ getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyV
 
     jobject messagingAccessPoint;
     if (useKV) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         jobject prop = kv->getProxy();
         messagingAccessPoint = current.callStaticObjectMethod(classMessagingAccessPointFactory,
                                                               midGetMessagingAccessPoint,
@@ -49,18 +47,18 @@ getMessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyV
     return new MessagingAccessPointImpl(url, props, globalRef);
 }
 
-boost::shared_ptr<MessagingAccessPoint>
+NS::shared_ptr<MessagingAccessPoint>
 MessagingAccessPointFactory::getMessagingAccessPoint(const std::string &url,
-                                                     const boost::shared_ptr<KeyValue> &properties) {
-    return boost::shared_ptr<MessagingAccessPoint>(::getMessagingAccessPointImpl(url, properties));
+                                                     const NS::shared_ptr<KeyValue> &properties) {
+    return NS::shared_ptr<MessagingAccessPoint>(::getMessagingAccessPointImpl(url, properties));
 }
 
 void MessagingAccessPointFactory::addInterceptor(
-        const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
+        const NS::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
 
 }
 
 void MessagingAccessPointFactory::removeInterceptor(
-        const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
+        const NS::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor) {
 
 }

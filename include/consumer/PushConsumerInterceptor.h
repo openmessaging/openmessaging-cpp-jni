@@ -3,6 +3,7 @@
 
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "smart_pointer.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
@@ -11,9 +12,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
        virtual ~PushConsumerInterceptor() {
         }
 
-        virtual void preHandle(boost::shared_ptr<void> context) = 0;
+        virtual void preHandle(NS::shared_ptr<void> context) = 0;
 
-        virtual void postHandle(boost::shared_ptr<void> context) = 0;
+        virtual void postHandle(NS::shared_ptr<void> context) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

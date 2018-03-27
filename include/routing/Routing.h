@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, routing)
 
         }
 
-        virtual boost::shared_ptr <KeyValue> properties() = 0;
+        virtual NS::shared_ptr <KeyValue> properties() = 0;
 
         virtual std::string source() = 0;
 

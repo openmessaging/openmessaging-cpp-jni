@@ -1,8 +1,19 @@
-//
-// Created by Li Zhanhui on 2018/3/27.
-//
-
 #ifndef OMS_SMART_POINTER_H
 #define OMS_SMART_POINTER_H
+
+#if __cplusplus >= 201103L
+
+#include <memory>
+
+#define NS std
+
+#else
+
+#include <boost/smart_ptr.hpp>
+
+#define NS boost
+
+#endif
+
 
 #endif //OMS_SMART_POINTER_H

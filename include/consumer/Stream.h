@@ -1,8 +1,7 @@
 #ifndef OMS_STREAM_H
 #define OMS_STREAM_H
 
-#include <boost/shared_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "ServiceLifecycle.h"
 #include "Namespace.h"
 #include "KeyValue.h"
@@ -25,15 +24,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> current() = 0;
+        virtual NS::shared_ptr<MessageIterator> current() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> begin() = 0;
+        virtual NS::shared_ptr<MessageIterator> begin() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> end() = 0;
+        virtual NS::shared_ptr<MessageIterator> end() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> seekByTime(long timestamp) = 0;
+        virtual NS::shared_ptr<MessageIterator> seekByTime(long timestamp) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

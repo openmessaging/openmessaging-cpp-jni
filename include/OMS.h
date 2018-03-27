@@ -3,8 +3,7 @@
 
 #include <cstring>
 
-#include <boost/smart_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -22,7 +21,7 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        static boost::shared_ptr<KeyValue> kv_nullptr;
+        static NS::shared_ptr<KeyValue> kv_nullptr;
 
         template<typename T>
         class scoped_array {
@@ -78,7 +77,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         class OMS {
         public:
-            static boost::shared_ptr<KeyValue> newKeyValue();
+            static NS::shared_ptr<KeyValue> newKeyValue();
         };
 
 END_NAMESPACE_2(io, openmessaging)

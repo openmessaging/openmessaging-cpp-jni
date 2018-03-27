@@ -2,9 +2,9 @@
 #define OMS_FUTURE_H
 
 #include <exception>
-#include <boost/smart_ptr.hpp>
 #include <climits>
 
+#include "smart_pointer.h"
 #include "producer/SendResult.h"
 #include "Uncopyable.h"
 #include "FutureListener.h"
@@ -28,9 +28,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool isDone() = 0;
 
-        virtual boost::shared_ptr<producer::SendResult> get(unsigned long timeout = LONG_MAX) = 0;
+        virtual NS::shared_ptr<producer::SendResult> get(unsigned long timeout = LONG_MAX) = 0;
 
-        virtual Future &addListener(boost::shared_ptr<FutureListener> listener) = 0;
+        virtual Future &addListener(NS::shared_ptr<FutureListener> listener) = 0;
 
         virtual std::exception &getThrowable() = 0;
 

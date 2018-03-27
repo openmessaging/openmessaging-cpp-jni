@@ -1,7 +1,7 @@
 #ifndef OMS_PUSH_CONSUMER_INTERCEPTOR_H
 #define OMS_PUSH_CONSUMER_INTERCEPTOR_H
 
-#include <boost/smart_ptr.hpp>
+#include "smart_pointer.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
 
@@ -33,7 +33,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void onMessageBefore(boost::shared_ptr<OnMessageBeforeContext> context);
+        virtual void onMessageBefore(NS::shared_ptr<OnMessageBeforeContext> context);
     };
 
 END_NAMESPACE_3(io, openmessaging, interceptor)

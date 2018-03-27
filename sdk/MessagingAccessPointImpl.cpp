@@ -12,7 +12,7 @@ using namespace io::openmessaging::consumer;
 using namespace io::openmessaging::observer;
 
 MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
-                                                   const boost::shared_ptr<KeyValue> &props,
+                                                   const NS::shared_ptr<KeyValue> &props,
                                                    jobject proxy) :
         _url(url), _properties(props), objectMessagingAccessPoint(proxy) {
 
@@ -45,7 +45,7 @@ MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
     midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", buildSignature(Types::void_, 0));
 }
 
-boost::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
+NS::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
     return _properties;
 }
 
@@ -59,12 +59,12 @@ std::string MessagingAccessPointImpl::implVersion() {
     return result;
 }
 
-boost::shared_ptr<Producer>
-MessagingAccessPointImpl::createProducer(const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<Producer>
+MessagingAccessPointImpl::createProducer(const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
     jobject producerLocal;
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
     } else {
         producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer);
@@ -72,16 +72,16 @@ MessagingAccessPointImpl::createProducer(const boost::shared_ptr<KeyValue> &prop
 
     jobject producer = current.newGlobalRef(producerLocal);
 
-    boost::shared_ptr<Producer> ret = boost::make_shared<ProducerImpl>(producer, props);
+    NS::shared_ptr<Producer> ret = NS::make_shared<ProducerImpl>(producer, props);
     return ret;
 }
 
-boost::shared_ptr<consumer::PushConsumer>
-MessagingAccessPointImpl::createPushConsumer(const boost::shared_ptr<KeyValue> &props) {
+NS::shared_ptr<consumer::PushConsumer>
+MessagingAccessPointImpl::createPushConsumer(const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
     jobject pushConsumerLocal;
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
 
     } else {
@@ -89,13 +89,13 @@ MessagingAccessPointImpl::createPushConsumer(const boost::shared_ptr<KeyValue> &
     }
 
     jobject pushConsumer = current.newGlobalRef(pushConsumerLocal);
-    boost::shared_ptr<PushConsumer> ret = boost::make_shared<PushConsumerImpl>(pushConsumer);
+    NS::shared_ptr<PushConsumer> ret = NS::make_shared<PushConsumerImpl>(pushConsumer);
     return ret;
 }
 
-boost::shared_ptr<consumer::PullConsumer>
+NS::shared_ptr<consumer::PullConsumer>
 MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
-                                             const boost::shared_ptr<KeyValue> &props) {
+                                             const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
     jobject pullConsumerLocal;
 
@@ -109,7 +109,7 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
     }
 
     if (props) {
-        boost::shared_ptr<KeyValueImpl> kv = boost::dynamic_pointer_cast<KeyValueImpl>(props);
+        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         pullConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2,
                                                           queue_name, kv->getProxy());
     } else {
@@ -120,45 +120,45 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
     current.deleteRef(queue_name);
 
     jobject pullConsumer = current.newGlobalRef(pullConsumerLocal);
-    boost::shared_ptr<PullConsumer> ret = boost::make_shared<PullConsumerImpl>(pullConsumer);
+    NS::shared_ptr<PullConsumer> ret = NS::make_shared<PullConsumerImpl>(pullConsumer);
     return ret;
 }
 
-boost::shared_ptr<consumer::StreamingConsumer>
+NS::shared_ptr<consumer::StreamingConsumer>
 MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName,
-                                                  const boost::shared_ptr<KeyValue> &props) {
+                                                  const NS::shared_ptr<KeyValue> &props) {
     throw OMSException("Not Implemented");
 
 }
 
-boost::shared_ptr<ResourceManager> MessagingAccessPointImpl::getResourceManager() {
+NS::shared_ptr<ResourceManager> MessagingAccessPointImpl::getResourceManager() {
     throw OMSException("Not Implemented");
 }
 
-void MessagingAccessPointImpl::addObserver(const boost::shared_ptr<observer::Observer> &observer) {
+void MessagingAccessPointImpl::addObserver(const NS::shared_ptr<observer::Observer> &observer) {
     throw OMSException("Not Implemented");
 }
 
-void MessagingAccessPointImpl::removeObserver(const boost::shared_ptr<observer::Observer> &observer) {
+void MessagingAccessPointImpl::removeObserver(const NS::shared_ptr<observer::Observer> &observer) {
     throw OMSException("Not Implemented");
 }
 
-std::vector<boost::shared_ptr<Producer> >
+std::vector<NS::shared_ptr<Producer> >
 MessagingAccessPointImpl::producers() {
     throw OMSException("Not Implemented");
 }
 
-std::vector<boost::shared_ptr<consumer::PushConsumer> >
+std::vector<NS::shared_ptr<consumer::PushConsumer> >
 MessagingAccessPointImpl::pushConsumers() {
     throw OMSException("Not Implemented");
 }
 
-std::vector<boost::shared_ptr<consumer::PullConsumer> >
+std::vector<NS::shared_ptr<consumer::PullConsumer> >
 MessagingAccessPointImpl::pullConsumers() {
     throw OMSException("Not Implemented");
 }
 
-std::vector<boost::shared_ptr<consumer::StreamingConsumer> >
+std::vector<NS::shared_ptr<consumer::StreamingConsumer> >
 MessagingAccessPointImpl::streamingConsumers() {
     throw OMSException("Not Implemented");
 }

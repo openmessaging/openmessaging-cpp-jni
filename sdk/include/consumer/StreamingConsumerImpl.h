@@ -14,19 +14,19 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~StreamingConsumerImpl();
 
-        virtual boost::shared_ptr<KeyValue> properties();
+        virtual NS::shared_ptr<KeyValue> properties();
 
         virtual std::vector<std::string> streams();
 
         virtual std::vector<std::string> consumers();
 
-        virtual boost::shared_ptr<MessageIterator> current();
+        virtual NS::shared_ptr<MessageIterator> current();
 
-        virtual boost::shared_ptr<MessageIterator> begin();
+        virtual NS::shared_ptr<MessageIterator> begin();
 
-        virtual boost::shared_ptr<MessageIterator> end();
+        virtual NS::shared_ptr<MessageIterator> end();
 
-        virtual boost::shared_ptr<MessageIterator> seekByTime(long timestamp);
+        virtual NS::shared_ptr<MessageIterator> seekByTime(long timestamp);
 
     private:
         jclass classStreamingConsumer;

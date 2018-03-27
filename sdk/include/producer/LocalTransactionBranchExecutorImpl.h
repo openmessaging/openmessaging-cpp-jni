@@ -13,10 +13,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         virtual ~LocalTransactionBranchExecutorImpl();
 
         virtual void
-        executeLocalTransaction(Message &message, boost::shared_ptr<LocalTransactionExecutionContext> &context);
+        executeLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionExecutionContext> &context);
 
         virtual void
-        checkLocalTransaction(Message &message, boost::shared_ptr<LocalTransactionCheckContext> &context);
+        checkLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionCheckContext> &context);
 
         jobject getProxy();
 

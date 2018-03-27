@@ -31,10 +31,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         virtual void
-        executeLocalTransaction(Message &message, boost::shared_ptr<LocalTransactionExecutionContext> &context) = 0;
+        executeLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionExecutionContext> &context) = 0;
 
         virtual void
-        checkLocalTransaction(Message &message, boost::shared_ptr<LocalTransactionCheckContext> &context) = 0;
+        checkLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionCheckContext> &context) = 0;
 
     };
 END_NAMESPACE_3(io, openmessaging, producer)

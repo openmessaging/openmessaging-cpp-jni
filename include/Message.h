@@ -2,8 +2,8 @@
 #define OMS_MESSAGE_H
 
 #include <string>
-#include <boost/smart_ptr.hpp>
 
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "BuiltinKeys.h"
 #include "Namespace.h"
@@ -40,9 +40,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> sysHeaders() = 0;
+        virtual NS::shared_ptr<KeyValue> sysHeaders() = 0;
 
-        virtual boost::shared_ptr<KeyValue> userHeaders() = 0;
+        virtual NS::shared_ptr<KeyValue> userHeaders() = 0;
 
         virtual Message& putSysHeaders(const std::string &key, int value) = 0;
 

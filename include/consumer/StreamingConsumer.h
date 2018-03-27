@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/smart_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
 #include "MessageIterator.h"
@@ -28,19 +27,19 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
         virtual std::vector<std::string> streams() = 0;
 
         virtual std::vector<std::string> consumers() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> current() = 0;
+        virtual NS::shared_ptr<MessageIterator> current() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> begin() = 0;
+        virtual NS::shared_ptr<MessageIterator> begin() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> end() = 0;
+        virtual NS::shared_ptr<MessageIterator> end() = 0;
 
-        virtual boost::shared_ptr<MessageIterator> seekByTime(long timestamp) = 0;
+        virtual NS::shared_ptr<MessageIterator> seekByTime(long timestamp) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

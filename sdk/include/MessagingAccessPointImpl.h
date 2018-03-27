@@ -7,41 +7,41 @@
 BEGIN_NAMESPACE_2(io, openmessaging)
     class MessagingAccessPointImpl : public MessagingAccessPoint {
     public:
-        MessagingAccessPointImpl(const std::string &url, const boost::shared_ptr<KeyValue> &properties, jobject proxy);
+        MessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValue> &properties, jobject proxy);
 
         virtual ~MessagingAccessPointImpl();
 
-        boost::shared_ptr<KeyValue> properties();
+        NS::shared_ptr<KeyValue> properties();
 
         std::string implVersion();
 
-        boost::shared_ptr<producer::Producer>
-        createProducer(const boost::shared_ptr<KeyValue> &properties);
+        NS::shared_ptr<producer::Producer>
+        createProducer(const NS::shared_ptr<KeyValue> &properties);
 
-        boost::shared_ptr<consumer::PushConsumer>
-        createPushConsumer(const boost::shared_ptr<KeyValue> &properties);
+        NS::shared_ptr<consumer::PushConsumer>
+        createPushConsumer(const NS::shared_ptr<KeyValue> &properties);
 
-        boost::shared_ptr<consumer::PullConsumer>
+        NS::shared_ptr<consumer::PullConsumer>
         createPullConsumer(const std::string &queueName,
-                           const boost::shared_ptr<KeyValue> &properties);
+                           const NS::shared_ptr<KeyValue> &properties);
 
-        boost::shared_ptr<consumer::StreamingConsumer>
+        NS::shared_ptr<consumer::StreamingConsumer>
         createStreamingConsumer(const std::string &queueName,
-                                const boost::shared_ptr<KeyValue> &properties);
+                                const NS::shared_ptr<KeyValue> &properties);
 
-        boost::shared_ptr<ResourceManager> getResourceManager();
+        NS::shared_ptr<ResourceManager> getResourceManager();
 
-        void addObserver(const boost::shared_ptr<observer::Observer> &observer);
+        void addObserver(const NS::shared_ptr<observer::Observer> &observer);
 
-        void removeObserver(const boost::shared_ptr<observer::Observer> &observer);
+        void removeObserver(const NS::shared_ptr<observer::Observer> &observer);
 
-        std::vector<boost::shared_ptr<producer::Producer> > producers();
+        std::vector<NS::shared_ptr<producer::Producer> > producers();
 
-        std::vector<boost::shared_ptr<consumer::PushConsumer> > pushConsumers();
+        std::vector<NS::shared_ptr<consumer::PushConsumer> > pushConsumers();
 
-        std::vector<boost::shared_ptr<consumer::PullConsumer> > pullConsumers();
+        std::vector<NS::shared_ptr<consumer::PullConsumer> > pullConsumers();
 
-        std::vector<boost::shared_ptr<consumer::StreamingConsumer> > streamingConsumers();
+        std::vector<NS::shared_ptr<consumer::StreamingConsumer> > streamingConsumers();
 
         void startup();
 
@@ -52,7 +52,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     private:
         const std::string _url;
 
-        const boost::shared_ptr<KeyValue> _properties;
+        const NS::shared_ptr<KeyValue> _properties;
 
         jobject objectMessagingAccessPoint;
 

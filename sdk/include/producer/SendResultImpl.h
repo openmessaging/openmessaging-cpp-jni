@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual std::string messageId();
 
-        virtual boost::shared_ptr<KeyValue> properties();
+        virtual NS::shared_ptr<KeyValue> properties();
 
     private:
         jobject _proxy;

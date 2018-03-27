@@ -1,8 +1,7 @@
 #ifndef OMS_OPERATOR_H
 #define OMS_OPERATOR_H
 
-#include <boost/shared_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -24,7 +23,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, routing)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
         virtual std::string expression() = 0;
     };

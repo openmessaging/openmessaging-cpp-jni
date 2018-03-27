@@ -12,9 +12,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual ~ByteMessageImpl();
 
-        virtual boost::shared_ptr<KeyValue> sysHeaders();
+        virtual NS::shared_ptr<KeyValue> sysHeaders();
 
-        virtual boost::shared_ptr<KeyValue> userHeaders();
+        virtual NS::shared_ptr<KeyValue> userHeaders();
 
         virtual scoped_array<char> getBody();
 

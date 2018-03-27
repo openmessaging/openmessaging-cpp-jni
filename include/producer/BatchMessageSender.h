@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual void send(Message &message, boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual void send(Message &message, NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
         virtual void commit() = 0;
 

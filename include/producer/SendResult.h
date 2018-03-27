@@ -3,8 +3,7 @@
 
 #include <string>
 
-#include <boost/shared_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -26,7 +25,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual std::string messageId() = 0;
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
     };
 

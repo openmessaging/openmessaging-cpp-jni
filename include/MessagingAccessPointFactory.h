@@ -5,7 +5,6 @@
 #include <string>
 #include <iostream>
 
-#include <boost/shared_ptr.hpp>
 
 #include "KeyValue.h"
 #include "MessagingAccessPoint.h"
@@ -67,10 +66,10 @@ extern "C" {
 
     static io::openmessaging::MessagingAccessPoint*
     getMessagingAccessPoint(const std::string &url,
-                            const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
+                            const NS::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr) {
 
         typedef io::openmessaging::MessagingAccessPoint* (*Fn)(const std::string&,
-                                                               const boost::shared_ptr<io::openmessaging::KeyValue> &);
+                                                               const NS::shared_ptr<io::openmessaging::KeyValue> &);
 
         if (NULL == handle) {
             load_library(url);
@@ -85,7 +84,7 @@ extern "C" {
 
     io::openmessaging::MessagingAccessPoint*
     getMessagingAccessPointImpl(const std::string &url,
-                                const boost::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr);
+                                const NS::shared_ptr<io::openmessaging::KeyValue> &props = io::openmessaging::kv_nullptr);
 
 #ifdef __cplusplus
 }
@@ -115,14 +114,14 @@ BEGIN_NAMESPACE_2(io, openmessaging)
      */
     class MessagingAccessPointFactory {
     public:
-        static boost::shared_ptr<MessagingAccessPoint>
-        getMessagingAccessPoint(const std::string &url, const boost::shared_ptr<KeyValue> &properties = kv_nullptr);
+        static NS::shared_ptr<MessagingAccessPoint>
+        getMessagingAccessPoint(const std::string &url, const NS::shared_ptr<KeyValue> &properties = kv_nullptr);
 
         static void
-        addInterceptor(const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor);
+        addInterceptor(const NS::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor);
 
         static void
-        removeInterceptor(const boost::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor);
+        removeInterceptor(const NS::shared_ptr<interceptor::MessagingAccessPointInterceptor> &interceptor);
     };
 
 END_NAMESPACE_2(io, openmessaging)

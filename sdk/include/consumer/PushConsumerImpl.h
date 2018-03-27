@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~PushConsumerImpl();
 
-        virtual boost::shared_ptr<KeyValue> properties();
+        virtual NS::shared_ptr<KeyValue> properties();
 
         virtual void resume();
 
@@ -23,14 +23,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual bool isSuspended();
 
         virtual consumer::PushConsumer& attachQueue(const std::string &queueName,
-                                          const boost::shared_ptr<consumer::MessageListener> &listener,
-                                          const boost::shared_ptr<KeyValue> &properties);
+                                          const NS::shared_ptr<consumer::MessageListener> &listener,
+                                          const NS::shared_ptr<KeyValue> &properties);
 
         virtual consumer::PushConsumer& detachQueue(const std::string &queueName);
 
-        virtual void addInterceptor(const boost::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
+        virtual void addInterceptor(const NS::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
 
-        virtual void removeInterceptor(const boost::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
+        virtual void removeInterceptor(const NS::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
 
 
     private:

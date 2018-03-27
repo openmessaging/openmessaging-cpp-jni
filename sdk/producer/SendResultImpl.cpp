@@ -35,17 +35,17 @@ std::string SendResultImpl::messageId() {
     return result;
 }
 
-boost::shared_ptr<KeyValue> SendResultImpl::properties() {
+NS::shared_ptr<KeyValue> SendResultImpl::properties() {
     CurrentEnv current;
     jobject kvLocal = current.env->CallObjectMethod(_proxy, midProperties);
     if (current.checkAndClearException()) {
         LOG_WARNING << "Java SDK throws an exception";
-        boost::shared_ptr<KeyValue> kv_nullptr;
+        NS::shared_ptr<KeyValue> kv_nullptr;
         return kv_nullptr;
     }
     jobject kv = current.env->NewGlobalRef(kvLocal);
     current.env->DeleteLocalRef(kvLocal);
-    boost::shared_ptr<KeyValue> result = boost::make_shared<KeyValueImpl>(kv);
+    NS::shared_ptr<KeyValue> result = NS::make_shared<KeyValueImpl>(kv);
     return result;
 }
 

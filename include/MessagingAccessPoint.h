@@ -2,7 +2,6 @@
 #define OMS_MESSAGING_ACCESS_POINT_H
 
 #include <string>
-#include <boost/shared_ptr.hpp>
 
 #include "ServiceLifecycle.h"
 #include "KeyValue.h"
@@ -35,37 +34,37 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
         virtual std::string implVersion() = 0;
 
-        virtual boost::shared_ptr<producer::Producer>
-        createProducer(const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual NS::shared_ptr<producer::Producer>
+        createProducer(const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual boost::shared_ptr<consumer::PushConsumer>
-        createPushConsumer(const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual NS::shared_ptr<consumer::PushConsumer>
+        createPushConsumer(const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual boost::shared_ptr<consumer::PullConsumer>
+        virtual NS::shared_ptr<consumer::PullConsumer>
         createPullConsumer(const std::string &queueName,
-                           const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+                           const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual boost::shared_ptr<consumer::StreamingConsumer>
+        virtual NS::shared_ptr<consumer::StreamingConsumer>
         createStreamingConsumer(const std::string &queueName,
-                                const boost::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+                                const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
 
-        virtual boost::shared_ptr<ResourceManager> getResourceManager() = 0;
+        virtual NS::shared_ptr<ResourceManager> getResourceManager() = 0;
 
-        virtual void addObserver(const boost::shared_ptr<observer::Observer> &observer) = 0;
+        virtual void addObserver(const NS::shared_ptr<observer::Observer> &observer) = 0;
 
-        virtual void removeObserver(const boost::shared_ptr<observer::Observer> &observer) = 0;
+        virtual void removeObserver(const NS::shared_ptr<observer::Observer> &observer) = 0;
 
-        virtual std::vector<boost::shared_ptr<producer::Producer> > producers() = 0;
+        virtual std::vector<NS::shared_ptr<producer::Producer> > producers() = 0;
 
-        virtual std::vector<boost::shared_ptr<consumer::PushConsumer> > pushConsumers() = 0;
+        virtual std::vector<NS::shared_ptr<consumer::PushConsumer> > pushConsumers() = 0;
 
-        virtual std::vector<boost::shared_ptr<consumer::PullConsumer> > pullConsumers() = 0;
+        virtual std::vector<NS::shared_ptr<consumer::PullConsumer> > pullConsumers() = 0;
 
-        virtual std::vector<boost::shared_ptr<consumer::StreamingConsumer> > streamingConsumers() = 0;
+        virtual std::vector<NS::shared_ptr<consumer::StreamingConsumer> > streamingConsumers() = 0;
     };
 
 END_NAMESPACE_2(io, openmessaging)

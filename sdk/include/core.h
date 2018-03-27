@@ -4,7 +4,17 @@
 #include <set>
 #include <string>
 
-#include <boost/smart_ptr.hpp>
+#include "smart_pointer.h"
+
+#if __cplusplus >= 201103L
+    #include <thread>
+    #include <mutex>
+    #include <condition_variable>
+#else
+    #include <boost/thread.hpp>
+    #include <boost/filesystem.hpp>
+#endif
+
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 

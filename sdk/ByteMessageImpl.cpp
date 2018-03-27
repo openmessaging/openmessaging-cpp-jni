@@ -40,20 +40,20 @@ ByteMessageImpl::~ByteMessageImpl() {
     current.env->DeleteGlobalRef(objectByteMessage);
 }
 
-boost::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
+NS::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
     CurrentEnv current;
     jobject jSysHeader = current.callObjectMethod(objectByteMessage, midSysHeaders);
     if (current.checkAndClearException()) {
         abort();
     }
-    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.newGlobalRef(jSysHeader));
+    NS::shared_ptr<KeyValue> headers = NS::make_shared<KeyValueImpl>(current.newGlobalRef(jSysHeader));
     return headers;
 }
 
-boost::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
+NS::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     CurrentEnv current;
     jobject jUserHeaders = current.callObjectMethod(objectByteMessage, midUserHeaders);
-    boost::shared_ptr<KeyValue> headers = boost::make_shared<KeyValueImpl>(current.newGlobalRef(jUserHeaders));
+    NS::shared_ptr<KeyValue> headers = NS::make_shared<KeyValueImpl>(current.newGlobalRef(jUserHeaders));
     return headers;
 }
 

@@ -3,8 +3,7 @@
 
 #include <string>
 
-#include <boost/shared_ptr.hpp>
-
+#include "smart_pointer.h"
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
 #include "Namespace.h"
@@ -27,12 +26,12 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual boost::shared_ptr<KeyValue> properties() = 0;
+        virtual NS::shared_ptr<KeyValue> properties() = 0;
 
-        virtual boost::shared_ptr<Message> poll(const boost::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
+        virtual NS::shared_ptr<Message> poll(const NS::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
 
         virtual void ack(const std::string &messageId,
-                         const boost::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
+                         const NS::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

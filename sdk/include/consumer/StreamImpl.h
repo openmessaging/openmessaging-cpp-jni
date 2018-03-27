@@ -12,15 +12,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~StreamImpl();
 
-        virtual boost::shared_ptr<KeyValue> properties();
+        virtual NS::shared_ptr<KeyValue> properties();
 
-        virtual boost::shared_ptr<consumer::MessageIterator> current();
+        virtual NS::shared_ptr<consumer::MessageIterator> current();
 
-        virtual boost::shared_ptr<consumer::MessageIterator> begin();
+        virtual NS::shared_ptr<consumer::MessageIterator> begin();
 
-        virtual boost::shared_ptr<consumer::MessageIterator> end();
+        virtual NS::shared_ptr<consumer::MessageIterator> end();
 
-        virtual boost::shared_ptr<consumer::MessageIterator> seekByTime(long timestamp);
+        virtual NS::shared_ptr<consumer::MessageIterator> seekByTime(long timestamp);
 
     private:
         jclass classStream;

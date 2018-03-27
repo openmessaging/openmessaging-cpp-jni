@@ -3,6 +3,7 @@
 
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "smart_pointer.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
@@ -30,9 +31,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void preSend(boost::shared_ptr<PreSendContext> context);
+        virtual void preSend(NS::shared_ptr<PreSendContext> context);
 
-        virtual void postSend(boost::shared_ptr<PostSendContext> context);
+        virtual void postSend(NS::shared_ptr<PostSendContext> context);
     };
 
 END_NAMESPACE_3(io, openmessaging, interceptor)

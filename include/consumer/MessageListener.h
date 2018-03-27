@@ -1,6 +1,7 @@
 #ifndef OMS_MESSAGE_LISTENER_H
 #define OMS_MESSAGE_LISTENER_H
 
+#include "smart_pointer.h"
 #include "Context.h"
 #include "Namespace.h"
 #include "Message.h"
@@ -21,7 +22,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual void onMessage(boost::shared_ptr<Message>& message, boost::shared_ptr<Context>& context) = 0;
+        virtual void onMessage(NS::shared_ptr<Message>& message, NS::shared_ptr<Context>& context) = 0;
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)

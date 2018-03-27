@@ -1,9 +1,6 @@
 #include <cstdlib>
 #include <cstdarg>
 
-#include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
-
 #include "core.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -57,7 +54,7 @@ using namespace boost::filesystem;
 
     JNIEnv *env;
 
-    boost::once_flag once_flag = BOOST_ONCE_INIT;
+    NS::once_flag once_flag = BOOST_ONCE_INIT;
 
     void init_logging() {
         char *home = getenv("HOME");
@@ -72,8 +69,8 @@ using namespace boost::filesystem;
 
         init_logging();
 
-        boost::shared_ptr<JavaOption> jOptions =
-                boost::make_shared<JavaOption>(JNI_VERSION_1_8);
+        NS::shared_ptr<JavaOption> jOptions =
+                NS::make_shared<JavaOption>(JNI_VERSION_1_8);
         std::string class_path_option = build_class_path_option();
         jOptions->addOption(class_path_option);
         jOptions->addOption("-Xms1G");
@@ -109,7 +106,7 @@ using namespace boost::filesystem;
     }
 
     void Initialize() {
-        boost::call_once(once_flag, init0);
+        NS::call_once(once_flag, init0);
     }
 
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {

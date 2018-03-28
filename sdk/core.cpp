@@ -60,7 +60,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 #if __cplusplus >= 201103L
         NS::once_flag once_flag;
 #else
-    NS::once_flag once_flag = BOOST_ONCE_INIT;
+    boost::once_flag once_flag = BOOST_ONCE_INIT;
 #endif
 
     void init_logging() {
@@ -76,8 +76,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         init_logging();
 
-        NS::shared_ptr<JavaOption> jOptions =
-                NS::make_shared<JavaOption>(JNI_VERSION_1_8);
+        NS::shared_ptr<JavaOption> jOptions = NS::make_shared<JavaOption>(JNI_VERSION_1_8);
         std::string class_path_option = build_class_path_option();
         jOptions->addOption(class_path_option);
         jOptions->addOption("-Xms1G");
@@ -113,7 +112,13 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     }
 
     void Initialize() {
-        NS::call_once(once_flag, init0);
+
+#if __cplusplus >= 201103L
+        std::call_once(once_flag, init0);
+#else
+        boost::call_once(once_flag, init0);
+#endif
+
     }
 
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {

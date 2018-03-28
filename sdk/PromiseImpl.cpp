@@ -29,7 +29,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
     }
 
     {
-        NS::unique_lock<NS::mutex> lk(_mtx);
+        boost::unique_lock<boost::mutex> lk(_mtx);
         if (cancelled) {
             return sr_nullptr;
         }
@@ -38,7 +38,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
             return _value;
         }
 
-        _cv.wait_for(lk, NS::chrono::milliseconds(timeout));
+        _cv.wait_for(lk, boost::chrono::milliseconds(timeout));
 
         if (cancelled) {
             return sr_nullptr;
@@ -53,7 +53,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
 }
 
 Future& PromiseImpl::addListener(NS::shared_ptr<FutureListener> listener) {
-    NS::lock_guard<NS::mutex> lk(_mtx);
+    boost::lock_guard<boost::mutex> lk(_mtx);
     if (done) {
         listener->operationComplete(*this);
     } else if (cancelled) {
@@ -74,7 +74,7 @@ bool PromiseImpl::cancel(bool interruptIfRunning) {
     }
 
     {
-        NS::lock_guard<NS::mutex> lk(_mtx);
+        boost::lock_guard<boost::mutex> lk(_mtx);
         if(done) {
             return false;
         }
@@ -91,7 +91,7 @@ bool PromiseImpl::set(NS::shared_ptr<producer::SendResult> &value) {
     }
 
     {
-        NS::unique_lock<NS::mutex> lk(_mtx);
+        boost::unique_lock<boost::mutex> lk(_mtx);
         _value = value;
         done = true;
         _cv.notify_all();
@@ -107,7 +107,7 @@ bool PromiseImpl::set(NS::shared_ptr<producer::SendResult> &value) {
 }
 
 bool PromiseImpl::setFailure(std::exception &e) {
-    NS::lock_guard<NS::mutex> lk(_mtx);
+    boost::lock_guard<boost::mutex> lk(_mtx);
     done = true;
     failed = true;
     m_e = e;

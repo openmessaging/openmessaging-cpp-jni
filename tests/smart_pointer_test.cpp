@@ -10,7 +10,7 @@ public:
         std::cout << "Ctor" << std::endl;
     }
 
-    ~Type() {
+    virtual ~Type() {
         std::cout << "Dtor" << std::endl;
     }
 
@@ -18,6 +18,11 @@ public:
         std::cout << "Dummy function" << std::endl;
     }
 };
+
+class Derivative : public Type {
+
+};
+
 
 TEST(smart_pointer_test, test_ctor_1) {
 
@@ -50,4 +55,10 @@ TEST(smart_pointer_test, test_make_shared) {
 TEST(smart_pointer_test, test_make_shared_2) {
     shared_ptr<int> ptr = make_shared<int>(1);
     std::cout << *ptr << std::endl;
+}
+
+TEST(smart_pointer_test, test_dynamic_pointer_cast) {
+    shared_ptr<Type> pType = make_shared<Derivative>();
+    shared_ptr<Derivative> pDerivative = dynamic_pointer_cast<Derivative>(pType);
+    pDerivative->execute();
 }

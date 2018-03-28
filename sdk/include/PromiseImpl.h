@@ -5,18 +5,7 @@
 
 #include "smart_pointer.h"
 
-#if __cplusplus >= 201103L
-
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-
-#else
-
 #include <boost/thread.hpp>
-
-#endif
-
 #include "Promise.h"
 #include "producer/SendResult.h"
 
@@ -51,8 +40,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool cancelled;
         std::exception m_e;
         std::vector<NS::shared_ptr<FutureListener> > _listeners;
-        NS::mutex _mtx;
-        NS::condition_variable _cv;
+        boost::mutex _mtx;
+        boost::condition_variable _cv;
         NS::shared_ptr<producer::SendResult> _value;
     };
 

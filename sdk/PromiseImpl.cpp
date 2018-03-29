@@ -1,4 +1,5 @@
 #include "PromiseImpl.h"
+#include <plog/Log.h>
 
 using namespace io::openmessaging;
 
@@ -97,9 +98,7 @@ bool PromiseImpl::set(NS::shared_ptr<producer::SendResult> &value) {
         _cv.notify_all();
     }
 
-    for (std::vector<NS::shared_ptr<FutureListener> >::iterator it = _listeners.begin();
-        it != _listeners.end();
-        it++) {
+    for (std::vector<NS::shared_ptr<FutureListener> >::iterator it = _listeners.begin(); it != _listeners.end(); it++) {
         (*it)->operationComplete(*this);
     }
 

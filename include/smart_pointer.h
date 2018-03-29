@@ -1,16 +1,21 @@
 #ifndef OMS_SMART_POINTER_H
 #define OMS_SMART_POINTER_H
 
+// In case C++11 or later version is available.
 #if __cplusplus >= 201103L
     #include <memory>
     #define NS std
 #else
 
+
+// If boost is used, we would use Boost.SmartPointer
+#ifdef USE_BOOST
     #include <boost/smart_ptr.hpp>
     #define NS boost
-#ifdef USE_BOOST
 #else
 
+// Define our own smart_ptr implementation if boost is not adopted.
+#include <cstdio>
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -122,6 +127,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             return *this;
         }
 
+        operator bool() const {
+            return ptr_ != NULL;
+        }
+
         T& operator*() {
             return *ptr_;
         }
@@ -164,8 +173,23 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         return shared_ptr<T>(p);
     }
 
+    template <typename T, typename _1, typename _2>
+    shared_ptr<T> make_shared(_1 arg1, _2 arg2) {
+        T* p = NULL;
+
+        try {
+            p = new T(arg1, arg2);
+        } catch (...) {
+            //TODO: allocate memory failed.
+            delete p;
+            return shared_ptr<T>();
+        }
+
+        return shared_ptr<T>(p);
+    }
+
     template <typename U, typename V>
-    shared_ptr<U> dynamic_pointer_cast(shared_ptr<V> &ptr) {
+    shared_ptr<U> dynamic_pointer_cast(const shared_ptr<V> &ptr) {
         U* p = dynamic_cast<U*>(ptr.get());
         if (p) {
             ptr.getRefCount()->operator++();
@@ -177,7 +201,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
 END_NAMESPACE_2(io, openmessaging)
 
-// #define NS io::openmessaging
+#define NS io::openmessaging
 
 #endif
 

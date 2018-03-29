@@ -10,7 +10,7 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-    NS::mutex listener_mutex;
+    boost::mutex listener_mutex;
     std::map<std::string, NS::shared_ptr<MessageListener> > queue_listener_map;
 
     void onMessage(JNIEnv *env, jobject object, jstring queue, jobject message, jobject context) {
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         std::string queue_name(queue_name_char_ptr);
         NS::shared_ptr<MessageListener> messageListenerPtr;
         {
-            NS::lock_guard<NS::mutex> lk(listener_mutex);
+            boost::lock_guard<boost::mutex> lk(listener_mutex);
             messageListenerPtr = queue_listener_map[queue_name];
         }
 
@@ -108,7 +108,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
     LOG_DEBUG << "MessageListenerAdaptor instance created";
     {
-        NS::lock_guard<NS::mutex> lk(listener_mutex);
+        boost::lock_guard<boost::mutex> lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
@@ -123,7 +123,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
 PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
 
     {
-        NS::lock_guard<NS::mutex> lk(listener_mutex);
+        boost::lock_guard<boost::mutex> lk(listener_mutex);
         queue_listener_map.erase(queueName);
     }
 

@@ -58,7 +58,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PromiseImplTest, testAddListener) {
         PromiseImpl promise;
         CountdownLatch countdownLatch(1);
-        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(NS::ref(countdownLatch));
+        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(boost::ref(countdownLatch));
         promise.addListener(listener);
         NS::shared_ptr<producer::SendResult> pSendResult =
                 NS::make_shared<producer::SendResultImpl>(objectSendResult);
@@ -69,7 +69,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PromiseImplTest, testAddListener2) {
         PromiseImpl promise;
         CountdownLatch countdownLatch(1);
-        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(NS::ref(countdownLatch));
+        NS::shared_ptr<FutureListener> listener = NS::make_shared<FutureListenerExample>(boost::ref(countdownLatch));
         NS::shared_ptr<producer::SendResult> pSendResult =
                 NS::make_shared<producer::SendResultImpl>(objectSendResult);
         promise.set(pSendResult);

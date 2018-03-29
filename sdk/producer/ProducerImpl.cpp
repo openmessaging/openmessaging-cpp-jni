@@ -12,14 +12,14 @@ using namespace io::openmessaging::producer;
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     long long sendOpaque = 0;
-    NS::mutex sendAsyncMutex;
+    boost::mutex sendAsyncMutex;
     std::map<long long, NS::shared_ptr<Promise> > sendAsyncMap;
 
     void sendAsyncCallback(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
 
         NS::shared_ptr<Promise> promise;
         {
-            NS::lock_guard<NS::mutex> lk(sendAsyncMutex);
+            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
             promise = sendAsyncMap[opaque];
             sendAsyncMap.erase(opaque);
         }
@@ -133,7 +133,7 @@ NS::shared_ptr<KeyValue> ProducerImpl::properties() {
 }
 
 NS::shared_ptr<SendResult> ProducerImpl::send(const NS::shared_ptr<Message> &message,
-                                                 const NS::shared_ptr<KeyValue> &props) {
+                                              const NS::shared_ptr<KeyValue> &props) {
     CurrentEnv current;
 
     NS::shared_ptr<ByteMessageImpl> msg = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
@@ -210,7 +210,7 @@ ProducerImpl::sendAsync(const NS::shared_ptr<Message> &message,
         long long opaque;
         {
             opaque = ++sendOpaque;
-            NS::lock_guard<NS::mutex> lk(sendAsyncMutex);
+            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
             sendAsyncMap[opaque] = ft;
         }
         if (props) {

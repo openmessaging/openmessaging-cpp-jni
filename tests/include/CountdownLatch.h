@@ -16,9 +16,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool await(long long timeout);
 
     private:
-        NS::mutex _mtx;
+        boost::mutex _mtx;
         unsigned int _count;
-        NS::condition_variable cv;
+
+        boost::condition_variable cv;
 
         bool predicate();
     };

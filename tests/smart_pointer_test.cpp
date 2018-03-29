@@ -2,6 +2,10 @@
 #include "smart_pointer.h"
 #include <iostream>
 
+#if __cplusplus < 201103L
+
+#ifndef USE_BOOST
+
 using namespace io::openmessaging;
 
 class Type {
@@ -62,3 +66,7 @@ TEST(smart_pointer_test, test_dynamic_pointer_cast) {
     shared_ptr<Derivative> pDerivative = dynamic_pointer_cast<Derivative>(pType);
     pDerivative->execute();
 }
+#endif
+
+// pre C++11
+#endif

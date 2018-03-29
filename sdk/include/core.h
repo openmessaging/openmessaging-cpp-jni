@@ -6,16 +6,8 @@
 
 #include "smart_pointer.h"
 
-#if __cplusplus >= 201103L
-    #include <thread>
-    #include <mutex>
-    #include <condition_variable>
-    #include <chrono>
-#else
-    #include <boost/thread.hpp>
-    #include <boost/date_time.hpp>
-#endif
-
+#include <boost/thread.hpp>
+#include <boost/date_time.hpp>
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 

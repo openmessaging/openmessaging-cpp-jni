@@ -13,9 +13,9 @@ add_library(oms_rocketmq SHARED
         producer/LocalTransactionBranchExecutorImpl.cpp
 
         consumer/ContextImpl.cpp
-        consumer/StreamImpl.cpp
         consumer/PullConsumerImpl.cpp
         consumer/PushConsumerImpl.cpp
+        consumer/StreamingIteratorImpl.cpp
         consumer/StreamingConsumerImpl.cpp
 
         MessagingAccessPointImpl.cpp)

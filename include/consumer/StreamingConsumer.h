@@ -7,7 +7,7 @@
 #include "smart_pointer.h"
 #include "KeyValue.h"
 #include "ServiceLifecycle.h"
-#include "MessageIterator.h"
+#include "StreamingIterator.h"
 #include "Namespace.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
@@ -27,19 +27,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual KeyValuePtr properties() = 0;
+        virtual KeyValuePtr attributes() = 0;
 
-        virtual std::vector<std::string> streams() = 0;
+        virtual StreamingIteratorPtr seek(const std::string &name, long offset, int whence) = 0;
 
-        virtual std::vector<std::string> consumers() = 0;
-
-        virtual MessageIteratorPtr current() = 0;
-
-        virtual MessageIteratorPtr begin() = 0;
-
-        virtual MessageIteratorPtr end() = 0;
-
-        virtual MessageIteratorPtr seekByTime(long timestamp) = 0;
     };
     typedef NS::shared_ptr<StreamingConsumer> StreamingConsumerPtr;
 

@@ -1,5 +1,5 @@
-#ifndef OMS_MESSAGE_ITERATOR_H
-#define OMS_MESSAGE_ITERATOR_H
+#ifndef OMS_STREAMING_ITERATOR_H
+#define OMS_STREAMING_ITERATOR_H
 
 
 #include "smart_pointer.h"
@@ -9,13 +9,13 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
-    class MessageIterator : public virtual ServiceLifecycle {
+    class StreamingIterator : public virtual ServiceLifecycle {
     public:
-        virtual ~MessageIterator() {
+        virtual ~StreamingIterator() {
 
         }
 
-        virtual KeyValuePtr properties() = 0;
+        virtual KeyValuePtr attributes() = 0;
 
         virtual void commit(bool flush) = 0;
 
@@ -28,8 +28,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual MessagePtr previous() = 0;
     };
 
-    typedef NS::shared_ptr<MessageIterator> MessageIteratorPtr;
+    typedef NS::shared_ptr<StreamingIterator> StreamingIteratorPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
-#endif //OMS_MESSAGE_ITERATOR_H
+#endif //OMS_STREAMING_ITERATOR_H

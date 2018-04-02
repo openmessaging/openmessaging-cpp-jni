@@ -4,7 +4,7 @@
 #include "Namespace.h"
 #include "consumer/StreamingConsumer.h"
 #include "ServiceLifecycleImpl.h"
-#include "consumer/MessageIterator.h"
+#include "consumer/StreamingIterator.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
@@ -14,19 +14,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~StreamingConsumerImpl();
 
-        virtual NS::shared_ptr<KeyValue> properties();
+        virtual KeyValuePtr attributes();
 
-        virtual std::vector<std::string> streams();
-
-        virtual std::vector<std::string> consumers();
-
-        virtual NS::shared_ptr<MessageIterator> current();
-
-        virtual NS::shared_ptr<MessageIterator> begin();
-
-        virtual NS::shared_ptr<MessageIterator> end();
-
-        virtual NS::shared_ptr<MessageIterator> seekByTime(long timestamp);
+        virtual StreamingIteratorPtr seek(const std::string &name, long offset, int whence);
 
     private:
         jclass classStreamingConsumer;

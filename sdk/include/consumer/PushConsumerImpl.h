@@ -18,19 +18,19 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual void resume();
 
-        virtual void suspend();
+        virtual void suspend(long timeout);
 
         virtual bool isSuspended();
 
         virtual consumer::PushConsumer& attachQueue(const std::string &queueName,
-                                          const NS::shared_ptr<consumer::MessageListener> &listener,
-                                          const NS::shared_ptr<KeyValue> &properties);
+                                          const consumer::MessageListenerPtr &listener,
+                                          const KeyValuePtr &properties);
 
         virtual consumer::PushConsumer& detachQueue(const std::string &queueName);
 
-        virtual void addInterceptor(const NS::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
+        virtual void addInterceptor(const consumer::PushConsumerInterceptorPtr &interceptor);
 
-        virtual void removeInterceptor(const NS::shared_ptr<consumer::PushConsumerInterceptor> &interceptor);
+        virtual void removeInterceptor(const consumer::PushConsumerInterceptorPtr &interceptor);
 
 
     private:

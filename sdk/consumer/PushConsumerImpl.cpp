@@ -58,7 +58,7 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
 
     midProperties = current.getMethodId(classPushConsumer, "properties", buildSignature(Types::KeyValue_, 0));
     midResume = current.getMethodId(classPushConsumer, "resume", buildSignature(Types::void_, 0));
-    midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::void_, 0));
+    midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::long_, 0));
     midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", buildSignature(Types::boolean_, 0));
 
     midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue",
@@ -86,9 +86,9 @@ void PushConsumerImpl::resume() {
     ctx.callVoidMethod(_proxy, midResume);
 }
 
-void PushConsumerImpl::suspend() {
+void PushConsumerImpl::suspend(long timeout) {
     CurrentEnv ctx;
-    ctx.callVoidMethod(_proxy, midSuspend);
+    ctx.callVoidMethod(_proxy, midSuspend, timeout);
 }
 
 bool PushConsumerImpl::isSuspended() {
@@ -136,10 +136,10 @@ PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
     return *this;
 }
 
-void PushConsumerImpl::addInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) {
+void PushConsumerImpl::addInterceptor(const PushConsumerInterceptorPtr &interceptor) {
     throw OMSException("Not Implemented");
 }
 
-void PushConsumerImpl::removeInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) {
+void PushConsumerImpl::removeInterceptor(const PushConsumerInterceptorPtr &interceptor) {
     throw OMSException("Not Implemented");
 }

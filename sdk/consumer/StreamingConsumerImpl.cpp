@@ -14,30 +14,10 @@ StreamingConsumerImpl::~StreamingConsumerImpl() {
     ctx.deleteRef(classStreamingConsumer);
 }
 
-NS::shared_ptr<KeyValue> StreamingConsumerImpl::properties() {
+KeyValuePtr StreamingConsumerImpl::attributes() {
     throw OMSException("Not Implemented");
 }
 
-std::vector<std::string> StreamingConsumerImpl::streams() {
-    throw OMSException("Not Implemented");
-}
+StreamingIteratorPtr StreamingConsumerImpl::seek(const std::string &name, long offset, int whence) {
 
-std::vector<std::string> StreamingConsumerImpl::consumers() {
-    throw OMSException("Not Implemented");
-}
-
-NS::shared_ptr<MessageIterator> StreamingConsumerImpl::current() {
-    throw OMSException("Not Implemented");
-}
-
-NS::shared_ptr<MessageIterator> StreamingConsumerImpl::begin() {
-    throw OMSException("Not Implemented");
-}
-
-NS::shared_ptr<MessageIterator> StreamingConsumerImpl::end() {
-    throw OMSException("Not Implemented");
-}
-
-NS::shared_ptr<MessageIterator> StreamingConsumerImpl::seekByTime(long timestamp) {
-    throw OMSException("Not Implemented");
 }

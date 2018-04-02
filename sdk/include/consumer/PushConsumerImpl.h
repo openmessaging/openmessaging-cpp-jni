@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~PushConsumerImpl();
 
-        virtual NS::shared_ptr<KeyValue> properties();
+        virtual KeyValuePtr attributes();
 
         virtual void resume();
 

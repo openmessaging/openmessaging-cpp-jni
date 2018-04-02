@@ -14,12 +14,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual ~PullConsumerImpl();
 
-        virtual NS::shared_ptr<KeyValue> properties();
+        virtual KeyValuePtr attributes();
 
-        virtual NS::shared_ptr<Message> poll(const NS::shared_ptr<KeyValue> &props);
+        PullConsumer& attachQueue(const std::string &queueName, const KeyValuePtr &properties);
 
-        virtual void ack(const std::string &messageId,
-                         const NS::shared_ptr<KeyValue> &props);
+        PullConsumer& detachQueue(const std::string &queueName);
+
+        virtual MessagePtr receive(const KeyValuePtr &props);
+
+        virtual void ack(const std::string &messageId, const KeyValuePtr &props);
 
         jobject getProxy();
 

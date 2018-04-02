@@ -31,10 +31,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         virtual void
-        executeLocalTransaction(Message &message, LocalTransactionExecutionContextPtr &context) = 0;
+        executeLocalTransaction(Message &message, const LocalTransactionExecutionContextPtr &context) = 0;
 
         virtual void
-        checkLocalTransaction(Message &message, LocalTransactionCheckContextPtr &context) = 0;
+        checkLocalTransaction(Message &message, const LocalTransactionCheckContextPtr &context) = 0;
 
     };
 

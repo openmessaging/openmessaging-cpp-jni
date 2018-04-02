@@ -44,13 +44,13 @@ include_directories(SYSTEM ${JNI_INCLUDE_DIRS})
 
 add_subdirectory(sdk)
 
-option(BUILD_EXAMPLE "Build examples flag" ON)
+option(BUILD_EXAMPLE "Build examples flag" OFF)
 
 if (BUILD_EXAMPLE)
     add_subdirectory(example)
 endif ()
 
-option(TEST "Build test cases" ON)
+option(TEST "Build test cases" OFF)
 if(TEST)
     enable_testing()
     option(gtest_build_tests OFF)

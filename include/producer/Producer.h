@@ -43,15 +43,51 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual KeyValuePtr properties() = 0;
+        /**
+         * Returns the attributes of this {@code Producer} instance.
+         * Changes to the return {@code KeyValue} are not reflected in physical {@code Producer}.
+         * <p>
+         * There are some standard attributes defined by OMS for {@code Producer}:
+         * <ul>
+         * <li> {@link OMSBuiltinKeys#PRODUCER_ID}, the unique producer id for a producer instance.
+         * <li> {@link OMSBuiltinKeys#OPERATION_TIMEOUT}, the default timeout period for operations of {@code Producer}.
+         * </ul>
+         *
+         * @return the attributes
+         */
+        virtual KeyValuePtr attributes() = 0;
 
+        /**
+         * Sends a message to the specified destination synchronously, the destination should be preset to
+         * {@link Message#sysHeaders()}, other header fields as well.
+         *
+         * @param message a message will be sent
+         * @return the successful {@code SendResult}
+         * @throws OMSMessageFormatException if an invalid message is specified.
+         * @throws OMSTimeOutException if the given timeout elapses before the send operation completes
+         * @throws OMSRuntimeException if the {@code Producer} fails to send the message due to some internal error.
+         */
         virtual SendResultPtr send(const MessagePtr &message,
-                                                   const KeyValuePtr &properties = kv_nullptr) = 0;
+                                   const KeyValuePtr &properties = kv_nullptr) = 0;
 
+        /**
+         * Sends a transactional message to the specified destination synchronously, using the specified attributes,
+         * the destination should be preset to {@link Message#sysHeaders()}, other header fields as well.
+         * <p>
+         * A transactional message will be exposed to consumer if and only if the local transaction
+         * branch has been committed, or be discarded if local transaction has been rolled back.
+         *
+         * @param message a transactional message will be sent
+         * @param branchExecutor local transaction executor associated with the message
+         * @param attributes the specified attributes
+         * @return the successful {@code SendResult}
+         * @throws OMSMessageFormatException if an invalid message is specified.
+         * @throws OMSTimeOutException if the given timeout elapses before the send operation completes
+         * @throws OMSRuntimeException if the {@code Producer} fails to send the message due to some internal error.
+         */
         virtual SendResultPtr send(const MessagePtr &message,
-                                                   const LocalTransactionBranchExecutorPtr &executor,
-                                                   const NS::shared_ptr<void> &arg,
-                                                   const KeyValuePtr &properties) = 0;
+                                   const LocalTransactionBranchExecutorPtr &executor,
+                                   const KeyValuePtr &properties) = 0;
 
         /**
          * Asynchronously send a message to its destination, which is specified in system headers.
@@ -64,17 +100,27 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * @param properties Optional additional properties.
          * @return Smart pointer to Future instance.
          */
-        virtual FuturePtr
-        sendAsync(const MessagePtr &message,
-                  const KeyValuePtr &properties = kv_nullptr) = 0;
+        virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual void sendOneway(const MessagePtr &message,
-                                const KeyValuePtr &properties = kv_nullptr) = 0;
-
+        /**
+         * Creates a {@code BatchMessageSender} to send message in batch way.
+         *
+         * @return a {@code BatchMessageSender} instance
+         */
         virtual BatchMessageSenderPtr createSequenceBatchMessageSender() = 0;
 
+        /**
+         * Adds a {@code ProducerInterceptor} to intercept send operations of producer.
+         *
+         * @param interceptor a producer interceptor
+         */
         virtual void addInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) = 0;
 
+        /**
+         * Removes a {@code ProducerInterceptor}
+         *
+         * @param interceptor a producer interceptor will be removed
+         */
         virtual void removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) = 0;
     };
 

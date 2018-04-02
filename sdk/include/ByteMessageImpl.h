@@ -63,6 +63,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     };
 
+    typedef NS::shared_ptr<ByteMessageImpl> ByteMessageImplPtr;
+
 END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_BYTE_MESSAGE_IMPL_H

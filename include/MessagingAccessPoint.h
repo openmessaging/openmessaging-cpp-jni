@@ -33,31 +33,77 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual KeyValuePtr properties() = 0;
-
+        /**
+        * Returns the target OMS specification version of the specified vendor implementation.
+        *
+        * @return the OMS version of implementation
+        * @see OMS#specVersion
+        */
         virtual std::string implVersion() = 0;
 
+        /**
+         * Returns the attributes of this {@code MessagingAccessPoint} instance.
+         * <p>
+         * There are some standard attributes defined by OMS for {@code MessagingAccessPoint}:
+         * <ul>
+         * <li> {@link OMSBuiltinKeys#ACCESS_POINTS}, the specified access points.
+         * <li> {@link OMSBuiltinKeys#DRIVER_IMPL}, the fully qualified class name of the specified MessagingAccessPoint's
+         * implementation, the default value is {@literal io.openmessaging.<driver_type>.MessagingAccessPointImpl}.
+         * <li> {@link OMSBuiltinKeys#NAMESPACE}, the namespace the OMS resource resides in.
+         * <li> {@link OMSBuiltinKeys#REGION}, the region the namespace resides in.
+         * <li> {@link OMSBuiltinKeys#ACCOUNT_ID}, the ID of the specific account system that owns the resource.
+         * </ul>
+         *
+         * @return the attributes
+         */
+        virtual KeyValuePtr attributes() = 0;
+
+        /**
+         * Creates a new {@code Producer} for the specified {@code MessagingAccessPoint}.
+         *
+         * @return the created {@code Producer}
+         * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
+         * due to some internal error
+         */
         virtual producer::ProducerPtr createProducer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
+        /**
+         * Creates a new {@code PushConsumer} for the specified {@code MessagingAccessPoint}.
+         * The returned {@code PushConsumer} isn't attached to any queue,
+         * uses {@link PushConsumer#attachQueue(String, MessageListener)} to attach queues.
+         *
+         * @return the created {@code PushConsumer}
+         * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
+         * due to some internal error
+         */
         virtual consumer::PushConsumerPtr createPushConsumer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
+        /**
+         * Creates a new {@code PullConsumer} for the specified {@code MessagingAccessPoint}.
+         *
+         * @return the created {@code PullConsumer}
+         * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
+         * due to some internal error
+         */
         virtual consumer::PullConsumerPtr createPullConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
 
+        /**
+         * Creates a new {@code StreamingConsumer} for the specified {@code MessagingAccessPoint}.
+         *
+         * @return the created {@code Stream}
+         * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
+         * due to some internal error
+         */
         virtual consumer::StreamingConsumerPtr createStreamingConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual ResourceManagerPtr getResourceManager() = 0;
-
-        virtual void addObserver(const observer::ObserverPtr &observer) = 0;
-
-        virtual void removeObserver(const observer::ObserverPtr &observer) = 0;
-
-        virtual std::vector<producer::ProducerPtr> producers() = 0;
-
-        virtual std::vector<consumer::PushConsumerPtr> pushConsumers() = 0;
-
-        virtual std::vector<consumer::PullConsumerPtr> pullConsumers() = 0;
-
-        virtual std::vector<consumer::StreamingConsumerPtr> streamingConsumers() = 0;
+        /**
+         * Gets a lightweight {@code ResourceManager} instance from the specified {@code MessagingAccessPoint}.
+         *
+         * @return the resource manger
+         * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
+         * due to some internal error
+         */
+        virtual ResourceManagerPtr resourceManager() = 0;
     };
 
     typedef NS::shared_ptr<MessagingAccessPoint> MessagingAccessPointPtr;

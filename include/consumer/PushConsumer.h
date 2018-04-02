@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual KeyValuePtr properties() = 0;
+        virtual KeyValuePtr attributes() = 0;
 
         virtual void resume() = 0;
 

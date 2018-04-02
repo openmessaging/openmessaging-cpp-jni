@@ -73,7 +73,7 @@ PushConsumerImpl::~PushConsumerImpl() {
     current.deleteRef(classMessageListenerAdaptor);
 }
 
-NS::shared_ptr<KeyValue> PushConsumerImpl::properties() {
+KeyValuePtr PushConsumerImpl::attributes() {
     CurrentEnv ctx;
     jobject propertiesLocal = ctx.callObjectMethod(_proxy, midProperties);
     jobject globalRef = ctx.newGlobalRef(propertiesLocal);

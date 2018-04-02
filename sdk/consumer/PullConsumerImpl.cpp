@@ -22,7 +22,7 @@ PullConsumerImpl::~PullConsumerImpl() {
     current.deleteRef(classPullConsumer);
 }
 
-KeyValuePtr PullConsumerImpl::properties() {
+KeyValuePtr PullConsumerImpl::attributes() {
     CurrentEnv current;
     jobject kv = current.callObjectMethod(_proxy, midProperties);
     KeyValueImplPtr ptr = NS::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
@@ -30,7 +30,15 @@ KeyValuePtr PullConsumerImpl::properties() {
     return ptr;
 }
 
-MessagePtr PullConsumerImpl::poll(const KeyValuePtr &props) {
+PullConsumer& PullConsumerImpl::attachQueue(const std::string &queueName, const KeyValuePtr &properties) {
+    return *this;
+}
+
+PullConsumer& PullConsumerImpl::detachQueue(const std::string &queueName) {
+    return *this;
+}
+
+MessagePtr PullConsumerImpl::receive(const KeyValuePtr &props) {
     CurrentEnv current;
 
     jobject jMessageLocal;

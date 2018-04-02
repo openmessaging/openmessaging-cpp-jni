@@ -30,6 +30,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual bool setFailure(std::exception &e) = 0;
     };
 
+    typedef NS::shared_ptr<Promise> PromisePtr;
+
 END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_PROMISE_H

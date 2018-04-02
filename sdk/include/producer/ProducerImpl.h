@@ -13,39 +13,27 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
     class ProducerImpl : public virtual producer::Producer, public virtual ServiceLifecycleImpl {
     public:
 
-        ProducerImpl(jobject proxy,
-                     const NS::shared_ptr<KeyValue> &props);
+        ProducerImpl(jobject proxy, const KeyValuePtr &props);
 
         virtual ~ProducerImpl();
 
-        virtual NS::shared_ptr<KeyValue> properties();
+        virtual KeyValuePtr attributes();
 
-        virtual NS::shared_ptr<producer::SendResult> send(const NS::shared_ptr<Message> &message,
-                                                             const NS::shared_ptr<KeyValue> &properties);
+        virtual producer::SendResultPtr send(const MessagePtr &message, const KeyValuePtr &properties);
 
-        virtual NS::shared_ptr<ByteMessage>
-        createByteMessageToTopic(const std::string &topic, const scoped_array<char> &body);
+        virtual ByteMessagePtr createByteMessageToQueue(const std::string &topic, const MessageBodyPtr &body);
 
-        virtual NS::shared_ptr<ByteMessage>
-        createByteMessageToQueue(const std::string &topic, const scoped_array<char> &body);
+        virtual SendResultPtr send(const MessagePtr &message,
+                                   const LocalTransactionBranchExecutorPtr &executor,
+                                   const KeyValuePtr &properties);
 
-        virtual NS::shared_ptr<SendResult> send(const NS::shared_ptr<Message> &message,
-                                                   const NS::shared_ptr<LocalTransactionBranchExecutor> &executor,
-                                                   const NS::shared_ptr<void> &arg,
-                                                   const NS::shared_ptr<KeyValue> &properties);
+        virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties);
 
-        virtual NS::shared_ptr<Future>
-        sendAsync(const NS::shared_ptr<Message> &message,
-                  const NS::shared_ptr<KeyValue> &properties);
+        virtual BatchMessageSenderPtr createSequenceBatchMessageSender();
 
-        virtual void sendOneway(const NS::shared_ptr<Message> &message,
-                                const NS::shared_ptr<KeyValue> &properties);
+        virtual void addInterceptor(const interceptor::ProducerInterceptorPtr &interceptor);
 
-        virtual NS::shared_ptr<BatchMessageSender> createSequenceBatchMessageSender();
-
-        virtual void addInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor);
-
-        virtual void removeInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor);
+        virtual void removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor);
 
     private:
         jclass     classProducer;
@@ -76,7 +64,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         jmethodID  midSendOneway2;
 
-        const NS::shared_ptr<KeyValue> &_properties;
+        const KeyValuePtr &_properties;
     };
 
 END_NAMESPACE_3(io, openmessaging, producer)

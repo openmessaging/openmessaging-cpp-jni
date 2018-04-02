@@ -7,41 +7,23 @@
 BEGIN_NAMESPACE_2(io, openmessaging)
     class MessagingAccessPointImpl : public MessagingAccessPoint {
     public:
-        MessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValue> &properties, jobject proxy);
+        MessagingAccessPointImpl(const std::string &url, const KeyValuePtr &properties, jobject proxy);
 
         virtual ~MessagingAccessPointImpl();
 
-        NS::shared_ptr<KeyValue> properties();
+        KeyValuePtr attributes();
 
         std::string implVersion();
 
-        NS::shared_ptr<producer::Producer>
-        createProducer(const NS::shared_ptr<KeyValue> &properties);
+        producer::ProducerPtr createProducer(const KeyValuePtr &properties);
 
-        NS::shared_ptr<consumer::PushConsumer>
-        createPushConsumer(const NS::shared_ptr<KeyValue> &properties);
+        consumer::PushConsumerPtr createPushConsumer(const KeyValuePtr &properties);
 
-        NS::shared_ptr<consumer::PullConsumer>
-        createPullConsumer(const std::string &queueName,
-                           const NS::shared_ptr<KeyValue> &properties);
+        consumer::PullConsumerPtr createPullConsumer(const std::string &queueName, const KeyValuePtr &properties);
 
-        NS::shared_ptr<consumer::StreamingConsumer>
-        createStreamingConsumer(const std::string &queueName,
-                                const NS::shared_ptr<KeyValue> &properties);
+        consumer::StreamingConsumerPtr createStreamingConsumer(const std::string &queueName, const KeyValuePtr &properties);
 
-        NS::shared_ptr<ResourceManager> getResourceManager();
-
-        void addObserver(const NS::shared_ptr<observer::Observer> &observer);
-
-        void removeObserver(const NS::shared_ptr<observer::Observer> &observer);
-
-        std::vector<NS::shared_ptr<producer::Producer> > producers();
-
-        std::vector<NS::shared_ptr<consumer::PushConsumer> > pushConsumers();
-
-        std::vector<NS::shared_ptr<consumer::PullConsumer> > pullConsumers();
-
-        std::vector<NS::shared_ptr<consumer::StreamingConsumer> > streamingConsumers();
+        ResourceManagerPtr resourceManager();
 
         void startup();
 
@@ -52,7 +34,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     private:
         const std::string _url;
 
-        const NS::shared_ptr<KeyValue> _properties;
+        const KeyValuePtr _properties;
 
         jobject objectMessagingAccessPoint;
 

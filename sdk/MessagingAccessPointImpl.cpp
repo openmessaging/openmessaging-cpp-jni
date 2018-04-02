@@ -4,7 +4,6 @@
 #include "producer/ProducerImpl.h"
 #include "consumer/PushConsumerImpl.h"
 #include "consumer/PullConsumerImpl.h"
-#include "consumer/StreamingConsumer.h"
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
@@ -12,7 +11,7 @@ using namespace io::openmessaging::consumer;
 using namespace io::openmessaging::observer;
 
 MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
-                                                   const NS::shared_ptr<KeyValue> &props,
+                                                   const KeyValuePtr &props,
                                                    jobject proxy) :
         _url(url), _properties(props), objectMessagingAccessPoint(proxy) {
 
@@ -45,7 +44,7 @@ MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
     midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", buildSignature(Types::void_, 0));
 }
 
-NS::shared_ptr<KeyValue> MessagingAccessPointImpl::properties() {
+KeyValuePtr MessagingAccessPointImpl::attributes() {
     return _properties;
 }
 
@@ -59,12 +58,11 @@ std::string MessagingAccessPointImpl::implVersion() {
     return result;
 }
 
-NS::shared_ptr<Producer>
-MessagingAccessPointImpl::createProducer(const NS::shared_ptr<KeyValue> &props) {
+ProducerPtr MessagingAccessPointImpl::createProducer(const KeyValuePtr &props) {
     CurrentEnv current;
     jobject producerLocal;
     if (props) {
-        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
+        KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
     } else {
         producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer);
@@ -76,12 +74,11 @@ MessagingAccessPointImpl::createProducer(const NS::shared_ptr<KeyValue> &props) 
     return ret;
 }
 
-NS::shared_ptr<consumer::PushConsumer>
-MessagingAccessPointImpl::createPushConsumer(const NS::shared_ptr<KeyValue> &props) {
+consumer::PushConsumerPtr MessagingAccessPointImpl::createPushConsumer(const KeyValuePtr &props) {
     CurrentEnv current;
     jobject pushConsumerLocal;
     if (props) {
-        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
+        KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
 
     } else {
@@ -93,9 +90,8 @@ MessagingAccessPointImpl::createPushConsumer(const NS::shared_ptr<KeyValue> &pro
     return ret;
 }
 
-NS::shared_ptr<consumer::PullConsumer>
-MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
-                                             const NS::shared_ptr<KeyValue> &props) {
+consumer::PullConsumerPtr MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
+                                                                       const KeyValuePtr &props) {
     CurrentEnv current;
     jobject pullConsumerLocal;
 
@@ -124,42 +120,12 @@ MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
     return ret;
 }
 
-NS::shared_ptr<consumer::StreamingConsumer>
-MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName,
-                                                  const NS::shared_ptr<KeyValue> &props) {
-    throw OMSException("Not Implemented");
-
-}
-
-NS::shared_ptr<ResourceManager> MessagingAccessPointImpl::getResourceManager() {
+consumer::StreamingConsumerPtr MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName,
+                                                                                 const KeyValuePtr &props) {
     throw OMSException("Not Implemented");
 }
 
-void MessagingAccessPointImpl::addObserver(const NS::shared_ptr<observer::Observer> &observer) {
-    throw OMSException("Not Implemented");
-}
-
-void MessagingAccessPointImpl::removeObserver(const NS::shared_ptr<observer::Observer> &observer) {
-    throw OMSException("Not Implemented");
-}
-
-std::vector<NS::shared_ptr<Producer> >
-MessagingAccessPointImpl::producers() {
-    throw OMSException("Not Implemented");
-}
-
-std::vector<NS::shared_ptr<consumer::PushConsumer> >
-MessagingAccessPointImpl::pushConsumers() {
-    throw OMSException("Not Implemented");
-}
-
-std::vector<NS::shared_ptr<consumer::PullConsumer> >
-MessagingAccessPointImpl::pullConsumers() {
-    throw OMSException("Not Implemented");
-}
-
-std::vector<NS::shared_ptr<consumer::StreamingConsumer> >
-MessagingAccessPointImpl::streamingConsumers() {
+ResourceManagerPtr MessagingAccessPointImpl::resourceManager() {
     throw OMSException("Not Implemented");
 }
 

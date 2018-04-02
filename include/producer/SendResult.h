@@ -4,7 +4,6 @@
 #include <string>
 
 #include "smart_pointer.h"
-#include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
 
@@ -24,9 +23,6 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         virtual std::string messageId() = 0;
-
-        virtual KeyValuePtr properties() = 0;
-
     };
 
     typedef NS::shared_ptr<SendResult> SendResultPtr;

@@ -15,14 +15,13 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual std::string messageId();
 
-        virtual NS::shared_ptr<KeyValue> properties();
-
     private:
         jobject _proxy;
         jclass classSendResult;
         jmethodID midMessageId;
-        jmethodID midProperties;
     };
+
+    typedef NS::shared_ptr<SendResultImpl> SendResultImplPtr;
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

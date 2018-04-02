@@ -14,13 +14,13 @@ LocalTransactionBranchExecutorImpl::~LocalTransactionBranchExecutorImpl() {
 }
 
 void LocalTransactionBranchExecutorImpl::executeLocalTransaction(Message &message,
-                                                                 NS::shared_ptr<LocalTransactionExecutionContext> &context) {
+                                                                 const LocalTransactionExecutionContextPtr &context) {
 
 }
 
 
 void LocalTransactionBranchExecutorImpl::checkLocalTransaction(Message &message,
-                                                               NS::shared_ptr<LocalTransactionCheckContext> &context) {
+                                                               const LocalTransactionCheckContextPtr &context) {
 
 }
 

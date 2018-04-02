@@ -7,6 +7,7 @@
 
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "smart_pointer.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 

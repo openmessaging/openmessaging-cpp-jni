@@ -22,15 +22,15 @@ PullConsumerImpl::~PullConsumerImpl() {
     current.deleteRef(classPullConsumer);
 }
 
-NS::shared_ptr<KeyValue> PullConsumerImpl::properties() {
+KeyValuePtr PullConsumerImpl::properties() {
     CurrentEnv current;
     jobject kv = current.callObjectMethod(_proxy, midProperties);
-    NS::shared_ptr<KeyValueImpl> ptr = NS::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
+    KeyValueImplPtr ptr = NS::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
     current.deleteRef(kv);
     return ptr;
 }
 
-NS::shared_ptr<Message> PullConsumerImpl::poll(const NS::shared_ptr<KeyValue> &props) {
+MessagePtr PullConsumerImpl::poll(const KeyValuePtr &props) {
     CurrentEnv current;
 
     jobject jMessageLocal;
@@ -43,7 +43,7 @@ NS::shared_ptr<Message> PullConsumerImpl::poll(const NS::shared_ptr<KeyValue> &p
 
     if (jMessageLocal) {
         jobject jMessage = current.newGlobalRef(jMessageLocal);
-        NS::shared_ptr<Message> messagePtr = NS::make_shared<ByteMessageImpl>(jMessage);
+       MessagePtr messagePtr = NS::make_shared<ByteMessageImpl>(jMessage);
         return messagePtr;
     }
 
@@ -51,13 +51,12 @@ NS::shared_ptr<Message> PullConsumerImpl::poll(const NS::shared_ptr<KeyValue> &p
     return msg_nullptr;
 }
 
-void PullConsumerImpl::ack(const std::string &messageId,
-                           const NS::shared_ptr<KeyValue> &props) {
+void PullConsumerImpl::ack(const std::string &messageId, const KeyValuePtr &props) {
     CurrentEnv current;
 
     jstring msgId = current.newStringUTF(messageId.c_str());
     if (props) {
-        NS::shared_ptr<KeyValueImpl> ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
+        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
         current.callObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
     } else {
         current.callObjectMethod(_proxy, midAck, msgId);

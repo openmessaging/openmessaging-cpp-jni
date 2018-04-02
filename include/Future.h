@@ -28,13 +28,15 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool isDone() = 0;
 
-        virtual NS::shared_ptr<producer::SendResult> get(unsigned long timeout = LONG_MAX) = 0;
+        virtual producer::SendResultPtr get(unsigned long timeout = LONG_MAX) = 0;
 
-        virtual Future &addListener(NS::shared_ptr<FutureListener> listener) = 0;
+        virtual Future &addListener(FutureListenerPtr listener) = 0;
 
         virtual std::exception &getThrowable() = 0;
 
     };
+
+    typedef NS::shared_ptr<Future> FuturePtr;
 
 END_NAMESPACE_2(io, openmessaging)
 

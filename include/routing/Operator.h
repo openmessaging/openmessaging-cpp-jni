@@ -23,10 +23,12 @@ BEGIN_NAMESPACE_3(io, openmessaging, routing)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual std::string expression() = 0;
     };
+    typedef NS::shared_ptr<Operator> OperatorPtr;
+
 END_NAMESPACE_3(io, openmessaging, routing)
 
 #endif //OMS_OPERATOR_H

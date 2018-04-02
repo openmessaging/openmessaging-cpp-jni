@@ -11,9 +11,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         ContextImpl(jobject proxy);
 
-        virtual NS::shared_ptr<KeyValue> properties();
+        virtual KeyValuePtr properties();
 
-        virtual void ack(NS::shared_ptr<KeyValue> props);
+        virtual void ack(KeyValuePtr props);
 
     private:
         jobject _proxy;

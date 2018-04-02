@@ -17,14 +17,14 @@ ContextImpl::ContextImpl(jobject proxy) : _proxy(proxy) {
     midAck2 = current.getMethodId(classContext, "ack", buildSignature(Types::void_, 1, Types::KeyValue_));
 }
 
-NS::shared_ptr<KeyValue> ContextImpl::properties() {
+KeyValuePtr ContextImpl::properties() {
     CurrentEnv current;
     jobject jPropertiesLocal = current.callObjectMethod(_proxy, midProperties);
     jobject jProps = current.newGlobalRef(jPropertiesLocal);
     return NS::make_shared<KeyValueImpl>(jProps);
 }
 
-void ContextImpl::ack(NS::shared_ptr<KeyValue> props) {
+void ContextImpl::ack(KeyValuePtr props) {
     CurrentEnv current;
     if (props) {
         NS::shared_ptr<KeyValueImpl> kvImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);

@@ -1,7 +1,8 @@
 #include <boost/lexical_cast.hpp>
 #include <plog/Log.h>
 
-#include "MessagingAccessPointFactory.h"
+#include "OMS.h"
+#include "MessagingAccessPoint.h"
 
 using namespace std;
 using namespace io::openmessaging;
@@ -27,16 +28,16 @@ int main(int argc, char *argv[]) {
     load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    NS::shared_ptr<KeyValue> kv = NS::shared_ptr<KeyValue>(newKeyValue());
+    KeyValuePtr kv(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    NS::shared_ptr<MessagingAccessPoint> accessPoint = NS::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
+    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl, kv));
 
     // Create a producer instance via MessageAccessPoint instance
-    NS::shared_ptr<Producer> producer = accessPoint->createProducer();
+    ProducerPtr producer = accessPoint->createProducer();
 
     // Start producer and hereafter be prepared to send message to brokers
     producer->startup();
@@ -47,14 +48,14 @@ int main(int argc, char *argv[]) {
     char* buffer = new char[strlen(slogan) + 1];
     strcpy(buffer, slogan);
 
-    const scoped_array<char> message_body(buffer, strlen(buffer));
+    const MessageBodyPtr message_body(buffer, strlen(buffer));
 
     // Create message by producer, which also plays the role of message factory
-    NS::shared_ptr<ByteMessage> message = producer->createByteMessageToTopic(topic, message_body);
+    ByteMessagePtr message = producer->createByteMessageToTopic(topic, message_body);
 
     for (int i = 0; i < count; ++i) {
         // Send message
-        NS::shared_ptr<SendResult> sendResult = producer->send(message);
+        SendResultPtr sendResult = producer->send(message);
 
         // SendResult instance holds meta data including message id which may be employed to query various info on messaging
         // console

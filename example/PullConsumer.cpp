@@ -1,11 +1,13 @@
 #include <plog/Log.h>
 
-#include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
+#include "OMS.h"
+#include "consumer/PullConsumer.h"
+#include "MessagingAccessPoint.h"
+
 
 using namespace std;
 using namespace io::openmessaging;
-using namespace io::openmessaging::producer;
 
 int main(int argc, char *argv[]) {
 
@@ -21,29 +23,29 @@ int main(int argc, char *argv[]) {
     load_library(accessPointUrl);
 
     // Create Key-Value container to hold custom settings
-    NS::shared_ptr<KeyValue> kv = NS::shared_ptr<KeyValue>(newKeyValue());
+    KeyValuePtr kv(newKeyValue());
 
     // Configure driver class
     kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    NS::shared_ptr<MessagingAccessPoint> accessPoint = NS::shared_ptr<MessagingAccessPoint>(getMessagingAccessPoint(accessPointUrl, kv));
+    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl, kv));
 
     std::string queueName("TopicTest");
 
-    NS::shared_ptr<KeyValue> subKV = NS::shared_ptr<KeyValue>(newKeyValue());
+    KeyValuePtr subKV(newKeyValue());
     const std::string consumer_group_value = "OMS_CONSUMER";
     subKV->put(CONSUMER_GROUP, consumer_group_value);
 
 
-    NS::shared_ptr<consumer::PullConsumer> pullConsumer = accessPoint->createPullConsumer(queueName, subKV);
+    consumer::PullConsumerPtr pullConsumer = accessPoint->createPullConsumer(queueName, subKV);
 
     pullConsumer->startup();
 
     while (true) {
-        NS::shared_ptr<Message> msg = pullConsumer->poll();
+        MessagePtr msg = pullConsumer->poll();
         if (msg) {
-            NS::shared_ptr<KeyValue> sysHeaders = msg->sysHeaders();
+            KeyValuePtr sysHeaders = msg->sysHeaders();
             std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "Receive a new message. MsgId: " << msgId;
             pullConsumer->ack(msgId);

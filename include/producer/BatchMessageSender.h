@@ -4,6 +4,7 @@
 #include "Namespace.h"
 #include "Message.h"
 #include "Uncopyable.h"
+#include "KeyValue.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
     /**
@@ -19,7 +20,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual void send(Message &message, NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual void send(Message &message, KeyValuePtr &properties = kv_nullptr) = 0;
 
         virtual void commit() = 0;
 
@@ -27,6 +28,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual void close() = 0;
     };
+
+    typedef NS::shared_ptr<BatchMessageSender> BatchMessageSenderPtr;
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

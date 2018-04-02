@@ -27,20 +27,21 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual std::vector<std::string> streams() = 0;
 
         virtual std::vector<std::string> consumers() = 0;
 
-        virtual NS::shared_ptr<MessageIterator> current() = 0;
+        virtual MessageIteratorPtr current() = 0;
 
-        virtual NS::shared_ptr<MessageIterator> begin() = 0;
+        virtual MessageIteratorPtr begin() = 0;
 
-        virtual NS::shared_ptr<MessageIterator> end() = 0;
+        virtual MessageIteratorPtr end() = 0;
 
-        virtual NS::shared_ptr<MessageIterator> seekByTime(long timestamp) = 0;
+        virtual MessageIteratorPtr seekByTime(long timestamp) = 0;
     };
+    typedef NS::shared_ptr<StreamingConsumer> StreamingConsumerPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 

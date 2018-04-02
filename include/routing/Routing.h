@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, routing)
 
         }
 
-        virtual NS::shared_ptr <KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual std::string source() = 0;
 
@@ -24,6 +24,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, routing)
 
         virtual std::string routingName() = 0;
     };
+    typedef NS::shared_ptr<Routing> RoutingPtr;
 
 END_NAMESPACE_3(io, openmessaging, routing)
 

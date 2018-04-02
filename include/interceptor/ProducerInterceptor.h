@@ -12,12 +12,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
         virtual ~PreSendContext() {
         }
     };
+    typedef NS::shared_ptr<PreSendContext> PreSendContextPtr;
 
     class PostSendContext {
     public:
         virtual ~PostSendContext() {
         }
     };
+    typedef NS::shared_ptr<PostSendContext> PostSendContextPtr;
 
     /**
      * A {@code ProducerInterceptor} is used to intercept send operations of producer.
@@ -31,10 +33,11 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void preSend(NS::shared_ptr<PreSendContext> context);
+        virtual void preSend(PreSendContextPtr &context);
 
-        virtual void postSend(NS::shared_ptr<PostSendContext> context);
+        virtual void postSend(PostSendContextPtr &context);
     };
+    typedef NS::shared_ptr<ProducerInterceptor> ProducerInterceptorPtr;
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 

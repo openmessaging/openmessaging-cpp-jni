@@ -3,7 +3,6 @@
 #include "consumer/PushConsumerImpl.h"
 #include "KeyValueImpl.h"
 #include "MessagingAccessPointImpl.h"
-#include "MessagingAccessPointFactory.h"
 #include "NonStandardKeys.h"
 #include "CountdownLatch.h"
 #include "BaseTest.h"

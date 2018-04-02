@@ -23,5 +23,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, observer)
         virtual std::string details() = 0;
     };
 
+    typedef NS::shared_ptr<OMSEvent> OMSEventPtr;
+
 END_NAMESPACE_3(io, openmessaging, observer)
 #endif //OMS_OMS_EVENT_H

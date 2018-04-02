@@ -18,13 +18,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual ~MessageFactory() {
         }
 
-        virtual NS::shared_ptr<ByteMessage>
-        createByteMessageToTopic(const std::string &topic,
-                                 const scoped_array<char> &body) = 0;
+        virtual ByteMessagePtr createByteMessageToTopic(const std::string &topic, const MessageBodyPtr &body) = 0;
 
-        virtual NS::shared_ptr<ByteMessage>
-        createByteMessageToQueue(const std::string &topic,
-                                 const scoped_array<char> &body) = 0;
+        virtual ByteMessagePtr createByteMessageToQueue(const std::string &topic, const MessageBodyPtr &body) = 0;
     };
 
 END_NAMESPACE_2(io, openmessaging)

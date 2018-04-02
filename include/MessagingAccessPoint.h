@@ -12,7 +12,6 @@
 #include "ResourceManager.h"
 #include "observer/Observer.h"
 #include "Namespace.h"
-#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -34,38 +33,34 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual std::string implVersion() = 0;
 
-        virtual NS::shared_ptr<producer::Producer>
-        createProducer(const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual producer::ProducerPtr createProducer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<consumer::PushConsumer>
-        createPushConsumer(const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual consumer::PushConsumerPtr createPushConsumer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<consumer::PullConsumer>
-        createPullConsumer(const std::string &queueName,
-                           const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual consumer::PullConsumerPtr createPullConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<consumer::StreamingConsumer>
-        createStreamingConsumer(const std::string &queueName,
-                                const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual consumer::StreamingConsumerPtr createStreamingConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<ResourceManager> getResourceManager() = 0;
+        virtual ResourceManagerPtr getResourceManager() = 0;
 
-        virtual void addObserver(const NS::shared_ptr<observer::Observer> &observer) = 0;
+        virtual void addObserver(const observer::ObserverPtr &observer) = 0;
 
-        virtual void removeObserver(const NS::shared_ptr<observer::Observer> &observer) = 0;
+        virtual void removeObserver(const observer::ObserverPtr &observer) = 0;
 
-        virtual std::vector<NS::shared_ptr<producer::Producer> > producers() = 0;
+        virtual std::vector<producer::ProducerPtr> producers() = 0;
 
-        virtual std::vector<NS::shared_ptr<consumer::PushConsumer> > pushConsumers() = 0;
+        virtual std::vector<consumer::PushConsumerPtr> pushConsumers() = 0;
 
-        virtual std::vector<NS::shared_ptr<consumer::PullConsumer> > pullConsumers() = 0;
+        virtual std::vector<consumer::PullConsumerPtr> pullConsumers() = 0;
 
-        virtual std::vector<NS::shared_ptr<consumer::StreamingConsumer> > streamingConsumers() = 0;
+        virtual std::vector<consumer::StreamingConsumerPtr> streamingConsumers() = 0;
     };
+
+    typedef NS::shared_ptr<MessagingAccessPoint> MessagingAccessPointPtr;
 
 END_NAMESPACE_2(io, openmessaging)
 

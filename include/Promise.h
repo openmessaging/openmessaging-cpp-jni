@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual bool cancel(bool interruptIfRunning = false) = 0;
 
-        virtual bool set(NS::shared_ptr<producer::SendResult> &value) = 0;
+        virtual bool set(producer::SendResultPtr &value) = 0;
 
         virtual bool setFailure(std::exception &e) = 0;
     };

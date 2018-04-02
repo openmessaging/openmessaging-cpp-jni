@@ -11,11 +11,12 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
     class ConstructMessagingAccessPointContext : private Uncopyable {
     public:
-        virtual NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint() = 0;
+        virtual MessagingAccessPointPtr messagingAccessPoint() = 0;
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
     };
+    typedef NS::shared_ptr<ConstructMessagingAccessPointContext> ConstructMessagingAccessPointContextPtr;
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 

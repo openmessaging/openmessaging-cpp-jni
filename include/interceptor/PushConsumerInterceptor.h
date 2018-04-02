@@ -13,6 +13,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
     };
+    typedef NS::shared_ptr<OnMessageBeforeContext> OnMessageBeforeContextPtr;
 
     class OnMessageAfterContext : private Uncopyable {
     public:
@@ -20,6 +21,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
     };
+    typedef NS::shared_ptr<OnMessageAfterContext> OnMessageAfterContextPtr;
 
     /**
      * A {@code PushConsumerInterceptor} is used to intercept consume operations of push consumer.
@@ -33,8 +35,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void onMessageBefore(NS::shared_ptr<OnMessageBeforeContext> context);
+        virtual void onMessageBefore(OnMessageBeforeContextPtr &context);
     };
+    NS::shared_ptr<PushConsumerInterceptor> PushConsumerInterceptorPtr;
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 

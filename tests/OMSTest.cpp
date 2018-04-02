@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(OMSTest, testNewKeyValue) {
         using namespace io::openmessaging;
 
-        NS::shared_ptr<KeyValue> kv = OMS::newKeyValue();
+        KeyValuePtr kv(newKeyValue());
         ASSERT_TRUE(kv);
 
         NS::shared_ptr<KeyValueImpl> impl = NS::dynamic_pointer_cast<KeyValueImpl>(kv);

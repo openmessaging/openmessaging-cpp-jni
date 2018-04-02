@@ -31,12 +31,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         virtual void
-        executeLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionExecutionContext> &context) = 0;
+        executeLocalTransaction(Message &message, LocalTransactionExecutionContextPtr &context) = 0;
 
         virtual void
-        checkLocalTransaction(Message &message, NS::shared_ptr<LocalTransactionCheckContext> &context) = 0;
+        checkLocalTransaction(Message &message, LocalTransactionCheckContextPtr &context) = 0;
 
     };
+
+    typedef NS::shared_ptr<LocalTransactionBranchExecutor> LocalTransactionBranchExecutorPtr;
+
 END_NAMESPACE_3(io, openmessaging, producer)
 
 #endif //OMS_LOCAL_TRANSACTION_BRANCH_EXECUTOR_H

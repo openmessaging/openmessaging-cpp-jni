@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "KeyValueImpl.h"
-#include "MessagingAccessPointFactory.h"
 #include "producer/ProducerImpl.h"
 #include "CountdownLatch.h"
 #include "BaseTest.h"

@@ -18,6 +18,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual void operationComplete(const Future& future) = 0;
     };
 
+    typedef NS::shared_ptr<FutureListener> FutureListenerPtr;
+
 END_NAMESPACE_2(io, openmessaging)
 
 #endif //OMS_FUTURE_LISTENER_H

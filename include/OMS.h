@@ -1,85 +1,109 @@
 #ifndef OMS_OMS_H
 #define OMS_OMS_H
 
+#include <dlfcn.h>
+
 #include <cstring>
+#include <iostream>
 
 #include "smart_pointer.h"
-#include "KeyValue.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
 #include "OMSException.h"
+#include "KeyValue.h"
+
+// forward declaration
+BEGIN_NAMESPACE_2(io, openmessaging)
+    class KeyValue;
+
+    class MessagingAccessPoint;
+END_NAMESPACE_2(io, openmessaging)
+
+typedef io::openmessaging::KeyValue KeyValue;
+typedef io::openmessaging::KeyValuePtr KeyValuePtr;
+typedef io::openmessaging::MessagingAccessPoint MessagingAccessPoint;
+typedef io::openmessaging::OMSException OMSException;
+
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
-        io::openmessaging::KeyValue* newKeyValueImpl();
+        static void *handle = NULL;
+
+        static void load_library(const std::string &url) {
+            std::string::size_type begin = url.find(":");
+            std::string::size_type end = url.find(":", begin + 1);
+            std::string driver = url.substr(begin + 1, end - begin - 1);
+
+        #ifdef __APPLE__
+            std::string extension = ".dylib";
+        #endif
+        #ifdef __linux__
+            std::string extension = ".so";
+        #endif
+            std::string shared_library_name = "liboms_" + driver + extension;
+            // clean previous error
+            dlerror();
+            handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
+            if (!handle) {
+                char * error = dlerror();
+                std::cerr << "Failed to load shared library: " << shared_library_name
+                          << "; Error Message:" << error << std::endl;
+                std::string default_library = "liboms_jni";
+                shared_library_name = default_library + extension;
+                handle = dlopen(shared_library_name.c_str(), RTLD_LAZY);
+
+                if (!handle) {
+                    std::string msg = "Failed to dlopen shared library: ";
+                    msg += shared_library_name;
+                    msg += ". Reason: ";
+                    msg += dlerror();
+                    std::cout << msg << std::endl;
+                    throw OMSException(msg);
+                }
+            }
+        }
+
+        static KeyValue* newKeyValue() {
+            if (NULL == handle) {
+                throw OMSException("Please call load_library first");
+            }
+
+            typedef KeyValue* (*Fn)();
+            Fn fn;
+            fn = (Fn)dlsym(handle, "newKeyValueImpl");
+            return fn();
+        }
+
+        static MessagingAccessPoint*
+        getMessagingAccessPoint(const std::string &url,
+                                const KeyValuePtr &props = KeyValuePtr()) {
+
+            typedef MessagingAccessPoint* (*Fn)(const std::string&, const KeyValuePtr &);
+
+            if (NULL == handle) {
+                load_library(url);
+            }
+
+            Fn fn;
+
+            fn = (Fn)dlsym(handle, "getMessagingAccessPointImpl");
+
+            return fn(url, props);
+        }
+
+        MessagingAccessPoint*
+        getMessagingAccessPointImpl(const std::string &url,
+                                    const KeyValuePtr &props = KeyValuePtr());
+
+
+        KeyValue* newKeyValueImpl();
 
 #ifdef __cplusplus
     }
 #endif
 
-BEGIN_NAMESPACE_2(io, openmessaging)
 
-        static NS::shared_ptr<KeyValue> kv_nullptr;
-
-        template<typename T>
-        class scoped_array {
-        public:
-            scoped_array(const T *ptr, int length) : ptr_(NULL), length_(length) {
-                ptr_ = new T[length_];
-                memcpy(ptr_, ptr, length_);
-            }
-
-            /**
-             * Copy constructor is assumed to be expensive and used with caution.
-             */
-            scoped_array(const scoped_array& other) {
-                ptr_ = new T[other.length_];
-                length_ = other.length_;
-                std::memcpy(ptr_, other.ptr_, other.length_ * sizeof(T));
-            }
-
-            // copy assignment
-            scoped_array& operator= (const scoped_array &other) {
-                if (this != &other) {
-                    delete[](ptr_);
-                    length_ = other.length_;
-                    ptr_ = new T[length_];
-                    std::memcpy(ptr_, other.ptr_, length_ * sizeof(T));
-                }
-                return *this;
-            }
-
-            ~scoped_array() {
-                delete[](ptr_);
-            }
-
-            int getLength() const {
-                return length_;
-            }
-
-            const T* getRawPtr() const {
-                return ptr_;
-            }
-
-            T& operator[](int i) {
-                if (i >= length_ || i < 0) {
-                    throw OMSException("IndexOutOfBoundary");
-                }
-                return *(ptr_ + i);
-            }
-
-        private:
-            T *ptr_;
-            int length_;
-        };
-
-        class OMS {
-        public:
-            static NS::shared_ptr<KeyValue> newKeyValue();
-        };
-
-END_NAMESPACE_2(io, openmessaging)
 
 #endif // OMS_OMS_H

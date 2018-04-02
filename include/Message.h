@@ -40,9 +40,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> sysHeaders() = 0;
+        virtual KeyValuePtr sysHeaders() = 0;
 
-        virtual NS::shared_ptr<KeyValue> userHeaders() = 0;
+        virtual KeyValuePtr userHeaders() = 0;
 
         virtual Message& putSysHeaders(const std::string &key, int value) = 0;
 
@@ -61,6 +61,12 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual Message& putUserHeaders(const std::string &key, const std::string &value) = 0;
 
     };
+
+#if __cplusplus >= 201103L
+    typedef NS::unique_ptr<Message> MessagePtr;
+#else
+    typedef NS::shared_ptr<Message> MessagePtr;
+#endif
 
 END_NAMESPACE_2(io, openmessaging)
 

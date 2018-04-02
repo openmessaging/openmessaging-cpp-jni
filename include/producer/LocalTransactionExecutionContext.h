@@ -18,6 +18,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     };
 
+    typedef NS::shared_ptr<LocalTransactionExecutionContext> LocalTransactionExecutionContextPtr;
+
 END_NAMESPACE_3(io, openmessaging, producer)
 
 #endif //OMS_LOCAL_TRANSACTION_EXECUTION_CONTEXT_H

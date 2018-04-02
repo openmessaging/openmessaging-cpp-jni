@@ -26,13 +26,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
-        virtual NS::shared_ptr<Message> poll(const NS::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
+        virtual MessagePtr poll(const KeyValuePtr &props = kv_nullptr) = 0;
 
         virtual void ack(const std::string &messageId,
-                         const NS::shared_ptr<KeyValue> &props = kv_nullptr) = 0;
+                         const KeyValuePtr &props = kv_nullptr) = 0;
     };
+    typedef NS::shared_ptr<PullConsumer> PullConsumerPtr;
+
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 

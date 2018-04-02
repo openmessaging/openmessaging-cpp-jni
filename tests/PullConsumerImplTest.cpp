@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "consumer/PullConsumer.h"
 #include "MessagingAccessPoint.h"
-#include "MessagingAccessPointFactory.h"
 #include "core.h"
 #include "KeyValueImpl.h"
 #include "NonStandardKeys.h"
@@ -22,8 +21,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
         properties->put(driverClassKey, driverClass);
 
-        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
-                MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
+        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
 
         // First send a message
         NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();

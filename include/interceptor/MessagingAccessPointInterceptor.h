@@ -16,7 +16,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
      */
     class MessagingAccessPointInterceptor : private Uncopyable {
     public:
-        virtual NS::shared_ptr<MessagingAccessPoint> constructMessagingAccessPoint(ConstructMessagingAccessPointContext &context) = 0;
+        virtual MessagingAccessPointPtr constructMessagingAccessPoint(ConstructMessagingAccessPointContext &context) = 0;
     };
+    typedef NS::shared_ptr<MessagingAccessPointInterceptor> MessagingAccessPointInterceptorPtr;
+
 END_NAMESPACE_3(io, openmessaging, interceptor)
 #endif //OMS_MESSAGING_ACCESS_POINT_INTERCEPTOR_H

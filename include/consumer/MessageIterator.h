@@ -15,18 +15,20 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual void commit(bool flush) = 0;
 
         virtual bool hasNext() = 0;
 
-        virtual NS::shared_ptr<Message> next() = 0;
+        virtual MessagePtr next() = 0;
 
         virtual bool hasPrevious() = 0;
 
-        virtual NS::shared_ptr<Message> previous() = 0;
+        virtual MessagePtr previous() = 0;
     };
+
+    typedef NS::shared_ptr<MessageIterator> MessageIteratorPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 

@@ -17,6 +17,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual void postHandle(NS::shared_ptr<void> context) = 0;
     };
 
+    typedef NS::shared_ptr<PushConsumerInterceptor> PushConsumerInterceptorPtr;
+
 END_NAMESPACE_3(io, openmessaging, consumer)
 
 #endif //OMS_PUSH_CONSUMER_INTERCEPTOR_H

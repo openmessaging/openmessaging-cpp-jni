@@ -1,9 +1,9 @@
 #ifndef OMS_BYTE_MESSAGE_H
 #define OMS_BYTE_MESSAGE_H
 
+#include "OMS.h"
 #include "Message.h"
 #include "Namespace.h"
-#include "OMS.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -28,6 +28,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual ByteMessage& setBody(const scoped_array<char> &body) = 0;
 
     };
+
+    typedef NS::shared_ptr<ByteMessage> ByteMessagePtr;
 
 END_NAMESPACE_2(io, openmessaging)
 

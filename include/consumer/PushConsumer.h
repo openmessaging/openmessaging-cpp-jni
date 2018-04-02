@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
         virtual void resume() = 0;
 
@@ -34,15 +34,17 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual bool isSuspended() = 0;
 
         virtual PushConsumer &attachQueue(const std::string &queueName,
-                                          const NS::shared_ptr<MessageListener> &listener,
-                                          const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+                                          const MessageListenerPtr &listener,
+                                          const KeyValuePtr &properties = kv_nullptr) = 0;
 
         virtual PushConsumer &detachQueue(const std::string &queueName) = 0;
 
-        virtual void addInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
+        virtual void addInterceptor(const PushConsumerInterceptorPtr &interceptor) = 0;
 
-        virtual void removeInterceptor(const NS::shared_ptr<PushConsumerInterceptor> &interceptor) = 0;
+        virtual void removeInterceptor(const PushConsumerInterceptorPtr &interceptor) = 0;
     };
+
+    typedef NS::shared_ptr<PushConsumer> PushConsumerPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 

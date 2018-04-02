@@ -35,52 +35,49 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual void createNamespace(const std::string &ns, NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void createNamespace(const std::string &ns, KeyValuePtr &attributes) = 0;
 
-        virtual void setNamespaceAttributes(const std::string &ns, NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void setNamespaceAttributes(const std::string &ns, KeyValuePtr &attributes) = 0;
 
-        virtual NS::shared_ptr<KeyValue> getNamespaceAttributes(const std::string &ns) = 0;
+        virtual KeyValuePtr getNamespaceAttributes(const std::string &ns) = 0;
 
         virtual void deleteNamespace(const std::string &ns) = 0;
 
         virtual std::vector<std::string> listNamespaces() = 0;
 
-        virtual void createTopic(const std::string &ns, const std::string &topic,
-                                 NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void createTopic(const std::string &ns, const std::string &topic, KeyValuePtr &attributes) = 0;
 
-        virtual void setTopicAttributes(const std::string &ns, const std::string &topic,
-                                        NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void setTopicAttributes(const std::string &ns, const std::string &topic, KeyValuePtr &attributes) = 0;
 
-        virtual NS::shared_ptr<KeyValue> getTopicAttributes(const std::string &ns, const std::string &topic) = 0;
+        virtual KeyValuePtr getTopicAttributes(const std::string &ns, const std::string &topic) = 0;
 
         virtual void deleteTopic(const std::string &ns, const std::string &topic) = 0;
 
         virtual std::vector<std::string> listTopics(std::string &ns) = 0;
 
-        virtual void createQueue(const std::string &ns, const std::string &queue,
-                                 NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void createQueue(const std::string &ns, const std::string &queue, KeyValuePtr attributes) = 0;
 
-        virtual void setQueueAttributes(const std::string &ns, const std::string &queue,
-                                        NS::shared_ptr<KeyValue> attributes) = 0;
+        virtual void setQueueAttributes(const std::string &ns, const std::string &queue, KeyValuePtr attributes) = 0;
 
-        virtual NS::shared_ptr<KeyValue> getQueueAttributes(const std::string &ns, const std::string &queue) = 0;
+        virtual KeyValuePtr getQueueAttributes(const std::string &ns, const std::string &queue) = 0;
 
         virtual void deleteQueue(const std::string &ns, const std::string &queue) = 0;
 
         virtual std::vector<std::string> listQueues(std::string &ns) = 0;
 
-        virtual void createRouting(const std::string &ns, NS::shared_ptr<routing::Routing> route) = 0;
+        virtual void createRouting(const std::string &ns, routing::RoutingPtr route) = 0;
 
-        virtual void updateRouting(const std::string &ns, NS::shared_ptr<routing::Routing> route) = 0;
+        virtual void updateRouting(const std::string &ns, routing::RoutingPtr route) = 0;
 
-        virtual NS::shared_ptr<routing::Routing> getRouting(const std::string &ns, const std::string &route) = 0;
+        virtual routing::RoutingPtr getRouting(const std::string &ns, const std::string &route) = 0;
 
         virtual void deleteRouting(const std::string &ns, const std::string &route) = 0;
 
-        virtual std::vector<NS::shared_ptr<routing::Routing> > listRoutings(const std::string &ns) = 0;
+        virtual std::vector<routing::RoutingPtr> listRoutings(const std::string &ns) = 0;
 
-        virtual void updateMessage(const std::string &messageId, NS::shared_ptr<KeyValue> headers) = 0;
+        virtual void updateMessage(const std::string &messageId, KeyValuePtr &headers) = 0;
     };
+    typedef NS::shared_ptr<ResourceManager> ResourceManagerPtr;
 
 END_NAMESPACE_2(io, openmessaging)
 

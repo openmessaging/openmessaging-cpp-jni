@@ -43,15 +43,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual NS::shared_ptr<KeyValue> properties() = 0;
+        virtual KeyValuePtr properties() = 0;
 
-        virtual NS::shared_ptr<SendResult> send(const NS::shared_ptr<Message> &message,
-                                                   const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual SendResultPtr send(const MessagePtr &message,
+                                                   const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<SendResult> send(const NS::shared_ptr<Message> &message,
-                                                   const NS::shared_ptr<LocalTransactionBranchExecutor> &executor,
+        virtual SendResultPtr send(const MessagePtr &message,
+                                                   const LocalTransactionBranchExecutorPtr &executor,
                                                    const NS::shared_ptr<void> &arg,
-                                                   const NS::shared_ptr<KeyValue> &properties) = 0;
+                                                   const KeyValuePtr &properties) = 0;
 
         /**
          * Asynchronously send a message to its destination, which is specified in system headers.
@@ -64,18 +64,21 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * @param properties Optional additional properties.
          * @return Smart pointer to Future instance.
          */
-        virtual NS::shared_ptr<Future>
-        sendAsync(const NS::shared_ptr<Message> &message,
-                  const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual FuturePtr
+        sendAsync(const MessagePtr &message,
+                  const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual void sendOneway(const NS::shared_ptr<Message> &message,
-                                const NS::shared_ptr<KeyValue> &properties = kv_nullptr) = 0;
+        virtual void sendOneway(const MessagePtr &message,
+                                const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual NS::shared_ptr<BatchMessageSender> createSequenceBatchMessageSender() = 0;
+        virtual BatchMessageSenderPtr createSequenceBatchMessageSender() = 0;
 
-        virtual void addInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor) = 0;
+        virtual void addInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) = 0;
 
-        virtual void removeInterceptor(const NS::shared_ptr<interceptor::ProducerInterceptor> &interceptor) = 0;
+        virtual void removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) = 0;
     };
+
+    typedef NS::shared_ptr<Producer> ProducerPtr;
+
 END_NAMESPACE_3(io, openmessaging, producer)
 #endif //OMS_PRODUCER_H

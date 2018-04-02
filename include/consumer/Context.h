@@ -13,10 +13,11 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
             virtual ~Context() {
             }
 
-            virtual NS::shared_ptr<KeyValue> properties() = 0;
+            virtual KeyValuePtr properties() = 0;
 
-            virtual void ack(NS::shared_ptr<KeyValue> props = kv_nullptr) = 0;
+            virtual void ack(KeyValuePtr props = kv_nullptr) = 0;
         };
+    typedef NS::shared_ptr<Context> ContextPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 #endif //OMS_CONTEXT_H

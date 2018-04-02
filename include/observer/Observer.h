@@ -21,8 +21,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, observer)
 
         }
 
-        virtual void onEvent(NS::shared_ptr<OMSEvent> &event) = 0;
+        virtual void onEvent(const OMSEvent &event) = 0;
     };
+
+    typedef NS::shared_ptr<Observer> ObserverPtr;
 
 END_NAMESPACE_3(io, openmessaging, observer)
 

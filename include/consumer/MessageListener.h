@@ -22,8 +22,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         }
 
-        virtual void onMessage(NS::shared_ptr<Message>& message, NS::shared_ptr<Context>& context) = 0;
+        virtual void onMessage(MessagePtr &message, ContextPtr &context) = 0;
     };
+
+    typedef NS::shared_ptr<MessageListener> MessageListenerPtr;
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 #endif //OMS_MESSAGE_LISTENER_H

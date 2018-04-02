@@ -20,8 +20,17 @@ BEGIN_NAMESPACE_2(io, openmessaging)
      */
     class ServiceLifecycle : private Uncopyable {
     public:
+
+        /**
+         * Used for startup or initialization of a service endpoint. A service endpoint instance will be in a ready state
+         * after this method has been completed.
+         */
         virtual void startup() = 0;
 
+        /**
+         * Notify a service instance of the end of its life cycle. Once this method completes, the service endpoint could be
+         * destroyed and eligible for garbage collection.
+         */
         virtual void shutdown() = 0;
 
         virtual ~ServiceLifecycle() {

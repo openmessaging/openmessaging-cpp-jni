@@ -18,8 +18,17 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual ~MessageFactory() {
         }
 
-        virtual ByteMessagePtr createByteMessageToTopic(const std::string &topic, const MessageBodyPtr &body) = 0;
-
+        /**
+         * Creates a {@code BytesMessage} object. A {@code BytesMessage} object is used to send a message containing a
+         * stream of uninterpreted bytes.
+         * <p>
+         * The returned {@code BytesMessage} object only can be sent to the specified queue.
+         *
+         * @param queue the target queue to send
+         * @param body the body data for a message
+         * @return the created {@code BytesMessage} object
+         * @throws OMSRuntimeException if the OMS provider fails to create this message due to some internal error.
+         */
         virtual ByteMessagePtr createByteMessageToQueue(const std::string &topic, const MessageBodyPtr &body) = 0;
     };
 

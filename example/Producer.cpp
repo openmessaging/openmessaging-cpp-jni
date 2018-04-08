@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     const MessageBodyPtr message_body(buffer, strlen(buffer));
 
     // Create message by producer, which also plays the role of message factory
-    ByteMessagePtr message = producer->createByteMessageToTopic(topic, message_body);
+    ByteMessagePtr message = producer->createByteMessageToQueue(topic, message_body);
 
     for (int i = 0; i < count; ++i) {
         // Send message

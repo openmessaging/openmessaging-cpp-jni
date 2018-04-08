@@ -18,38 +18,38 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
+        KeyValuePtr properties(newKeyValueImpl());
         properties->put(driverClassKey, driverClass);
 
-        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl, properties));
 
         // First send a message
-        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
-        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
+        MessagePtr message = producer->createByteMessageToQueue(topic, body);
         producer->send(message);
         // Send message OK
 
         std::string queueName("TopicTest");
 
-        NS::shared_ptr<KeyValue> kv = NS::make_shared<KeyValueImpl>();
+        KeyValuePtr kv(newKeyValueImpl());
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_GROUP, value);
 
-        NS::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
         ASSERT_TRUE(pullConsumer);
 
         pullConsumer->startup();
 
         while (true) {
-            NS::shared_ptr<Message> msg = pullConsumer->poll();
+            MessagePtr msg = pullConsumer->receive();
             if (msg) {
-                NS::shared_ptr<KeyValue> sysHeaders = message->sysHeaders();
+                KeyValuePtr sysHeaders = message->sysHeaders();
                 std::string msgId = sysHeaders->getString(MessageId);
                 ASSERT_TRUE(!msgId.empty());
                 ASSERT_NO_THROW(pullConsumer->ack(msgId));

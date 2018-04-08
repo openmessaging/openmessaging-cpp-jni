@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     consumer::PushConsumerPtr pushConsumer = accessPoint->createPushConsumer(subKV);
 
     // Create a listener instance
-    MessageListenerPtr messageListener = NS::make_shared<ExampleMessageListener>();
+    MessageListenerPtr messageListener(new ExampleMessageListener);
 
     // Attach listener to queue
     pushConsumer->attachQueue(queueName, messageListener);

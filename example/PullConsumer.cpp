@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     pullConsumer->startup();
 
     while (true) {
-        MessagePtr msg = pullConsumer->poll();
+        MessagePtr msg = pullConsumer->receive();
         if (msg) {
             KeyValuePtr sysHeaders = msg->sysHeaders();
             std::string msgId = sysHeaders->getString(MessageId);

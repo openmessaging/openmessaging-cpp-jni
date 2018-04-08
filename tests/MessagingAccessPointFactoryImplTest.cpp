@@ -21,19 +21,19 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
+        KeyValuePtr properties(newKeyValue());
         properties->put(driverClassKey, driverClass);
 
-        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
 
-        NS::shared_ptr<producer::Producer> producer = messagingAccessPoint->createProducer();
+        producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();
 
         string topic = "TopicTest";
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
-        NS::shared_ptr<Message> message = producer->createByteMessageToTopic(topic, body);
-        NS::shared_ptr<producer::SendResult> sendResult = producer->send(message);
+        MessagePtr message = producer->createByteMessageToQueue(topic, body);
+        producer::SendResultPtr sendResult = producer->send(message);
 
         cout << sendResult->messageId() << endl;
 
@@ -46,20 +46,19 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         string driverClassKey = "oms.driver.impl";
         string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        NS::shared_ptr<KeyValue> properties = NS::make_shared<KeyValueImpl>();
+        KeyValuePtr properties(newKeyValue());
         properties->put(driverClassKey, driverClass);
 
-        NS::shared_ptr<MessagingAccessPoint> messagingAccessPoint =
-                MessagingAccessPointFactory::getMessagingAccessPoint(accessPointUrl, properties);
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
         std::string queueName("TopicTest");
 
 
-        NS::shared_ptr<KeyValue> kv = NS::make_shared<KeyValueImpl>();
+        KeyValuePtr kv(newKeyValue());
         const std::string key = "rmq.consumer.group";
         const std::string value = "OMS_CONSUMER";
         kv->put(key, value);
 
-        NS::shared_ptr<consumer::PullConsumer> pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
 
         ASSERT_TRUE(pullConsumer);
 

@@ -56,7 +56,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const char* data = "HELLO";
         scoped_array<char> body(const_cast<char *>(data), strlen(data));
 
-        MessagePtr message = producer->createByteMessageToQueue(topic, body);
+        MessagePtr message = producer->createBytesMessage(topic, body);
         for (int i = 0; i < 10000; ++i) {
             producer->send(message);
         }
@@ -78,7 +78,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         CountdownLatch latch(1);
         FutureListenerPtr listener(new FutureListenerTest(latch));
 
-        MessagePtr message = producer->createByteMessageToQueue(topic, body);
+        MessagePtr message = producer->createBytesMessage(topic, body);
         FuturePtr future = producer->sendAsync(message);
         future->addListener(listener);
         latch.await();

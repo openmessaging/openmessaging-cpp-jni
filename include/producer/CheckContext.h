@@ -6,9 +6,9 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class LocalTransactionCheckContext : private Uncopyable {
+    class CheckContext : private Uncopyable {
     public:
-        virtual ~LocalTransactionCheckContext() {
+        virtual ~CheckContext() {
 
         }
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     };
 
-    typedef NS::shared_ptr<LocalTransactionCheckContext> LocalTransactionCheckContextPtr;
+    typedef NS::shared_ptr<CheckContext> CheckContextPtr;
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

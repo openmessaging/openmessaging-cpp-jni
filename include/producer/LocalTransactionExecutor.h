@@ -3,8 +3,8 @@
 
 #include "Namespace.h"
 #include "Message.h"
-#include "producer/LocalTransactionExecutionContext.h"
-#include "producer/LocalTransactionCheckContext.h"
+#include "producer/ExecutionContext.h"
+#include "producer/CheckContext.h"
 #include "Uncopyable.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
@@ -24,21 +24,19 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
      * @version OMS 1.0
      * @since OMS 1.0
      */
-    class LocalTransactionBranchExecutor : private Uncopyable {
+    class LocalTransactionExecutor : private Uncopyable {
     public:
-        virtual ~LocalTransactionBranchExecutor() {
+        virtual ~LocalTransactionExecutor() {
 
         }
 
-        virtual void
-        executeLocalTransaction(Message &message, const LocalTransactionExecutionContextPtr &context) = 0;
+        virtual void execute(const MessagePtr &message, const ExecutionContextPtr &context) = 0;
 
-        virtual void
-        checkLocalTransaction(Message &message, const LocalTransactionCheckContextPtr &context) = 0;
+        virtual void check(const MessagePtr &message, const CheckContextPtr &context) = 0;
 
     };
 
-    typedef NS::shared_ptr<LocalTransactionBranchExecutor> LocalTransactionBranchExecutorPtr;
+    typedef NS::shared_ptr<LocalTransactionExecutor> LocalTransactionExecutorPtr;
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

@@ -10,17 +10,17 @@ ServiceLifecycleImpl::ServiceLifecycleImpl(jobject proxy) : _proxy(proxy) {
 }
 
 ServiceLifecycleImpl::~ServiceLifecycleImpl() {
-    CurrentEnv current;
-    current.deleteRef(_proxy);
-    current.deleteRef(classServiceLifecycle);
+    CurrentEnv context;
+    context.deleteRef(_proxy);
+    context.deleteRef(classServiceLifecycle);
 };
 
 void ServiceLifecycleImpl::startup() {
-    CurrentEnv current;
-    current.callVoidMethod(_proxy, midStartup);
+    CurrentEnv context;
+    context.callVoidMethod(_proxy, midStartup);
 }
 
 void ServiceLifecycleImpl::shutdown() {
-    CurrentEnv current;
-    current.callVoidMethod(_proxy, midShutdown);
+    CurrentEnv context;
+    context.callVoidMethod(_proxy, midShutdown);
 }

@@ -1,7 +1,8 @@
 #include <map>
 
 #include "producer/ProducerImpl.h"
-#include "producer/LocalTransactionBranchExecutorImpl.h"
+#include "producer/LocalTransactionExecutorImpl.h"
+#include "producer/BatchMessageSenderImpl.h"
 #include "KeyValueImpl.h"
 #include "producer/SendResultImpl.h"
 #include "PromiseImpl.h"
@@ -38,9 +39,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
             promise->cancel();
 
             // clean up JNI calling contex
-            env->DeleteLocalRef(jFuture);
-            env->DeleteLocalRef(classFuture);
-            env->DeleteLocalRef(object);
+            current.deleteRef(jFuture);
+            current.deleteRef(classFuture);
+            current.deleteRef(object);
             return;
         }
 
@@ -59,9 +60,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         }
 
         // clean up JNI
-        env->DeleteLocalRef(jFuture);
-        env->DeleteLocalRef(classFuture);
-        env->DeleteLocalRef(object);
+        current.deleteRef(jFuture);
+        current.deleteRef(classFuture);
+        current.deleteRef(object);
     }
 
     static JNINativeMethod methods[] = {
@@ -93,19 +94,16 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     objectProducerAdaptor = current.newObject(classProducerAdaptor, producerAdaptorCtor, proxy);
 
     const std::string signature = buildSignature(Types::ByteMessage_, 2, Types::String_, Types::byteArray_);
-    midCreateByteMessageToQueue = current.getMethodId(classProducer, "createQueueBytesMessage", signature);
-    midCreateByteMessageToTopic = current.getMethodId(classProducer, "createTopicBytesMessage", signature);
-    midStartup = current.getMethodId(classProducer, "startup", buildSignature(Types::void_, 0));
-    midShutdown = current.getMethodId(classProducer, "shutdown", buildSignature(Types::void_, 0));
+    midCreateBytesMessage = current.getMethodId(classProducer, "createBytesMessage", signature);
 
+    midAttributes = current.getMethodId(classProducer, "attributes", buildSignature(Types::KeyValue_, 0));
     midSend = current.getMethodId(classProducer, "send", buildSignature(Types::SendResult_, 1, Types::Message_));
-
     midSend2 = current.getMethodId(classProducer, "send",
                                    buildSignature(Types::SendResult_, 2, Types::Message_, Types::KeyValue_));
 
     midSend3 = current.getMethodId(classProducer, "send",
-                                   buildSignature(Types::SendResult_, 4, Types::Message_,
-                                                  Types::LocalTransactionBranchExecutor_, Types::Object_,
+                                   buildSignature(Types::SendResult_, 3, Types::Message_,
+                                                  Types::LocalTransactionExecutor_,
                                                   Types::KeyValue_));
 
     midSendAsync = current.getMethodId(classProducerAdaptor, "sendAsync",
@@ -114,17 +112,23 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     midSendAsync2 = current.getMethodId(classProducerAdaptor, "sendAsync",
                                         buildSignature(Types::void_, 3, Types::long_, Types::Message_, Types::KeyValue_));
 
-    midSendOneway = current.getMethodId(classProducer, "sendOneway", buildSignature(Types::void_, 1, Types::Message_));
+    midSendOneway = current.getMethodId(classProducer, "sendOneway",
+                                        buildSignature(Types::void_, 1, Types::Message_));
 
     midSendOneway2 = current.getMethodId(classProducer, "sendOneway",
-                                         buildSignature(Types::void_, 2, Types::Message_, Types::KeyValue_));
+                                        buildSignature(Types::void_, 2, Types::Message_, Types::KeyValue_));
+
+    midAddInterceptor = current.getMethodId(classProducer, "addInterceptor",
+                                            buildSignature(Types::void_, 1, Types::ProducerInterceptor_));
+    midRemoveInterceptor = current.getMethodId(classProducer, "removeInterceptor",
+                                               buildSignature(Types::void_, 1, Types::ProducerInterceptor_));
 }
 
 ProducerImpl::~ProducerImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(classProducer);
-    current.env->DeleteGlobalRef(classProducerAdaptor);
-    current.env->DeleteGlobalRef(objectProducerAdaptor);
+    current.deleteRef(classProducer);
+    current.deleteRef(classProducerAdaptor);
+    current.deleteRef(objectProducerAdaptor);
 }
 
 KeyValuePtr ProducerImpl::attributes() {
@@ -149,28 +153,27 @@ SendResultPtr ProducerImpl::send(const MessagePtr &message, const KeyValuePtr &p
     return sendResult;
 }
 
-ByteMessagePtr ProducerImpl::createByteMessageToQueue(const std::string &topic,
-                                                                   const MessageBodyPtr &body) {
+ByteMessagePtr ProducerImpl::createBytesMessage(const std::string &topic, const MessageBodyPtr &body) {
     CurrentEnv current;
-    jstring pTopic = current.env->NewStringUTF(topic.c_str());
+    jstring pTopic = current.newStringUTF(topic.c_str());
     jsize len = static_cast<jint>(body.getLength());
     jbyteArray pBody = current.env->NewByteArray(len);
     current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.getRawPtr()));
-    jobject jMessage = current.callObjectMethod(_proxy, midCreateByteMessageToQueue, pTopic, pBody);
-    current.env->DeleteLocalRef(pBody);
-    current.env->DeleteLocalRef(pTopic);
+    jobject jMessage = current.callObjectMethod(_proxy, midCreateBytesMessage, pTopic, pBody);
+    current.deleteRef(pBody);
+    current.deleteRef(pTopic);
 
     NS::shared_ptr<ByteMessage> message = NS::make_shared<ByteMessageImpl>(current.newGlobalRef(jMessage));
     return message;
 }
 
 SendResultPtr ProducerImpl::send(const MessagePtr &message,
-                                 const LocalTransactionBranchExecutorPtr &executor,
+                                 const LocalTransactionExecutorPtr &executor,
                                  const KeyValuePtr &props) {
 
-    NS::shared_ptr<ByteMessageImpl> messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
-    NS::shared_ptr<LocalTransactionBranchExecutorImpl> executorImpl =
-            NS::dynamic_pointer_cast<LocalTransactionBranchExecutorImpl>(executor);
+    ByteMessageImplPtr messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
+    NS::shared_ptr<LocalTransactionExecutorImpl> executorImpl =
+            NS::dynamic_pointer_cast<LocalTransactionExecutorImpl>(executor);
     NS::shared_ptr<KeyValueImpl> propertiesImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
     CurrentEnv current;
     jobject jSendResult = current.callObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
@@ -210,8 +213,25 @@ FuturePtr ProducerImpl::sendAsync(const MessagePtr &message, const KeyValuePtr &
     }
 }
 
+void ProducerImpl::sendOneway(const MessagePtr &message, const KeyValuePtr &properties) {
+    CurrentEnv context;
+
+    ByteMessageImplPtr msgPtr = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
+
+    if (properties) {
+        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(properties);
+        context.callVoidMethod(_proxy, midSendOneway2, msgPtr->getProxy(), ptr->getProxy());
+        return;
+    }
+
+    context.callVoidMethod(_proxy, midSendOneway, msgPtr->getProxy());
+}
+
 BatchMessageSenderPtr ProducerImpl::createSequenceBatchMessageSender() {
-    throw OMSException("Not Implemented");
+    CurrentEnv context;
+    jobject jBatchMessageSender = context.callObjectMethod(_proxy, midCreateBatchMessageSender);
+    BatchMessageSenderImplPtr result(new BatchMessageSenderImpl(jBatchMessageSender));
+    return result;
 }
 
 void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) {

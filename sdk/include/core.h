@@ -42,10 +42,12 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         static const char *Message_;
         static const char *ByteMessage_;
         static const char *SendResult_;
-        static const char *LocalTransactionBranchExecutor_;
+        static const char *LocalTransactionExecutor_;
         static const char *Context_;
         static const char *MessageListener_;
-
+        static const char *ConsumerInterceptor_;
+        static const char *ProducerInterceptor_;
+        static const char *BatchMessageSender_;
     };
 
     std::string buildSignature(const std::string &return_type, int n, ...);

@@ -4,7 +4,6 @@
 #include "Namespace.h"
 #include "Message.h"
 #include "Uncopyable.h"
-#include "KeyValue.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
     /**
@@ -20,7 +19,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         }
 
-        virtual void send(Message &message, KeyValuePtr &properties = kv_nullptr) = 0;
+        virtual BatchMessageSender& send(MessagePtr &message) = 0;
 
         virtual void commit() = 0;
 

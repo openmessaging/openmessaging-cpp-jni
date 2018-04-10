@@ -1,29 +1,28 @@
-#include "producer/LocalTransactionBranchExecutorImpl.h"
+#include "producer/LocalTransactionExecutorImpl.h"
+#include "ByteMessageImpl.h"
 
 using namespace io::openmessaging::producer;
 
-LocalTransactionBranchExecutorImpl::LocalTransactionBranchExecutorImpl(jobject proxy)
-        : objectLocalTransactionBranchExecutor(proxy) {
+LocalTransactionExecutorImpl::LocalTransactionExecutorImpl(jobject proxy)
+        : objectLocalTransactionExecutor(proxy) {
 
 }
 
-LocalTransactionBranchExecutorImpl::~LocalTransactionBranchExecutorImpl() {
+LocalTransactionExecutorImpl::~LocalTransactionExecutorImpl() {
     CurrentEnv current;
-    current.deleteRef(objectLocalTransactionBranchExecutor);
-    current.deleteRef(classLocalTransactionBranchExecutor);
+    current.deleteRef(objectLocalTransactionExecutor);
+    current.deleteRef(classLocalTransactionExecutor);
 }
 
-void LocalTransactionBranchExecutorImpl::executeLocalTransaction(Message &message,
-                                                                 const LocalTransactionExecutionContextPtr &context) {
-
-}
-
-
-void LocalTransactionBranchExecutorImpl::checkLocalTransaction(Message &message,
-                                                               const LocalTransactionCheckContextPtr &context) {
+void LocalTransactionExecutorImpl::execute(const MessagePtr &message, const ExecutionContextPtr &context) {
 
 }
 
-jobject LocalTransactionBranchExecutorImpl::getProxy() {
-    return objectLocalTransactionBranchExecutor;
+
+void LocalTransactionExecutorImpl::check(const MessagePtr &message, const CheckContextPtr &context) {
+
+}
+
+jobject LocalTransactionExecutorImpl::getProxy() {
+    return objectLocalTransactionExecutor;
 }

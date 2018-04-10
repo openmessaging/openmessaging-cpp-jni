@@ -8,7 +8,7 @@
 #include "SendResult.h"
 #include "Namespace.h"
 #include "OMS.h"
-#include "LocalTransactionBranchExecutor.h"
+#include "LocalTransactionExecutor.h"
 #include "Future.h"
 #include "BatchMessageSender.h"
 #include "interceptor/ProducerInterceptor.h"
@@ -86,7 +86,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * @throws OMSRuntimeException if the {@code Producer} fails to send the message due to some internal error.
          */
         virtual SendResultPtr send(const MessagePtr &message,
-                                   const LocalTransactionBranchExecutorPtr &executor,
+                                   const LocalTransactionExecutorPtr &executor,
                                    const KeyValuePtr &properties) = 0;
 
         /**
@@ -101,6 +101,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          * @return Smart pointer to Future instance.
          */
         virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
+
+        virtual void sendOneway(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr);
 
         /**
          * Creates a {@code BatchMessageSender} to send message in batch way.

@@ -34,11 +34,12 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::Message_ = "Lio/openmessaging/Message;";
     const char* Types::ByteMessage_ = "Lio/openmessaging/BytesMessage;";
     const char* Types::SendResult_ = "Lio/openmessaging/producer/SendResult;";
-    const char* Types::LocalTransactionBranchExecutor_ = "Lio/openmessaging/producer/LocalTransactionBranchExecutor;";
+    const char* Types::LocalTransactionExecutor_ = "Lio/openmessaging/producer/LocalTransactionExecutor;";
     const char* Types::Context_ = "Lio/openmessaging/consumer/Context;";
     const char* Types::MessageListener_ = "Lio/openmessaging/consumer/MessageListener;";
-
-
+    const char* Types::ConsumerInterceptor_ = "Lio/openmessaging/consumer/ConsumerInterceptor;";
+    const char* Types::ProducerInterceptor_ = "Lio/openmessaging/consumer/ProducerInterceptor;";
+    const char* Types::BatchMessageSender_ = "Lio/openmessaging/producer/BatchMessageSender;";
 
     string buildSignature(const string &return_type, int n, ...) {
         string signature = "(";

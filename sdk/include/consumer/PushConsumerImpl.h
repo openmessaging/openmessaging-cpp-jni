@@ -23,8 +23,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         virtual bool isSuspended();
 
         virtual consumer::PushConsumer& attachQueue(const std::string &queueName,
-                                          const consumer::MessageListenerPtr &listener,
-                                          const KeyValuePtr &properties);
+                                                    const consumer::MessageListenerPtr &listener,
+                                                    const KeyValuePtr &properties);
 
         virtual consumer::PushConsumer& detachQueue(const std::string &queueName);
 
@@ -37,12 +37,16 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         jclass classPushConsumer;
         jclass classMessageListenerAdaptor;
 
-        jmethodID midProperties;
+        jmethodID midAttributes;
         jmethodID midResume;
         jmethodID midSuspend;
+        jmethodID midSuspend2;
         jmethodID midIsSuspended;
         jmethodID midAttachQueue;
+        jmethodID midAttachQueue2;
         jmethodID midDetachQueue;
+        jmethodID midAddInterceptor;
+        jmethodID midRemoveInterceptor;
     };
 
 END_NAMESPACE_3(io, openmessaging, core)

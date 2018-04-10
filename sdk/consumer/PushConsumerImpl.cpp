@@ -56,15 +56,23 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
         abort();
     }
 
-    midProperties = current.getMethodId(classPushConsumer, "properties", buildSignature(Types::KeyValue_, 0));
+    midAttributes = current.getMethodId(classPushConsumer, "attributes", buildSignature(Types::KeyValue_, 0));
     midResume = current.getMethodId(classPushConsumer, "resume", buildSignature(Types::void_, 0));
     midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::long_, 0));
+    midSuspend2 = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::long_, 1, Types::long_));
     midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", buildSignature(Types::boolean_, 0));
-
     midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue",
                                          buildSignature(Types::PushConsumer_, 2, Types::String_, Types::MessageListener_));
+    midAttachQueue2 = current.getMethodId(classPushConsumer, "attachQueue",
+                                         buildSignature(Types::PushConsumer_, 3, Types::String_,
+                                                        Types::MessageListener_, Types::KeyValue_));
 
-    midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", buildSignature(Types::PushConsumer_, 1, Types::String_));
+    midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", buildSignature(Types::PushConsumer_, 1,
+                                                                                          Types::String_));
+    midAddInterceptor = current.getMethodId(classPushConsumer, "addInterceptor",
+                                            buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
+    midRemoveInterceptor = current.getMethodId(classPushConsumer, "removeInterceptor",
+                                               buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
 }
 
 PushConsumerImpl::~PushConsumerImpl() {
@@ -75,9 +83,9 @@ PushConsumerImpl::~PushConsumerImpl() {
 
 KeyValuePtr PushConsumerImpl::attributes() {
     CurrentEnv ctx;
-    jobject propertiesLocal = ctx.callObjectMethod(_proxy, midProperties);
+    jobject propertiesLocal = ctx.callObjectMethod(_proxy, midAttributes);
     jobject globalRef = ctx.newGlobalRef(propertiesLocal);
-    NS::shared_ptr<KeyValue> ret = NS::make_shared<KeyValueImpl>(globalRef);
+    KeyValuePtr ret = NS::make_shared<KeyValueImpl>(globalRef);
     return ret;
 }
 
@@ -98,13 +106,13 @@ bool PushConsumerImpl::isSuspended() {
 }
 
 PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
-                                            const NS::shared_ptr<MessageListener> &listener,
-                                            const NS::shared_ptr<KeyValue> &props) {
+                                            const MessageListenerPtr &listener,
+                                            const KeyValuePtr &props) {
     CurrentEnv ctx;
 
-    jmethodID ctor = ctx.env->GetMethodID(classMessageListenerAdaptor, "<init>", "(Ljava/lang/String;)V");
+    jmethodID ctor = ctx.getMethodId(classMessageListenerAdaptor, "<init>", buildSignature(Types::String_, 0));
     const char* queueNameChars = queueName.c_str();
-    jstring jQueueName = ctx.env->NewStringUTF(queueNameChars);
+    jstring jQueueName = ctx.newStringUTF(queueNameChars);
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
     LOG_DEBUG << "MessageListenerAdaptor instance created";
     {
@@ -112,7 +120,13 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
         queue_listener_map[queueName] = listener;
     }
 
-    jobject ret = ctx.callObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
+    jobject ret;
+    if (props) {
+        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
+        ret = ctx.callObjectMethod(_proxy, midAttachQueue2, jQueueName, messageListener, ptr->getProxy());
+    } else {
+        ret = ctx.callObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
+    }
     LOG_DEBUG << "MessageListenerAdaptor per queue attached";
     ctx.deleteRef(messageListener);
     ctx.deleteRef(jQueueName);
@@ -128,11 +142,10 @@ PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
     }
 
     CurrentEnv ctx;
-    const char *str = queueName.c_str();
-    jstring queue = ctx.env->NewStringUTF(str);
+    jstring queue = ctx.newStringUTF(queueName.c_str());
     jobject ret = ctx.callObjectMethod(_proxy, midDetachQueue, queue);
     ctx.deleteRef(ret);
-    ctx.env->ReleaseStringUTFChars(queue, str);
+    ctx.deleteRef(queue);
     return *this;
 }
 

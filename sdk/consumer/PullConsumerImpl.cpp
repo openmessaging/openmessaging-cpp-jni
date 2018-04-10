@@ -10,9 +10,12 @@ PullConsumerImpl::PullConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     const char *klassPullConsumer = "io/openmessaging/consumer/PullConsumer";
     classPullConsumer = current.findClass(klassPullConsumer);
 
-    midProperties = current.getMethodId(classPullConsumer, "properties", buildSignature(Types::KeyValue_, 0));
-    midPoll = current.getMethodId(classPullConsumer, "poll", buildSignature(Types::Message_, 0));
-    midPoll2 = current.getMethodId(classPullConsumer, "poll", buildSignature(Types::Message_, 1, Types::KeyValue_));
+    midAttributes = current.getMethodId(classPullConsumer, "attributes", buildSignature(Types::void_, 0));
+    midAttachQueue = current.getMethodId(classPullConsumer, "attachQueue", buildSignature(Types::PullConsumer_, 1, Types::String_));
+    midAttachQueue2 = current.getMethodId(classPullConsumer, "attachQueue", buildSignature(Types::PullConsumer_, 2, Types::String_, Types::KeyValue_));
+    midDetachQueue = current.getMethodId(classPullConsumer, "detachQueue", buildSignature(Types::PullConsumer_, 1, Types::String_));
+    midReceive = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::KeyValue_, 0));
+    midReceive2 = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::KeyValue_, 1, Types::KeyValue_));
     midAck = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 1, Types::String_));
     midAck2 = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 2, Types::String_, Types::KeyValue_));
 }
@@ -24,17 +27,37 @@ PullConsumerImpl::~PullConsumerImpl() {
 
 KeyValuePtr PullConsumerImpl::attributes() {
     CurrentEnv current;
-    jobject kv = current.callObjectMethod(_proxy, midProperties);
+    jobject kv = current.callObjectMethod(_proxy, midAttributes);
     KeyValueImplPtr ptr = NS::make_shared<KeyValueImpl>(current.newGlobalRef(kv));
     current.deleteRef(kv);
     return ptr;
 }
 
 PullConsumer& PullConsumerImpl::attachQueue(const std::string &queueName, const KeyValuePtr &properties) {
+    CurrentEnv current;
+    jstring jQueueName = current.newStringUTF(queueName.c_str());
+    jobject jPullConsumer;
+    if (properties) {
+        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(properties);
+        jPullConsumer = current.callObjectMethod(_proxy, midAttachQueue2, jQueueName, ptr->getProxy());
+    } else {
+        jPullConsumer = current.callObjectMethod(_proxy, midAttachQueue, jQueueName);
+    }
+    current.deleteRef(jQueueName);
+    if (jPullConsumer) {
+        current.deleteRef(jPullConsumer);
+    }
     return *this;
 }
 
 PullConsumer& PullConsumerImpl::detachQueue(const std::string &queueName) {
+    CurrentEnv context;
+    jstring jQueueName = context.newStringUTF(queueName.c_str());
+    jobject jPullConsumer = context.callObjectMethod(_proxy, midDetachQueue, jQueueName);
+    context.deleteRef(jQueueName);
+    if (jPullConsumer) {
+        context.deleteRef(jPullConsumer);
+    }
     return *this;
 }
 
@@ -43,10 +66,10 @@ MessagePtr PullConsumerImpl::receive(const KeyValuePtr &props) {
 
     jobject jMessageLocal;
     if (props) {
-        NS::shared_ptr<KeyValueImpl> ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        jMessageLocal = current.callObjectMethod(_proxy, midPoll2, ptr->getProxy());
+        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
+        jMessageLocal = current.callObjectMethod(_proxy, midReceive2, ptr->getProxy());
     } else {
-        jMessageLocal = current.callObjectMethod(_proxy, midPoll);
+        jMessageLocal = current.callObjectMethod(_proxy, midReceive);
     }
 
     if (jMessageLocal) {
@@ -55,7 +78,7 @@ MessagePtr PullConsumerImpl::receive(const KeyValuePtr &props) {
         return messagePtr;
     }
 
-    NS::shared_ptr<Message> msg_nullptr;
+    MessagePtr msg_nullptr;
     return msg_nullptr;
 }
 

@@ -50,7 +50,7 @@ if (BUILD_EXAMPLE)
     add_subdirectory(example)
 endif ()
 
-option(TEST "Build test cases" OFF)
+option(TEST "Build test cases" ON)
 if(TEST)
     enable_testing()
     option(gtest_build_tests OFF)

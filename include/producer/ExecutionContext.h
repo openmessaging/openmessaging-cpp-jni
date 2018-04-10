@@ -6,9 +6,9 @@
 
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
-    class LocalTransactionExecutionContext : private Uncopyable {
+    class ExecutionContext : private Uncopyable {
     public:
-        virtual ~LocalTransactionExecutionContext() {
+        virtual ~ExecutionContext() {
 
         }
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     };
 
-    typedef NS::shared_ptr<LocalTransactionExecutionContext> LocalTransactionExecutionContextPtr;
+    typedef NS::shared_ptr<ExecutionContext> ExecutionContextPtr;
 
 END_NAMESPACE_3(io, openmessaging, producer)
 

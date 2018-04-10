@@ -28,12 +28,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     private:
         jclass classPullConsumer;
-        jmethodID midProperties;
-        jmethodID midPoll;
-        jmethodID midPoll2;
+        jmethodID midAttributes;
+        jmethodID midAttachQueue;
+        jmethodID midAttachQueue2;
+        jmethodID midDetachQueue;
+        jmethodID midReceive;
+        jmethodID midReceive2;
         jmethodID midAck;
         jmethodID midAck2;
-
     };
 
 END_NAMESPACE_3(io, openmessaging, core)

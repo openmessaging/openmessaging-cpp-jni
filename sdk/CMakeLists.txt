@@ -10,6 +10,7 @@ add_library(oms_rocketmq SHARED
         ByteMessageImpl.cpp
         producer/SendResultImpl.cpp
         producer/ProducerImpl.cpp
+        producer/BatchMessageSenderImpl.cpp
         producer/LocalTransactionBranchExecutorImpl.cpp
 
         consumer/ContextImpl.cpp

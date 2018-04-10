@@ -21,13 +21,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual producer::SendResultPtr send(const MessagePtr &message, const KeyValuePtr &properties);
 
-        virtual ByteMessagePtr createByteMessageToQueue(const std::string &topic, const MessageBodyPtr &body);
+        virtual ByteMessagePtr createBytesMessage(const std::string &topic, const MessageBodyPtr &body);
 
         virtual SendResultPtr send(const MessagePtr &message,
-                                   const LocalTransactionBranchExecutorPtr &executor,
+                                   const LocalTransactionExecutorPtr &executor,
                                    const KeyValuePtr &properties);
 
         virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties);
+
+        virtual void sendOneway(const MessagePtr &message, const KeyValuePtr &properties);
 
         virtual BatchMessageSenderPtr createSequenceBatchMessageSender();
 
@@ -39,30 +41,20 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jclass     classProducer;
         jclass     classProducerAdaptor;
         jobject    objectProducerAdaptor;
-        jmethodID  midCreateByteMessageToTopic;
-        jmethodID  midCreateByteMessageToQueue;
-        jmethodID  midStartup;
-        jmethodID  midShutdown;
 
-        // SendResult send(Message message);
-        jmethodID  midSend;
+        jmethodID midCreateBytesMessage;
 
-        // SendResult send(Message message, KeyValue properties);
-        jmethodID  midSend2;
-
-        // SendResult send(Message message, LocalTransactionBranchExecutor branchExecutor, Object arg, KeyValue properties);
-        jmethodID  midSend3;
-
-        // ProducerAdaptor#public void sendAsync(final long opaque, Message message)
-        jmethodID  midSendAsync;
-
-        // ProducerAdaptor#public void sendAsync(final long opaque, Message message, KeyValue properties)
-        jmethodID  midSendAsync2;
-
-        // Producer#void sendOneway(Message message);
-        jmethodID  midSendOneway;
-
-        jmethodID  midSendOneway2;
+        jmethodID midAttributes;
+        jmethodID midSend;
+        jmethodID midSend2;
+        jmethodID midSend3;
+        jmethodID midSendAsync;
+        jmethodID midSendAsync2;
+        jmethodID midSendOneway;
+        jmethodID midSendOneway2;
+        jmethodID midCreateBatchMessageSender;
+        jmethodID midAddInterceptor;
+        jmethodID midRemoveInterceptor;
 
         const KeyValuePtr &_properties;
     };

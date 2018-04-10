@@ -102,7 +102,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          */
         virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
 
-        virtual void sendOneway(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr);
+        virtual void sendOneway(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
 
         /**
          * Creates a {@code BatchMessageSender} to send message in batch way.

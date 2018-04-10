@@ -26,6 +26,7 @@ typedef io::openmessaging::OMSException OMSException;
 
     #else
         #include "shared_ptr.hpp"
+        #include <cstring>
         #define NS io::openmessaging
 
         BEGIN_NAMESPACE_2(io, openmessaging)

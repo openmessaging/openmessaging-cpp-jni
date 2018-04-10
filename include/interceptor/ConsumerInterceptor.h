@@ -1,5 +1,5 @@
-#ifndef OMS_PUSH_CONSUMER_INTERCEPTOR_H
-#define OMS_PUSH_CONSUMER_INTERCEPTOR_H
+#ifndef OMS_CONSUMER_INTERCEPTOR_H
+#define OMS_CONSUMER_INTERCEPTOR_H
 
 #include "smart_pointer.h"
 #include "Namespace.h"
@@ -29,16 +29,17 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
      * @version OMS 1.0
      * @since OMS 1.0
      */
-    class PushConsumerInterceptor : private Uncopyable {
+    class ConsumerInterceptor : private Uncopyable {
     public:
-        virtual ~PushConsumerInterceptor() {
+        virtual ~ConsumerInterceptor() {
 
         }
 
         virtual void onMessageBefore(OnMessageBeforeContextPtr &context);
     };
-    NS::shared_ptr<PushConsumerInterceptor> PushConsumerInterceptorPtr;
+
+    NS::shared_ptr<ConsumerInterceptor> ConsumerInterceptorPtr;
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 
-#endif //OMS_PUSH_CONSUMER_INTERCEPTOR_H
+#endif //OMS_CONSUMER_INTERCEPTOR_H

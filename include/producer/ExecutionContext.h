@@ -1,5 +1,5 @@
-#ifndef OMS_LOCAL_TRANSACTION_EXECUTION_CONTEXT_H
-#define OMS_LOCAL_TRANSACTION_EXECUTION_CONTEXT_H
+#ifndef OMS_EXECUTION_CONTEXT_H
+#define OMS_EXECUTION_CONTEXT_H
 
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -22,4 +22,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
 END_NAMESPACE_3(io, openmessaging, producer)
 
-#endif //OMS_LOCAL_TRANSACTION_EXECUTION_CONTEXT_H
+#endif //OMS_EXECUTION_CONTEXT_H

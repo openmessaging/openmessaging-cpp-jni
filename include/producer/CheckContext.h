@@ -1,5 +1,5 @@
-#ifndef OMS_LOCAL_TRANSACTION_CHECK_CONTEXT_H
-#define OMS_LOCAL_TRANSACTION_CHECK_CONTEXT_H
+#ifndef OMS_CHECK_CONTEXT_H
+#define OMS_CHECK_CONTEXT_H
 
 #include "Namespace.h"
 #include "Uncopyable.h"
@@ -22,4 +22,4 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
 END_NAMESPACE_3(io, openmessaging, producer)
 
-#endif //OMS_LOCAL_TRANSACTION_CHECK_CONTEXT_H
+#endif //OMS_CHECK_CONTEXT_H

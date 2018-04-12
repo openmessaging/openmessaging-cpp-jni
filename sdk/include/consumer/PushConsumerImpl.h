@@ -28,14 +28,24 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual consumer::PushConsumer& detachQueue(const std::string &queueName);
 
-        virtual void addInterceptor(const consumer::PushConsumerInterceptorPtr &interceptor);
+        virtual void addInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor);
 
-        virtual void removeInterceptor(const consumer::PushConsumerInterceptorPtr &interceptor);
+        virtual void removeInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor);
 
 
     private:
         jclass classPushConsumer;
+        jclass classPushConsumerAdaptor;
+        jclass classConsumerInterceptorAdaptor;
         jclass classMessageListenerAdaptor;
+
+        jobject objectPushConsumerAdaptor;
+
+        // Default constructor
+        jmethodID midConsumerInterceptorAdaptor;
+
+        // Default constructor
+        jmethodID midPushConsumerAdaptor;
 
         jmethodID midAttributes;
         jmethodID midResume;

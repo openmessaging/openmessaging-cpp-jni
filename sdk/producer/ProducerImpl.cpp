@@ -174,7 +174,7 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
                                                buildSignature(Types::void_, 1, Types::int_));
 
     midProducerInterceptor = current.getMethodId(classProducerInterceptor, "<init>",
-                                                 buildSignature(Types::void_, 0));
+                                                 buildSignature(Types::void_, 1, Types::int_));
 
 }
 
@@ -297,18 +297,21 @@ void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &int
         interceptorMap[index] = interceptor;
     }
 
-    jobject jInterceptor = context.newObject(classProducerInterceptor, midProducerInterceptor);
+    jobject jInterceptor = context.newObject(classProducerInterceptor, midProducerInterceptor, index);
     context.callVoidMethod(objectProducerAdaptor, midAddInterceptor, index, jInterceptor);
     context.deleteRef(jInterceptor);
 }
 
 void ProducerImpl::removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) {
+    CurrentEnv context;
     {
         boost::lock_guard<boost::mutex> lk(interceptorMutex);
         for (std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.begin();
                 it != interceptorMap.end(); it++) {
             if (it->second == interceptor) {
+                context.callVoidMethod(objectProducerAdaptor, midRemoveInterceptor, it->first);
                 interceptorMap.erase(it->first);
+                LOG_INFO << "Interceptor: " << interceptor->name() << " is removed";
                 break;
             }
         }

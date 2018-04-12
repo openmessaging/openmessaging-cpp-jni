@@ -5,10 +5,10 @@
 
 #include "smart_pointer.h"
 #include "ServiceLifecycle.h"
-#include "PushConsumerInterceptor.h"
 #include "MessageListener.h"
 #include "Namespace.h"
 #include "OMS.h"
+#include "interceptor/ConsumerInterceptor.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     /**
@@ -100,14 +100,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
          *
          * @param interceptor an interceptor instance
          */
-        virtual void addInterceptor(const PushConsumerInterceptorPtr &interceptor) = 0;
+        virtual void addInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor) = 0;
 
         /**
          * Removes an interceptor from this consumer.
          *
          * @param interceptor an interceptor to be removed
          */
-        virtual void removeInterceptor(const PushConsumerInterceptorPtr &interceptor) = 0;
+        virtual void removeInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor) = 0;
     };
 
     typedef NS::shared_ptr<PushConsumer> PushConsumerPtr;

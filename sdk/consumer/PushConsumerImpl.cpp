@@ -5,13 +5,18 @@
 #include "KeyValueImpl.h"
 #include "ByteMessageImpl.h"
 #include "consumer/ContextImpl.h"
+#include "interceptor/ConsumerInterceptor.h"
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     boost::mutex listener_mutex;
-    std::map<std::string, NS::shared_ptr<MessageListener> > queue_listener_map;
+    std::map<std::string, MessageListenerPtr> queue_listener_map;
+
+    int interceptorIndex;
+    boost::mutex interceptorMutex;
+    std::map<int, interceptor::ConsumerInterceptorPtr> interceptorMap;
 
     void onMessage(JNIEnv *env, jobject object, jstring queue, jobject message, jobject context) {
         const char* queue_name_char_ptr = env->GetStringUTFChars(queue, NULL);
@@ -29,6 +34,42 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         }
     }
 
+    void doPreReceive(JNIEnv *env, jobject object, jint index, jobject message, jobject attributes) {
+        interceptor::ConsumerInterceptorPtr ptr;
+        {
+            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            std::map<int, interceptor::ConsumerInterceptorPtr>::iterator search = interceptorMap.find(index);
+            if (search != interceptorMap.end()) {
+                ptr = search->second;
+            } else {
+                LOG_WARNING << "Interceptor is not found";
+                return;
+            }
+        }
+
+        ByteMessageImplPtr msg(new ByteMessageImpl(message));
+        KeyValueImplPtr attr(new KeyValueImpl(attributes));
+        ptr->postReceive(msg, attr);
+    }
+
+    void doPostReceive(JNIEnv *env, jobject object, jint index, jobject message, jobject attributes) {
+        interceptor::ConsumerInterceptorPtr ptr;
+        {
+            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            std::map<int, interceptor::ConsumerInterceptorPtr>::iterator search = interceptorMap.find(index);
+            if (search != interceptorMap.end()) {
+                ptr = search->second;
+            } else {
+                LOG_WARNING << "Interceptor is not found";
+                return;
+            }
+        }
+
+        ByteMessageImplPtr msg(new ByteMessageImpl(message));
+        KeyValueImplPtr attr(new KeyValueImpl(attributes));
+        ptr->preReceive(msg, attr);
+    }
+
     const std::string signature = buildSignature(Types::void_, 3, Types::String_, Types::Message_, Types::Context_);
     static JNINativeMethod methods[] = {
             {
@@ -38,7 +79,21 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
             }
     };
 
+    const std::string interceptorSignature = buildSignature(Types::void_, 3, Types::int_, Types::Message_,
+                                                            Types::KeyValue_);
 
+    static JNINativeMethod interceptorMethods[] = {
+            {
+                    const_cast<char*>("doPreReceive"),
+                    const_cast<char*>(interceptorSignature.c_str()),
+                    (void *)&doPreReceive
+            },
+            {
+                    const_cast<char *>("doPostReceive"),
+                    const_cast<char *>(interceptorSignature.c_str()),
+                    (void *)&doPostReceive
+            }
+    };
 
 END_NAMESPACE_3(io, openmessaging, consumer)
 
@@ -46,15 +101,30 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     CurrentEnv current;
 
     const char *klassPushConsumer = "io/openmessaging/consumer/PushConsumer";
-    classPushConsumer = current.findClass(klassPushConsumer);
-
+    const char *klassPushConsumerAdaptor = "io/openmessaging/consumer/PushConsumerAdaptor";
+    const char *klassConsumerInterceptorAdaptor = "io/openmessaging/interceptor/ConsumerInterceptorAdaptor";
     const char *klassMessageListenerAdaptor = "io/openmessaging/consumer/MessageListenerAdaptor";
+
+    classPushConsumer = current.findClass(klassPushConsumer);
+    classPushConsumerAdaptor = current.findClass(klassPushConsumerAdaptor);
+    classConsumerInterceptorAdaptor = current.findClass(klassConsumerInterceptorAdaptor);
     classMessageListenerAdaptor = current.findClass(klassMessageListenerAdaptor);
 
-    if (current.env->RegisterNatives(classMessageListenerAdaptor, methods, 1) < 0) {
-        LOG_WARNING << "Failed to register native methods";
+    if (current.env->RegisterNatives(classConsumerInterceptorAdaptor, interceptorMethods, 2) < 0) {
+        LOG_ERROR << "Failed to register native methods for ConsumerInterceptorAdaptor";
         abort();
     }
+
+    if (current.env->RegisterNatives(classMessageListenerAdaptor, methods, 1) < 0) {
+        LOG_ERROR << "Failed to register native methods for MessageListenerAdaptor";
+        abort();
+    }
+
+    midConsumerInterceptorAdaptor = current.getMethodId(classConsumerInterceptorAdaptor, "<init>",
+                                                        buildSignature(Types::void_, 1, Types::int_));
+
+    midPushConsumerAdaptor = current.getMethodId(classPushConsumerAdaptor, "<init>",
+                                                 buildSignature(Types::void_, 1, Types::PushConsumer_));
 
     midAttributes = current.getMethodId(classPushConsumer, "attributes", buildSignature(Types::KeyValue_, 0));
     midResume = current.getMethodId(classPushConsumer, "resume", buildSignature(Types::void_, 0));
@@ -69,10 +139,12 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
 
     midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", buildSignature(Types::PushConsumer_, 1,
                                                                                           Types::String_));
-    midAddInterceptor = current.getMethodId(classPushConsumer, "addInterceptor",
+    midAddInterceptor = current.getMethodId(classPushConsumerAdaptor, "addInterceptor",
                                             buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
-    midRemoveInterceptor = current.getMethodId(classPushConsumer, "removeInterceptor",
+    midRemoveInterceptor = current.getMethodId(classPushConsumerAdaptor, "removeInterceptor",
                                                buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
+
+    objectPushConsumerAdaptor = current.newObject(classPushConsumerAdaptor, midPushConsumerAdaptor, proxy);
 }
 
 PushConsumerImpl::~PushConsumerImpl() {
@@ -149,10 +221,32 @@ PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
     return *this;
 }
 
-void PushConsumerImpl::addInterceptor(const PushConsumerInterceptorPtr &interceptor) {
-    throw OMSException("Not Implemented");
+void PushConsumerImpl::addInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor) {
+    CurrentEnv context;
+    int index;
+    {
+        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        index = ++interceptorIndex;
+        interceptorMap[index] = interceptor;
+    }
+
+    jobject consumerInterceptor = context.newObject(classConsumerInterceptorAdaptor, midConsumerInterceptorAdaptor, index);
+    context.callVoidMethod(objectPushConsumerAdaptor, midAddInterceptor, index, consumerInterceptor);
+    context.deleteRef(consumerInterceptor);
+    LOG_INFO << "Interceptor: " << interceptor->name() << " is added";
 }
 
-void PushConsumerImpl::removeInterceptor(const PushConsumerInterceptorPtr &interceptor) {
-    throw OMSException("Not Implemented");
+void PushConsumerImpl::removeInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor) {
+    CurrentEnv context;
+    {
+        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        for(std::map<int, interceptor::ConsumerInterceptorPtr>::iterator it = interceptorMap.begin();
+                it != interceptorMap.end(); it++) {
+            if (it->second == interceptor) {
+                context.callVoidMethod(objectPushConsumerAdaptor, midRemoveInterceptor, it->first);
+                interceptorMap.erase(it->first);
+                LOG_INFO << "Interceptor: " << interceptor->name() << " is removed";
+            }
+        }
+    }
 }

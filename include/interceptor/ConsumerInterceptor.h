@@ -20,12 +20,14 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
+        virtual std::string name() const = 0;
+
         virtual void preReceive(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
 
         virtual void postReceive(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
     };
 
-    NS::shared_ptr<ConsumerInterceptor> ConsumerInterceptorPtr;
+    typedef NS::shared_ptr<ConsumerInterceptor> ConsumerInterceptorPtr;
 
 END_NAMESPACE_3(io, openmessaging, interceptor)
 

@@ -6,6 +6,7 @@
 #include "KeyValueImpl.h"
 #include "producer/SendResultImpl.h"
 #include "PromiseImpl.h"
+#include "ByteMessageImpl.h"
 
 using namespace io::openmessaging;
 using namespace io::openmessaging::producer;
@@ -16,7 +17,11 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
     boost::mutex sendAsyncMutex;
     std::map<long long, PromisePtr> sendAsyncMap;
 
-    void sendAsyncCallback(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
+    int interceptorIndex = 0;
+    boost::mutex interceptorMutex;
+    std::map<int, interceptor::ProducerInterceptorPtr> interceptorMap;
+
+    void operationComplete(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
 
         NS::shared_ptr<Promise> promise;
         {
@@ -65,11 +70,49 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         current.deleteRef(object);
     }
 
-    static JNINativeMethod methods[] = {
+    void doPreSend(JNIEnv *env, jobject object, int index, jobject message, jobject attributes) {
+        ByteMessageImplPtr msg(new ByteMessageImpl(message));
+        KeyValueImplPtr attr(new KeyValueImpl(attributes));
         {
-            const_cast<char*>("sendAsyncCallback"),
+            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.find(index);
+            if (it != interceptorMap.end()) {
+                it->second->preSend(msg, attr);
+            }
+        }
+    }
+
+    void doPostSend(JNIEnv* env, jobject object, int index, jobject message, jobject attributes, jobject exception) {
+        ByteMessageImplPtr msg(new ByteMessageImpl(message));
+        KeyValueImplPtr attr(new KeyValueImpl(attributes));
+        {
+            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.find(index);
+            if (it != interceptorMap.end()) {
+                it->second->postSend(msg, attr);
+            }
+        }
+    }
+
+    static JNINativeMethod sendAsyncMethods[] = {
+        {
+            const_cast<char*>("operationComplete"),
             const_cast<char*>("(JLio/openmessaging/Future;)V"),
-            (void *)&sendAsyncCallback
+            (void *)&operationComplete
+        }
+    };
+
+    static JNINativeMethod producerInterceptorMethods[] = {
+        {
+                const_cast<char*>("doPreSend"),
+                const_cast<char*>(buildSignature(Types::void_, 3, Types::int_, Types::Message_, Types::KeyValue_).c_str()),
+                (void*)&doPreSend
+        },
+        {
+                const_cast<char*>("doPostSend"),
+                const_cast<char*>(buildSignature(Types::void_, 4, Types::int_, Types::Message_, Types::KeyValue_,
+                                                 Types::OMSException_).c_str()),
+                (void*)&doPostSend
         }
     };
 
@@ -80,12 +123,19 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     CurrentEnv current;
     const char *clazzProducer = "io/openmessaging/producer/Producer";
     const char *clazzProducerAdaptor = "io/openmessaging/producer/ProducerAdaptor";
+    const char *clazzProducerInterceptor = "io/openmessaging/interceptor/ProducerInterceptor";
 
     classProducer = current.findClass(clazzProducer);
     classProducerAdaptor = current.findClass(clazzProducerAdaptor);
+    classProducerInterceptor = current.findClass(clazzProducerInterceptor);
 
-    if (current.env->RegisterNatives(classProducerAdaptor, methods, 1) < 0) {
-        LOG_ERROR << "Failed to bind native methods";
+    if (current.env->RegisterNatives(classProducerAdaptor, sendAsyncMethods, 1) < 0) {
+        LOG_ERROR << "Failed to bind native methods to async send";
+        abort();
+    }
+
+    if (current.env->RegisterNatives(classProducerInterceptor, producerInterceptorMethods, 2) < 0) {
+        LOG_ERROR << "Failed to bind native methods to preSend and postSend";
         abort();
     }
 
@@ -118,10 +168,14 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     midSendOneway2 = current.getMethodId(classProducer, "sendOneway",
                                         buildSignature(Types::void_, 2, Types::Message_, Types::KeyValue_));
 
-    midAddInterceptor = current.getMethodId(classProducer, "addInterceptor",
-                                            buildSignature(Types::void_, 1, Types::ProducerInterceptor_));
-    midRemoveInterceptor = current.getMethodId(classProducer, "removeInterceptor",
-                                               buildSignature(Types::void_, 1, Types::ProducerInterceptor_));
+    midAddInterceptor = current.getMethodId(classProducerAdaptor, "addInterceptor",
+                                            buildSignature(Types::void_, 2, Types::int_, Types::ProducerInterceptor_));
+    midRemoveInterceptor = current.getMethodId(classProducerAdaptor, "removeInterceptor",
+                                               buildSignature(Types::void_, 1, Types::int_));
+
+    midProducerInterceptor = current.getMethodId(classProducerInterceptor, "<init>",
+                                                 buildSignature(Types::void_, 0));
+
 }
 
 ProducerImpl::~ProducerImpl() {
@@ -235,9 +289,28 @@ BatchMessageSenderPtr ProducerImpl::createSequenceBatchMessageSender() {
 }
 
 void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) {
-    throw OMSException("Not Implemented");
+    CurrentEnv context;
+    int index;
+    {
+        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        index = ++interceptorIndex;
+        interceptorMap[index] = interceptor;
+    }
+
+    jobject jInterceptor = context.newObject(classProducerInterceptor, midProducerInterceptor);
+    context.callVoidMethod(objectProducerAdaptor, midAddInterceptor, index, jInterceptor);
+    context.deleteRef(jInterceptor);
 }
 
 void ProducerImpl::removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) {
-    throw OMSException("Not Implemented");
+    {
+        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        for (std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.begin();
+                it != interceptorMap.end(); it++) {
+            if (it->second == interceptor) {
+                interceptorMap.erase(it->first);
+                break;
+            }
+        }
+    }
 }

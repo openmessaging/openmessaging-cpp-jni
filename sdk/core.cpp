@@ -40,6 +40,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::ConsumerInterceptor_ = "Lio/openmessaging/consumer/ConsumerInterceptor;";
     const char* Types::ProducerInterceptor_ = "Lio/openmessaging/consumer/ProducerInterceptor;";
     const char* Types::BatchMessageSender_ = "Lio/openmessaging/producer/BatchMessageSender;";
+    const char* Types::OMSException_ = "Lio/openmessaging/exception/OMSException;";
 
     string buildSignature(const string &return_type, int n, ...) {
         string signature = "(";

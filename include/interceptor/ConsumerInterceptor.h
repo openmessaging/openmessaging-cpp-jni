@@ -4,24 +4,9 @@
 #include "smart_pointer.h"
 #include "Namespace.h"
 #include "Uncopyable.h"
+#include "Message.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
-
-    class OnMessageBeforeContext : private Uncopyable {
-    public:
-        virtual ~OnMessageBeforeContext() {
-
-        }
-    };
-    typedef NS::shared_ptr<OnMessageBeforeContext> OnMessageBeforeContextPtr;
-
-    class OnMessageAfterContext : private Uncopyable {
-    public:
-        virtual ~OnMessageAfterContext() {
-
-        }
-    };
-    typedef NS::shared_ptr<OnMessageAfterContext> OnMessageAfterContextPtr;
 
     /**
      * A {@code PushConsumerInterceptor} is used to intercept consume operations of push consumer.
@@ -35,7 +20,9 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void onMessageBefore(OnMessageBeforeContextPtr &context);
+        virtual void preReceive(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
+
+        virtual void postReceive(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
     };
 
     NS::shared_ptr<ConsumerInterceptor> ConsumerInterceptorPtr;

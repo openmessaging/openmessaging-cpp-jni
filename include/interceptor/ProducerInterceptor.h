@@ -4,22 +4,9 @@
 #include "Namespace.h"
 #include "Uncopyable.h"
 #include "smart_pointer.h"
+#include "Message.h"
 
 BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
-
-    class PreSendContext : private Uncopyable {
-    public:
-        virtual ~PreSendContext() {
-        }
-    };
-    typedef NS::shared_ptr<PreSendContext> PreSendContextPtr;
-
-    class PostSendContext {
-    public:
-        virtual ~PostSendContext() {
-        }
-    };
-    typedef NS::shared_ptr<PostSendContext> PostSendContextPtr;
 
     /**
      * A {@code ProducerInterceptor} is used to intercept send operations of producer.
@@ -33,9 +20,10 @@ BEGIN_NAMESPACE_3(io, openmessaging, interceptor)
 
         }
 
-        virtual void preSend(PreSendContextPtr &context);
+        virtual void preSend(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
 
-        virtual void postSend(PostSendContextPtr &context);
+        virtual void postSend(const MessagePtr &message, const KeyValuePtr &attributes = kv_nullptr) = 0;
+
     };
     typedef NS::shared_ptr<ProducerInterceptor> ProducerInterceptorPtr;
 

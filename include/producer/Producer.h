@@ -102,6 +102,16 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
          */
         virtual FuturePtr sendAsync(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
 
+        /**
+         * Sends a message to the specified destination in one way, using the specified attributes, the destination
+         * should be preset to {@link Message.BuiltinKeys}, other header fields as well.
+         * <p>
+         * There is no {@code Promise} related or {@code RuntimeException} thrown. The calling thread doesn't
+         * care about the send result and also have no context to get the result.
+         *
+         * @param message a message will be sent
+         * @param properties the specified userHeaders
+         */
         virtual void sendOneway(const MessagePtr &message, const KeyValuePtr &properties = kv_nullptr) = 0;
 
         /**

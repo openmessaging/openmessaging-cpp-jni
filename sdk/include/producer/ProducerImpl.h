@@ -40,6 +40,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
     private:
         jclass     classProducer;
         jclass     classProducerAdaptor;
+        jclass     classProducerInterceptor;
+
         jobject    objectProducerAdaptor;
 
         jmethodID midCreateBytesMessage;
@@ -55,6 +57,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jmethodID midCreateBatchMessageSender;
         jmethodID midAddInterceptor;
         jmethodID midRemoveInterceptor;
+
+        jmethodID midProducerInterceptor;
 
         const KeyValuePtr &_properties;
     };

@@ -17,15 +17,15 @@ public:
         if (NULL == byteMessage) {
             CurrentEnv context;
             // Create Java ByteMessage object
-            jclass klass = context.env->FindClass("io/openmessaging/rocketmq/domain/BytesMessageImpl");
-            jmethodID ctor = context.env->GetMethodID(klass, "<init>", "()V");
-            jobject jByteMessage = context.env->NewObject(klass, ctor);
+            jclass klass = context.findClass("io/openmessaging/rocketmq/domain/BytesMessageImpl");
+            jmethodID ctor = context.getMethodId(klass, "<init>", "()V");
+            jobject jByteMessage = context.newObject(klass, ctor);
             string msg = "Hello World";
             jbyteArray jba = context.env->NewByteArray(msg.size());
             context.env->SetByteArrayRegion(jba, 0, msg.size(), reinterpret_cast<const jbyte *>(msg.c_str()));
             jmethodID midSetBody = context.env->GetMethodID(klass, "setBody", "([B)Lio/openmessaging/BytesMessage;");
-            context.env->CallObjectMethod(jByteMessage, midSetBody, jba);
-            context.env->DeleteLocalRef(jba);
+            context.callObjectMethod(jByteMessage, midSetBody, jba);
+            context.deleteRef(jba);
 
             // call constructor
             byteMessage = new ByteMessageImpl(jByteMessage);

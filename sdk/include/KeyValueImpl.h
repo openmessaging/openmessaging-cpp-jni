@@ -55,6 +55,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         void init(CurrentEnv &current);
     };
+
     typedef NS::shared_ptr<KeyValueImpl> KeyValueImplPtr;
 
 END_NAMESPACE_2(io, openmessaging)

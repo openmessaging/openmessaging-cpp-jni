@@ -54,11 +54,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         virtual bool containsKey(const std::string &key) = 0;
     };
 
-#if __cplusplus >= 201103L
-    typedef NS::unique_ptr<KeyValue> KeyValuePtr;
-#else
     typedef NS::shared_ptr<KeyValue> KeyValuePtr;
-#endif
 
     static KeyValuePtr kv_nullptr;
 

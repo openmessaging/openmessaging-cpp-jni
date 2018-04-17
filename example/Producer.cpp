@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     char* buffer = new char[strlen(slogan) + 1];
     strcpy(buffer, slogan);
 
-    const MessageBodyPtr message_body(buffer, strlen(buffer));
+    const MessageBody message_body(buffer, strlen(buffer));
 
     // Create message by producer, which also plays the role of message factory
     ByteMessagePtr message = producer->createBytesMessage(topic, message_body);

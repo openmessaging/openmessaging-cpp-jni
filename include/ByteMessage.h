@@ -23,9 +23,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         }
 
-        virtual scoped_array<char> getBody()  = 0;
+        virtual MessageBody getBody()  = 0;
 
-        virtual ByteMessage& setBody(const scoped_array<char> &body) = 0;
+        virtual ByteMessage& setBody(const MessageBody &body) = 0;
 
     };
 

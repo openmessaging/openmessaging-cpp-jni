@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string topic = "TopicTest";
         const char* data = "HELLO";
-        scoped_array<char> body(const_cast<char *>(data), strlen(data));
+        MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
         MessagePtr message = producer->createBytesMessage(topic, body);
         producer->send(message);
         // Send message OK

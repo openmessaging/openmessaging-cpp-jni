@@ -57,25 +57,21 @@ NS::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     return headers;
 }
 
-scoped_array<char> ByteMessageImpl::getBody() {
+MessageBody ByteMessageImpl::getBody() {
     CurrentEnv current;
-
     jbyteArray jBody = static_cast<jbyteArray>(current.callObjectMethod(objectByteMessage, midGetBody));
-
     jbyte *pArray = current.env->GetByteArrayElements(jBody, NULL);
     jsize len = current.env->GetArrayLength(jBody);
-    char *data = new char[len];
-    memcpy(data, pArray, static_cast<size_t>(len));
+    MessageBody result(pArray, len);
     current.env->ReleaseByteArrayElements(jBody, pArray, 0);
     current.env->DeleteLocalRef(jBody);
-    scoped_array<char> array(data, len);
-    return array;
+    return result;
 }
 
-ByteMessage& ByteMessageImpl::setBody(const scoped_array<char> &body) {
+ByteMessage& ByteMessageImpl::setBody(const MessageBody &body) {
     CurrentEnv current;
-    jbyteArray jBody = current.env->NewByteArray(body.getLength());
-    current.env->SetByteArrayRegion(jBody, 0, body.getLength(), reinterpret_cast<const jbyte *>(body.getRawPtr()));
+    jbyteArray jBody = current.env->NewByteArray(body.length());
+    current.env->SetByteArrayRegion(jBody, 0, body.length(), reinterpret_cast<const jbyte *>(body.get()));
     jobject ret = current.callObjectMethod(objectByteMessage, midSetBody, jBody);
     current.env->DeleteLocalRef(ret);
     current.env->DeleteLocalRef(jBody);

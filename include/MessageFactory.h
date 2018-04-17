@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
          * @return the created {@code BytesMessage} object
          * @throws OMSRuntimeException if the OMS provider fails to create this message due to some internal error.
          */
-        virtual ByteMessagePtr createBytesMessage(const std::string &topic, const MessageBodyPtr &body) = 0;
+        virtual ByteMessagePtr createBytesMessage(const std::string &topic, const MessageBody &body) = 0;
     };
 
 END_NAMESPACE_2(io, openmessaging)

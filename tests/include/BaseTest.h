@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             const char* klassNameSrvStartup = "org/apache/rocketmq/namesrv/NamesrvStartup";
             classNamesrvStartup = context.findClass(klassNameSrvStartup);
             const char* sigCreateNamesrvController = "([Ljava/lang/String;)Lorg/apache/rocketmq/namesrv/NamesrvController;";
-            midCreateNamesrvController = context.getMethodId(classNamesrvStartup, "createController", sigCreateNamesrvController, true);
+            midCreateNamesrvController = context.getMethodId(classNamesrvStartup, "createNamesrvController", sigCreateNamesrvController, true);
 
             const char* sigStartNamesrv = "(Lorg/apache/rocketmq/namesrv/NamesrvController;)Lorg/apache/rocketmq/namesrv/NamesrvController;";
             midStartNamesrv = context.getMethodId(classNamesrvStartup, "start", sigStartNamesrv, true);

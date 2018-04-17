@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
         virtual producer::SendResultPtr send(const MessagePtr &message, const KeyValuePtr &properties);
 
-        virtual ByteMessagePtr createBytesMessage(const std::string &topic, const MessageBodyPtr &body);
+        virtual ByteMessagePtr createBytesMessage(const std::string &topic, const MessageBody &body);
 
         virtual SendResultPtr send(const MessagePtr &message,
                                    const LocalTransactionExecutorPtr &executor,

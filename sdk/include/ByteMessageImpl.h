@@ -16,9 +16,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual NS::shared_ptr<KeyValue> userHeaders();
 
-        virtual scoped_array<char> getBody();
+        virtual MessageBody getBody();
 
-        virtual ByteMessage& setBody(const scoped_array<char> &body);
+        virtual ByteMessage& setBody(const MessageBody &body);
 
         virtual ByteMessageImpl& putSysHeaders(const std::string &key, int value);
 

@@ -54,7 +54,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string topic = "TopicTest";
         const char* data = "HELLO";
-        scoped_array<char> body(const_cast<char *>(data), strlen(data));
+        MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
 
         MessagePtr message = producer->createBytesMessage(topic, body);
         for (int i = 0; i < 10000; ++i) {
@@ -73,7 +73,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string topic = "TopicTest";
         const char* data = "HELLO";
-        scoped_array<char> body(const_cast<char *>(data), strlen(data));
+        MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
 
         CountdownLatch latch(1);
         FutureListenerPtr listener(new FutureListenerTest(latch));

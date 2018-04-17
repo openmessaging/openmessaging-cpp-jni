@@ -207,12 +207,12 @@ SendResultPtr ProducerImpl::send(const MessagePtr &message, const KeyValuePtr &p
     return sendResult;
 }
 
-ByteMessagePtr ProducerImpl::createBytesMessage(const std::string &topic, const MessageBodyPtr &body) {
+ByteMessagePtr ProducerImpl::createBytesMessage(const std::string &topic, const MessageBody &body) {
     CurrentEnv current;
     jstring pTopic = current.newStringUTF(topic.c_str());
-    jsize len = static_cast<jint>(body.getLength());
+    jsize len = static_cast<jint>(body.length());
     jbyteArray pBody = current.env->NewByteArray(len);
-    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.getRawPtr()));
+    current.env->SetByteArrayRegion(pBody, 0, len, reinterpret_cast<const jbyte *>(body.get()));
     jobject jMessage = current.callObjectMethod(_proxy, midCreateBytesMessage, pTopic, pBody);
     current.deleteRef(pBody);
     current.deleteRef(pTopic);

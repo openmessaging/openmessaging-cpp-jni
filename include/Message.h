@@ -62,11 +62,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     };
 
-#if __cplusplus >= 201103L
-    typedef NS::unique_ptr<Message> MessagePtr;
-#else
     typedef NS::shared_ptr<Message> MessagePtr;
-#endif
 
 END_NAMESPACE_2(io, openmessaging)
 

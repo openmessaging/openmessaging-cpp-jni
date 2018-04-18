@@ -37,10 +37,11 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::LocalTransactionExecutor_ = "Lio/openmessaging/producer/LocalTransactionExecutor;";
     const char* Types::Context_ = "Lio/openmessaging/consumer/Context;";
     const char* Types::MessageListener_ = "Lio/openmessaging/consumer/MessageListener;";
-    const char* Types::ConsumerInterceptor_ = "Lio/openmessaging/consumer/ConsumerInterceptor;";
-    const char* Types::ProducerInterceptor_ = "Lio/openmessaging/consumer/ProducerInterceptor;";
+    const char* Types::ConsumerInterceptor_ = "Lio/openmessaging/interceptor/ConsumerInterceptor;";
+    const char* Types::ProducerInterceptor_ = "Lio/openmessaging/interceptor/ProducerInterceptor;";
     const char* Types::BatchMessageSender_ = "Lio/openmessaging/producer/BatchMessageSender;";
     const char* Types::OMSException_ = "Lio/openmessaging/exception/OMSException;";
+    const char* Types::Future_ = "Lio/openmessaging/Future;";
 
     string buildSignature(const string &return_type, int n, ...) {
         string signature = "(";

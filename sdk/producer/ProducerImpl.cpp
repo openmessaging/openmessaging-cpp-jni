@@ -98,20 +98,19 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         {
             const_cast<char*>("operationComplete"),
             const_cast<char*>("(JLio/openmessaging/Future;)V"),
-            (void *)&operationComplete
+            (void*)&operationComplete
         }
     };
 
     static JNINativeMethod producerInterceptorMethods[] = {
         {
                 const_cast<char*>("doPreSend"),
-                const_cast<char*>(buildSignature(Types::void_, 3, Types::int_, Types::Message_, Types::KeyValue_).c_str()),
+                const_cast<char*>("(ILio/openmessaging/Message;Lio/openmessaging/KeyValue;)V"),
                 (void*)&doPreSend
         },
         {
                 const_cast<char*>("doPostSend"),
-                const_cast<char*>(buildSignature(Types::void_, 4, Types::int_, Types::Message_, Types::KeyValue_,
-                                                 Types::OMSException_).c_str()),
+                const_cast<char*>("(ILio/openmessaging/Message;Lio/openmessaging/KeyValue;Lio/openmessaging/exception/OMSException;)V"),
                 (void*)&doPostSend
         }
     };
@@ -123,18 +122,18 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     CurrentEnv current;
     const char *clazzProducer = "io/openmessaging/producer/Producer";
     const char *clazzProducerAdaptor = "io/openmessaging/producer/ProducerAdaptor";
-    const char *clazzProducerInterceptor = "io/openmessaging/interceptor/ProducerInterceptor";
+    const char *clazzProducerInterceptorAdaptor = "io/openmessaging/interceptor/ProducerInterceptorAdaptor";
 
     classProducer = current.findClass(clazzProducer);
     classProducerAdaptor = current.findClass(clazzProducerAdaptor);
-    classProducerInterceptor = current.findClass(clazzProducerInterceptor);
+    classProducerInterceptorAdaptor = current.findClass(clazzProducerInterceptorAdaptor);
 
     if (current.env->RegisterNatives(classProducerAdaptor, sendAsyncMethods, 1) < 0) {
         LOG_ERROR << "Failed to bind native methods to async send";
         abort();
     }
 
-    if (current.env->RegisterNatives(classProducerInterceptor, producerInterceptorMethods, 2) < 0) {
+    if (current.env->RegisterNatives(classProducerInterceptorAdaptor, producerInterceptorMethods, 2) < 0) {
         LOG_ERROR << "Failed to bind native methods to preSend and postSend";
         abort();
     }
@@ -173,8 +172,8 @@ ProducerImpl::ProducerImpl(jobject proxy, const KeyValuePtr &props)
     midRemoveInterceptor = current.getMethodId(classProducerAdaptor, "removeInterceptor",
                                                buildSignature(Types::void_, 1, Types::int_));
 
-    midProducerInterceptor = current.getMethodId(classProducerInterceptor, "<init>",
-                                                 buildSignature(Types::void_, 1, Types::int_));
+    midProducerInterceptorAdaptor = current.getMethodId(classProducerInterceptorAdaptor, "<init>",
+                                                        buildSignature(Types::void_, 1, Types::int_));
 
 }
 
@@ -297,7 +296,7 @@ void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &int
         interceptorMap[index] = interceptor;
     }
 
-    jobject jInterceptor = context.newObject(classProducerInterceptor, midProducerInterceptor, index);
+    jobject jInterceptor = context.newObject(classProducerInterceptorAdaptor, midProducerInterceptorAdaptor, index);
     context.callVoidMethod(objectProducerAdaptor, midAddInterceptor, index, jInterceptor);
     context.deleteRef(jInterceptor);
 }

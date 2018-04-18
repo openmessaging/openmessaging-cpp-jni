@@ -40,7 +40,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
     private:
         jclass     classProducer;
         jclass     classProducerAdaptor;
-        jclass     classProducerInterceptor;
+        jclass     classProducerInterceptorAdaptor;
 
         jobject    objectProducerAdaptor;
 
@@ -58,7 +58,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         jmethodID midAddInterceptor;
         jmethodID midRemoveInterceptor;
 
-        jmethodID midProducerInterceptor;
+        jmethodID midProducerInterceptorAdaptor;
 
         const KeyValuePtr &_properties;
     };

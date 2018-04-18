@@ -186,9 +186,8 @@ jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const char* 
         mid = env->GetMethodID(klass, method, sig);
     }
 
-    // For now, we just throw an exception.
-    // TODO: log and warn this situation.
     if (NULL == mid) {
+        LOG_ERROR << "Method[" << method << "], signature: [" << sig << "] is not found";
         throw OMSException("Method is not found");
     }
 
@@ -201,6 +200,7 @@ jobject CurrentEnv::newObject(jclass klass, jmethodID mid, ...) {
     jobject result = env->NewObjectV(klass, mid, args);
     va_end(args);
     if (NULL == result) {
+        LOG_ERROR << "Fail to new object";
         throw OMSException("Fail to create new object");
     }
 

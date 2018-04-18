@@ -49,6 +49,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         static const char *ProducerInterceptor_;
         static const char *BatchMessageSender_;
         static const char *OMSException_;
+        static const char *Future_;
     };
 
     std::string buildSignature(const std::string &return_type, int n, ...);

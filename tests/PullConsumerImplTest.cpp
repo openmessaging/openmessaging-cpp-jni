@@ -40,7 +40,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_GROUP, value);
 
-        consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(queueName, kv);
+        consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(kv);
+        pullConsumer->attachQueue(queueName);
 
         ASSERT_TRUE(pullConsumer);
 

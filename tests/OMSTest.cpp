@@ -1,18 +1,70 @@
+#include <string>
+
 #include <gtest/gtest.h>
 
 #include "core.h"
 #include "OMS.h"
 #include "KeyValueImpl.h"
+#include "BaseTest.h"
+#include "MessagingAccessPoint.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-    class OMSTest : public ::testing::Test {
-    public:
-        virtual void SetUp() {
-            io::openmessaging::Initialize();
-        }
+
+    using namespace std;
+
+    class OmsTest : public BaseTest {
+
     };
 
-    TEST_F(OMSTest, testNewKeyValue) {
+    TEST_F(OmsTest, testCtor) {
+
+        string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
+
+        producer::ProducerPtr producer = messagingAccessPoint->createProducer();
+        producer->startup();
+
+        string topic = "TopicTest";
+        const char* data = "HELLO";
+        MessageBody body(reinterpret_cast<signed char*>(const_cast<char *>(data)), strlen(data));
+        MessagePtr message = producer->createBytesMessage(topic, body);
+        producer::SendResultPtr sendResult = producer->send(message);
+
+        cout << sendResult->messageId() << endl;
+
+        producer->shutdown();
+    }
+
+    TEST_F(OmsTest, testCreatePullConsumer) {
+
+        string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
+        string driverClassKey = "oms.driver.impl";
+        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
+
+        KeyValuePtr properties(newKeyValue());
+        properties->put(driverClassKey, driverClass);
+
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
+        std::string queueName("TopicTest");
+
+
+        KeyValuePtr kv(newKeyValue());
+        const std::string key = "rmq.consumer.group";
+        const std::string value = "OMS_CONSUMER";
+        kv->put(key, value);
+
+        consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(kv);
+        pullConsumer->attachQueue(queueName);
+
+        ASSERT_TRUE(pullConsumer);
+
+        pullConsumer->startup();
+
+        pullConsumer->shutdown();
+    }
+
+    TEST_F(OmsTest, testNewKeyValue) {
         using namespace io::openmessaging;
 
         KeyValuePtr kv(newKeyValueImpl());

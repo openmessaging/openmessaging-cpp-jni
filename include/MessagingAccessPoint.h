@@ -85,7 +85,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
          * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
          * due to some internal error
          */
-        virtual consumer::PullConsumerPtr createPullConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
+        virtual consumer::PullConsumerPtr createPullConsumer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
         /**
          * Creates a new {@code StreamingConsumer} for the specified {@code MessagingAccessPoint}.
@@ -94,7 +94,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
          * @throws OMSRuntimeException if the {@code MessagingAccessPoint} fails to handle this request
          * due to some internal error
          */
-        virtual consumer::StreamingConsumerPtr createStreamingConsumer(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
+        virtual consumer::StreamingConsumerPtr createStreamingConsumer(const KeyValuePtr &properties = kv_nullptr) = 0;
 
         /**
          * Gets a lightweight {@code ResourceManager} instance from the specified {@code MessagingAccessPoint}.

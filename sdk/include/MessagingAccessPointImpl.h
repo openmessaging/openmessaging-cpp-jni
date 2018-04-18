@@ -2,10 +2,11 @@
 #define OMS_MESSAGING_ACCESS_POINT_IMPL_H
 
 #include "MessagingAccessPoint.h"
+#include "ServiceLifecycleImpl.h"
 #include "core.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
-    class MessagingAccessPointImpl : public MessagingAccessPoint {
+    class MessagingAccessPointImpl : public virtual MessagingAccessPoint, public virtual ServiceLifecycleImpl {
     public:
         MessagingAccessPointImpl(const std::string &url, const KeyValuePtr &properties, jobject proxy);
 
@@ -19,15 +20,11 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         consumer::PushConsumerPtr createPushConsumer(const KeyValuePtr &properties);
 
-        consumer::PullConsumerPtr createPullConsumer(const std::string &queueName, const KeyValuePtr &properties);
+        consumer::PullConsumerPtr createPullConsumer(const KeyValuePtr &properties);
 
-        consumer::StreamingConsumerPtr createStreamingConsumer(const std::string &queueName, const KeyValuePtr &properties);
+        consumer::StreamingConsumerPtr createStreamingConsumer(const KeyValuePtr &properties);
 
         ResourceManagerPtr resourceManager();
-
-        void startup();
-
-        void shutdown();
 
         jobject getProxy();
 
@@ -35,8 +32,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const std::string _url;
 
         const KeyValuePtr _properties;
-
-        jobject objectMessagingAccessPoint;
 
         jclass classMessagingAccessPoint;
 
@@ -59,8 +54,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         jmethodID  midPushConsumers;
         jmethodID  midPullConsumers;
         jmethodID  midStreamingConsumers;
-        jmethodID  midStartup;
-        jmethodID  midShutdown;
 
     };
 

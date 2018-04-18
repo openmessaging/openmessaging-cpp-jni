@@ -12,7 +12,6 @@ add_executable(runUnitTests
         KeyValueImplTest.cpp
         OMSTest.cpp
         PromiseImplTest.cpp
-        MessagingAccessPointFactoryImplTest.cpp
         ProducerImplTest.cpp
         PullConsumerImplTest.cpp
         PushConsumerImplTest.cpp

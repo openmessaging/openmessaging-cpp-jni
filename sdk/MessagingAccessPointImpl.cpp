@@ -13,7 +13,7 @@ using namespace io::openmessaging::observer;
 MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
                                                    const KeyValuePtr &props,
                                                    jobject proxy) :
-        _url(url), _properties(props), objectMessagingAccessPoint(proxy) {
+        _url(url), _properties(props), ServiceLifecycleImpl(proxy) {
 
     CurrentEnv current;
     const char *klassMessagingAccessPoint = "io/openmessaging/MessagingAccessPoint";
@@ -35,13 +35,10 @@ MessagingAccessPointImpl::MessagingAccessPointImpl(const std::string &url,
                                        buildSignature(Types::PushConsumer_, 1, Types::KeyValue_));
 
     midCreatePullConsumer = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
-                                      buildSignature(Types::PullConsumer_, 1, Types::String_));
+                                      buildSignature(Types::PullConsumer_, 0));
 
     midCreatePullConsumer2 = current.getMethodId(classMessagingAccessPoint, "createPullConsumer",
-                                       buildSignature(Types::PullConsumer_, 2, Types::String_, Types::KeyValue_));
-
-    midStartup = current.getMethodId(classMessagingAccessPoint, "startup", buildSignature(Types::void_, 0));
-    midShutdown = current.getMethodId(classMessagingAccessPoint, "shutdown", buildSignature(Types::void_, 0));
+                                       buildSignature(Types::PullConsumer_, 1, Types::KeyValue_));
 }
 
 KeyValuePtr MessagingAccessPointImpl::attributes() {
@@ -51,7 +48,7 @@ KeyValuePtr MessagingAccessPointImpl::attributes() {
 std::string MessagingAccessPointImpl::implVersion() {
     CurrentEnv current;
     jstring version =
-            reinterpret_cast<jstring>(current.callObjectMethod(objectMessagingAccessPoint, midImplVersion));
+            reinterpret_cast<jstring>(current.callObjectMethod(_proxy, midImplVersion));
     const char *pVersion = current.env->GetStringUTFChars(version, NULL);
     std::string result = pVersion;
     current.env->ReleaseStringUTFChars(version, pVersion);
@@ -63,9 +60,9 @@ ProducerPtr MessagingAccessPointImpl::createProducer(const KeyValuePtr &props) {
     jobject producerLocal;
     if (props) {
         KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer2, kv->getProxy());
+        producerLocal = current.callObjectMethod(_proxy, midCreateProducer2, kv->getProxy());
     } else {
-        producerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreateProducer);
+        producerLocal = current.callObjectMethod(_proxy, midCreateProducer);
     }
 
     jobject producer = current.newGlobalRef(producerLocal);
@@ -79,10 +76,10 @@ consumer::PushConsumerPtr MessagingAccessPointImpl::createPushConsumer(const Key
     jobject pushConsumerLocal;
     if (props) {
         KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer2, kv->getProxy());
+        pushConsumerLocal = current.callObjectMethod(_proxy, midCreatePushConsumer2, kv->getProxy());
 
     } else {
-        pushConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePushConsumer);
+        pushConsumerLocal = current.callObjectMethod(_proxy, midCreatePushConsumer);
     }
 
     jobject pushConsumer = current.newGlobalRef(pushConsumerLocal);
@@ -90,38 +87,23 @@ consumer::PushConsumerPtr MessagingAccessPointImpl::createPushConsumer(const Key
     return ret;
 }
 
-consumer::PullConsumerPtr MessagingAccessPointImpl::createPullConsumer(const std::string &queueName,
-                                                                       const KeyValuePtr &props) {
+consumer::PullConsumerPtr MessagingAccessPointImpl::createPullConsumer(const KeyValuePtr &props) {
     CurrentEnv current;
     jobject pullConsumerLocal;
 
-    const char *str = queueName.c_str();
-    jstring queue_name = current.newStringUTF(str);
-
-    if (!queue_name) {
-        // Allocate memory fails
-        current.checkAndClearException();
-        abort();
-    }
-
     if (props) {
         NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        pullConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer2,
-                                                          queue_name, kv->getProxy());
+        pullConsumerLocal = current.callObjectMethod(_proxy, midCreatePullConsumer2, kv->getProxy());
     } else {
-        pullConsumerLocal = current.callObjectMethod(objectMessagingAccessPoint, midCreatePullConsumer,
-                                                          queue_name);
+        pullConsumerLocal = current.callObjectMethod(_proxy, midCreatePullConsumer);
     }
-
-    current.deleteRef(queue_name);
 
     jobject pullConsumer = current.newGlobalRef(pullConsumerLocal);
     NS::shared_ptr<PullConsumer> ret = NS::make_shared<PullConsumerImpl>(pullConsumer);
     return ret;
 }
 
-consumer::StreamingConsumerPtr MessagingAccessPointImpl::createStreamingConsumer(const std::string &queueName,
-                                                                                 const KeyValuePtr &props) {
+consumer::StreamingConsumerPtr MessagingAccessPointImpl::createStreamingConsumer(const KeyValuePtr &props) {
     throw OMSException("Not Implemented");
 }
 
@@ -129,21 +111,11 @@ ResourceManagerPtr MessagingAccessPointImpl::resourceManager() {
     throw OMSException("Not Implemented");
 }
 
-void MessagingAccessPointImpl::startup() {
-    CurrentEnv current;
-    current.env->CallVoidMethod(objectMessagingAccessPoint, midStartup);
-}
-
-void MessagingAccessPointImpl::shutdown() {
-    CurrentEnv current;
-    current.env->CallVoidMethod(objectMessagingAccessPoint, midShutdown);
-}
-
 jobject MessagingAccessPointImpl::getProxy() {
-    return objectMessagingAccessPoint;
+    return _proxy;
 }
 
 MessagingAccessPointImpl::~MessagingAccessPointImpl() {
-    CurrentEnv current;
-    current.env->DeleteGlobalRef(objectMessagingAccessPoint);
+    CurrentEnv context;
+    context.deleteRef(classMessagingAccessPoint);
 }

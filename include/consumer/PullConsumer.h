@@ -46,7 +46,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
          * @param queueName a specified queue
          * @return this {@code PullConsumer} instance
          */
-        virtual PullConsumer& attachQueue(const std::string &queueName, const KeyValuePtr &properties) = 0;
+        virtual PullConsumer& attachQueue(const std::string &queueName, const KeyValuePtr &properties = kv_nullptr) = 0;
 
         /**
          * Detaches the {@code PullConsumer} from a specified queue.

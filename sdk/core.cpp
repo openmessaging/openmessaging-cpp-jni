@@ -87,7 +87,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     //    jOptions->addOption("-verbose");
     //    jOptions->addOption("-Xcheck:jni");
     //    jOptions->addOption("-Drocketmq.namesrv.addr=localhost:9876");
-    //    jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
+        jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
 
         int optionCount = jOptions->options.size();
         JavaVMOption *options = new JavaVMOption[optionCount];

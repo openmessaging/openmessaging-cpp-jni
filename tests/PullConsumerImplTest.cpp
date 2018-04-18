@@ -15,13 +15,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     TEST_F(PullConsumerImplTest, testCreatePullConsumer) {
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-        string driverClassKey = "oms.driver.impl";
-        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        KeyValuePtr properties(newKeyValueImpl());
-        properties->put(driverClassKey, driverClass);
-
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
 
         // First send a message
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
@@ -31,8 +26,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const char* data = "HELLO";
         MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
         MessagePtr message = producer->createBytesMessage(topic, body);
-        producer->send(message);
-        // Send message OK
+        producer::SendResultPtr sendResultPtr = producer->send(message);
+        LOG_INFO << "Send Message OK. Message Id: " << sendResultPtr->messageId();
 
         std::string queueName("TopicTest");
 

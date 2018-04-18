@@ -76,6 +76,8 @@ MessagePtr PullConsumerImpl::receive(const KeyValuePtr &props) {
         jobject jMessage = current.newGlobalRef(jMessageLocal);
        MessagePtr messagePtr = NS::make_shared<ByteMessageImpl>(jMessage);
         return messagePtr;
+    } else {
+        LOG_DEBUG << "Receive returns without any message";
     }
 
     MessagePtr msg_nullptr;

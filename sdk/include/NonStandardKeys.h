@@ -6,7 +6,7 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-        static const std::string CONSUMER_GROUP = "rmq.consumer.group";
+        static const std::string CONSUMER_GROUP = "consumer.id";
         static const std::string PRODUCER_GROUP = "rmq.producer.group";
         static const std::string MAX_REDELIVERY_TIMES = "rmq.max.redelivery.times";
         static const std::string MESSAGE_CONSUME_TIMEOUT = "rmq.message.consume.timeout";

@@ -60,11 +60,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     JNIEnv *env;
 
-#if __cplusplus >= 201103L
-        NS::once_flag once_flag;
-#else
     boost::once_flag once_flag = BOOST_ONCE_INIT;
-#endif
 
     void init_logging() {
         char *home = getenv("HOME");
@@ -115,13 +111,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     }
 
     void Initialize() {
-
-#if __cplusplus >= 201103L
-        std::call_once(once_flag, init0);
-#else
         boost::call_once(once_flag, init0);
-#endif
-
     }
 
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {

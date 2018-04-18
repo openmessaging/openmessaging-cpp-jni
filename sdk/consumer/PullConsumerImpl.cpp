@@ -10,12 +10,12 @@ PullConsumerImpl::PullConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     const char *klassPullConsumer = "io/openmessaging/consumer/PullConsumer";
     classPullConsumer = current.findClass(klassPullConsumer);
 
-    midAttributes = current.getMethodId(classPullConsumer, "attributes", buildSignature(Types::void_, 0));
+    midAttributes = current.getMethodId(classPullConsumer, "attributes", buildSignature(Types::KeyValue_, 0));
     midAttachQueue = current.getMethodId(classPullConsumer, "attachQueue", buildSignature(Types::PullConsumer_, 1, Types::String_));
     midAttachQueue2 = current.getMethodId(classPullConsumer, "attachQueue", buildSignature(Types::PullConsumer_, 2, Types::String_, Types::KeyValue_));
     midDetachQueue = current.getMethodId(classPullConsumer, "detachQueue", buildSignature(Types::PullConsumer_, 1, Types::String_));
-    midReceive = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::KeyValue_, 0));
-    midReceive2 = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::KeyValue_, 1, Types::KeyValue_));
+    midReceive = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::Message_, 0));
+    midReceive2 = current.getMethodId(classPullConsumer, "receive", buildSignature(Types::Message_, 1, Types::KeyValue_));
     midAck = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 1, Types::String_));
     midAck2 = current.getMethodId(classPullConsumer, "ack", buildSignature(Types::void_, 2, Types::String_, Types::KeyValue_));
 }

@@ -39,22 +39,17 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(OmsTest, testCreatePullConsumer) {
 
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-        string driverClassKey = "oms.driver.impl";
-        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        KeyValuePtr properties(newKeyValue());
-        properties->put(driverClassKey, driverClass);
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPoint(accessPointUrl, properties));
-        std::string queueName("TopicTest");
-
-
-        KeyValuePtr kv(newKeyValue());
-        const std::string key = "rmq.consumer.group";
+        KeyValuePtr kv(newKeyValueImpl());
+        const std::string key = "consumer.id";
         const std::string value = "OMS_CONSUMER";
         kv->put(key, value);
 
         consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(kv);
+
+        std::string queueName("TopicTest");
         pullConsumer->attachQueue(queueName);
 
         ASSERT_TRUE(pullConsumer);

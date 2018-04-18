@@ -40,13 +40,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PushConsumerImplTest, testCreatePushConsumer) {
 
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
-        string driverClassKey = "oms.driver.impl";
-        string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
-        KeyValuePtr properties(newKeyValueImpl());
-        properties->put(driverClassKey, driverClass);
-
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
 
         // First send a message
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();

@@ -35,7 +35,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::ByteMessage_ = "Lio/openmessaging/BytesMessage;";
     const char* Types::SendResult_ = "Lio/openmessaging/producer/SendResult;";
     const char* Types::LocalTransactionExecutor_ = "Lio/openmessaging/producer/LocalTransactionExecutor;";
-    const char* Types::Context_ = "Lio/openmessaging/consumer/Context;";
+    const char* Types::Context_ = "Lio/openmessaging/consumer/MessageListener$Context;";
     const char* Types::MessageListener_ = "Lio/openmessaging/consumer/MessageListener;";
     const char* Types::ConsumerInterceptor_ = "Lio/openmessaging/interceptor/ConsumerInterceptor;";
     const char* Types::ProducerInterceptor_ = "Lio/openmessaging/interceptor/ProducerInterceptor;";

@@ -57,8 +57,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
 
         MessagePtr message = producer->createBytesMessage(topic, body);
-        for (int i = 0; i < 10000; ++i) {
-            producer->send(message);
+        for (int i = 0; i < 1024; ++i) {
+            producer::SendResultPtr sendResultPtr = producer->send(message);
+            LOG_DEBUG << "Send OK. Message Id: " << sendResultPtr->messageId();
         }
     }
 

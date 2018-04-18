@@ -187,7 +187,11 @@ jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const char* 
     }
 
     if (NULL == mid) {
-        LOG_ERROR << "Method[" << method << "], signature: [" << sig << "] is not found";
+        jmethodID midGetName = env->GetMethodID(klass, "getName", "()Ljava/lang/String;");
+        jstring className = static_cast<jstring>(env->CallObjectMethod(klass, midGetName));
+        const char* name = env->GetStringUTFChars(className, NULL);
+        LOG_ERROR << "Class[" << name << "], Method[" << method << "], signature: [" << sig << "] is not found";
+        env->ReleaseStringUTFChars(className, name);
         throw OMSException("Method is not found");
     }
 

@@ -10,12 +10,12 @@ add_executable(runUnitTests
         CoreTest.cpp
         CurrentEnvTest.cpp
         KeyValueImplTest.cpp
+        ServerTest.cpp
         OMSTest.cpp
         PromiseImplTest.cpp
         ProducerImplTest.cpp
         PullConsumerImplTest.cpp
         PushConsumerImplTest.cpp
-        ServerTest.cpp
         )
 
 target_link_libraries(runUnitTests

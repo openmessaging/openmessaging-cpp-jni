@@ -70,29 +70,25 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         ptr->preReceive(msg, attr);
     }
 
-    const std::string signature = buildSignature(Types::void_, 3, Types::String_, Types::Message_, Types::Context_);
     static JNINativeMethod methods[] = {
-            {
-                    const_cast<char*>("onMessage"),
-                    const_cast<char*>(signature.c_str()),
-                    (void *)&onMessage
-            }
+        {
+                const_cast<char*>("onMessage"),
+                const_cast<char*>("(Ljava/lang/String;Lio/openmessaging/Message;Lio/openmessaging/consumer/MessageListener$Context;)V"),
+                (void *)&onMessage
+        }
     };
 
-    const std::string interceptorSignature = buildSignature(Types::void_, 3, Types::int_, Types::Message_,
-                                                            Types::KeyValue_);
-
     static JNINativeMethod interceptorMethods[] = {
-            {
-                    const_cast<char*>("doPreReceive"),
-                    const_cast<char*>(interceptorSignature.c_str()),
-                    (void *)&doPreReceive
-            },
-            {
-                    const_cast<char *>("doPostReceive"),
-                    const_cast<char *>(interceptorSignature.c_str()),
-                    (void *)&doPostReceive
-            }
+        {
+                const_cast<char*>("doPreReceive"),
+                const_cast<char*>("(ILio/openmessaging/Message;Lio/openmessaging/KeyValue;)V"),
+                (void *)&doPreReceive
+        },
+        {
+                const_cast<char *>("doPostReceive"),
+                const_cast<char *>("(ILio/openmessaging/Message;Lio/openmessaging/KeyValue;)V"),
+                (void *)&doPostReceive
+        }
     };
 
 END_NAMESPACE_3(io, openmessaging, consumer)
@@ -128,8 +124,8 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
 
     midAttributes = current.getMethodId(classPushConsumer, "attributes", buildSignature(Types::KeyValue_, 0));
     midResume = current.getMethodId(classPushConsumer, "resume", buildSignature(Types::void_, 0));
-    midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::long_, 0));
-    midSuspend2 = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::long_, 1, Types::long_));
+    midSuspend = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::void_, 0));
+    midSuspend2 = current.getMethodId(classPushConsumer, "suspend", buildSignature(Types::void_, 1, Types::long_));
     midIsSuspended = current.getMethodId(classPushConsumer, "isSuspended", buildSignature(Types::boolean_, 0));
     midAttachQueue = current.getMethodId(classPushConsumer, "attachQueue",
                                          buildSignature(Types::PushConsumer_, 2, Types::String_, Types::MessageListener_));
@@ -140,9 +136,10 @@ PushConsumerImpl::PushConsumerImpl(jobject proxy) : ServiceLifecycleImpl(proxy) 
     midDetachQueue = current.getMethodId(classPushConsumer, "detachQueue", buildSignature(Types::PushConsumer_, 1,
                                                                                           Types::String_));
     midAddInterceptor = current.getMethodId(classPushConsumerAdaptor, "addInterceptor",
-                                            buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
+                                            buildSignature(Types::void_, 2, Types::int_, Types::ConsumerInterceptor_));
+
     midRemoveInterceptor = current.getMethodId(classPushConsumerAdaptor, "removeInterceptor",
-                                               buildSignature(Types::void_, 1, Types::ConsumerInterceptor_));
+                                               buildSignature(Types::void_, 1, Types::int_));
 
     objectPushConsumerAdaptor = current.newObject(classPushConsumerAdaptor, midPushConsumerAdaptor, proxy);
 }

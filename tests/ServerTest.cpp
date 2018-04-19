@@ -6,7 +6,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     };
 
     TEST_F(ServerTest, testNameServer) {
-        std::cout << "Name server and broker should have started" << std::endl;
+        LOG_DEBUG << "Name server and broker should have started";
     }
 
 END_NAMESPACE_2(io, openmessaging)

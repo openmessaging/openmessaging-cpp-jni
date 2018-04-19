@@ -71,7 +71,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             context.deleteRef(classBrokerStartup);
             context.deleteRef(classNamesrvStartup);
 
-            std::cout << "RocketMQ server cluster tears down OK" << std::endl;
+            LOG_DEBUG << "RocketMQ server cluster tears down OK";
         }
 
     protected:

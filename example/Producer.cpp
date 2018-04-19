@@ -19,22 +19,11 @@ int main(int argc, char *argv[]) {
     // Define access point
     const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
 
-    // Define implementation driver class key
-    const string driverClassKey = "oms.driver.impl";
-
-    // Define implementation driver class
-    const string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
-
     load_library(accessPointUrl);
 
-    // Create Key-Value container to hold custom settings
-    KeyValuePtr kv(newKeyValue());
-
-    // Configure driver class
-    kv->put(driverClassKey, driverClass);
 
     // Acquire messaging access point instance through factory method
-    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl, kv));
+    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
 
     // Create a producer instance via MessageAccessPoint instance
     ProducerPtr producer = accessPoint->createProducer();
@@ -48,7 +37,7 @@ int main(int argc, char *argv[]) {
     char* buffer = new char[strlen(slogan) + 1];
     strcpy(buffer, slogan);
 
-    const MessageBody message_body(buffer, strlen(buffer));
+    const MessageBody message_body(reinterpret_cast<signed char *>(buffer), strlen(buffer));
 
     // Create message by producer, which also plays the role of message factory
     ByteMessagePtr message = producer->createBytesMessage(topic, message_body);

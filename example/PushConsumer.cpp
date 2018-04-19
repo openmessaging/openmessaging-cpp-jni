@@ -14,6 +14,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
             KeyValuePtr sysHeaders = message->sysHeaders();
             std::string msgId = sysHeaders->getString(MessageId);
             LOG_INFO << "A new message received. MsgId: " << msgId;
+            context->ack();
         }
     };
 
@@ -28,22 +29,10 @@ int main(int argc, char *argv[]) {
     // Define access point
     const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
 
-    // Define implementation driver class key
-    const string driverClassKey = "oms.driver.impl";
-
-    // Define implementation driver class
-    const string driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
-
     load_library(accessPointUrl);
 
-    // Create Key-Value container to hold custom settings
-    KeyValuePtr kv(newKeyValue());
-
-    // Configure driver class
-    kv->put(driverClassKey, driverClass);
-
     // Acquire messaging access point instance through factory method
-    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl, kv));
+    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
 
     std::string queueName("TopicTest");
 

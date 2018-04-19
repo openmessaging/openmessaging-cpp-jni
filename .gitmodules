@@ -7,4 +7,4 @@
 	url = https://github.com/google/benchmark.git
 [submodule "third_party/jdk8m"]
 	path = third_party/jdk8m
-	url = git@gitlab.alibaba-inc.com:messaging/jdk8m.git
+	url = https://github.com/lizhanhui/jdk8m.git

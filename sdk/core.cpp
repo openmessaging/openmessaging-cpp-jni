@@ -7,8 +7,6 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
-
-    using namespace std;
     using namespace boost::filesystem;
 
     const char* Types::void_ = "V";
@@ -43,8 +41,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::OMSException_ = "Lio/openmessaging/exception/OMSException;";
     const char* Types::Future_ = "Lio/openmessaging/Future;";
 
-    string buildSignature(const string &return_type, int n, ...) {
-        string signature = "(";
+    std::string buildSignature(const std::string &return_type, int n, ...) {
+        std::string signature = "(";
 
         va_list args;
         va_start(args, n);
@@ -125,7 +123,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         jmethodID midHasNext = current.getMethodId(classIterator, "hasNext", "()Z");
         jmethodID midNext = current.getMethodId(classIterator, "next", "()Ljava/lang/Object;");
 
-        set<std::string> nativeSet;
+        std::set<std::string> nativeSet;
 
         while (current.callBooleanMethod(objIterator, midHasNext)) {
             jobject item = current.callObjectMethod(objIterator, midNext);
@@ -151,7 +149,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const std::string wildcard = "*";
         if (stringEndsWith(path_with_wildcard, wildcard)) {
             const std::string dir = path_with_wildcard.substr(0, path_with_wildcard.size() - wildcard.size());
-            std::vector<std::string> files = list(dir, file_name_filter);
+            std::vector<std::string> files = list_files(dir, file_name_filter);
             for (std::vector<std::string>::size_type i = 0; i < files.size(); ++i) {
                 if (result.empty()) {
                     result = files[i];
@@ -171,15 +169,15 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         return s.substr(s.size() - ext.size()) == ext;
     }
 
-    std::vector<std::string> list(const std::string &dir, bool (*f)(const std::string&)) {
+    std::vector<std::string> list_files(const std::string &dir, bool (*f)(const std::string&)) {
         path p(dir);
-        vector<string> result;
+        std::vector<std::string> result;
         if (is_directory(p)) {
             directory_iterator iterator(p);
             directory_iterator end;
             while (iterator != end) {
                 directory_entry &entry = *iterator;
-                string full_file_name = entry.path().string();
+                std::string full_file_name = entry.path().string();
                 if (f(full_file_name)) {
                     result.push_back(full_file_name);
                 }

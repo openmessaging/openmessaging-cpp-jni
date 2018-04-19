@@ -60,7 +60,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     std::string expand_class_path(const std::string& wildcard);
 
-    std::vector<std::string> list(const std::string &dir, bool (*f)(const std::string&));
+    std::vector<std::string> list_files(const std::string &dir, bool (*f)(const std::string&));
 
     bool stringEndsWith(const std::string &s, const std::string &ext);
 

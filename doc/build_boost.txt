@@ -1,3 +1,5 @@
+https://stackoverflow.com/questions/27848105/how-to-force-compilation-of-boost-to-use-fpic
+
 // linux:
 sudo ./bootstrap.sh --with-toolset=clang
 sudo ./b2 --reconfigure stage toolset=clang cxxflags="-std=c++1z -fPIC -O3 -Werror -Wno-unused-local-typedef -Wno-deprecated-declarations -Wno-unused-function" link=static,shared variant=release threading=multi linkflags="-fPIC" define=BOOST_SYSTEM_NO_DEPRECATED -q toolset=clang -fPIC" define=BOOST_SYSTEM_NO_DEPRECATED -q

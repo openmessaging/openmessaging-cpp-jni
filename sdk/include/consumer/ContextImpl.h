@@ -11,16 +11,15 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         ContextImpl(jobject proxy);
 
-        virtual KeyValuePtr properties();
+        virtual KeyValuePtr attributes();
 
-        virtual void ack(KeyValuePtr props);
+        virtual void ack();
 
     private:
         jobject _proxy;
         jclass classContext;
-        jmethodID midProperties;
+        jmethodID midAttributes;
         jmethodID midAck;
-        jmethodID midAck2;
 
     };
 END_NAMESPACE_3(io, openmessaging, consumer)

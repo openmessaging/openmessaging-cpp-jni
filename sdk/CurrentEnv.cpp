@@ -187,12 +187,11 @@ jmethodID CurrentEnv::getMethodId(jclass klass, const char *method, const char* 
     }
 
     if (NULL == mid) {
-        jmethodID midGetName = env->GetMethodID(klass, "getName", "()Ljava/lang/String;");
-        jstring className = static_cast<jstring>(env->CallObjectMethod(klass, midGetName));
-        const char* name = env->GetStringUTFChars(className, NULL);
-        LOG_ERROR << "Class[" << name << "], Method[" << method << "], signature: [" << sig << "] is not found";
-        env->ReleaseStringUTFChars(className, name);
-        throw OMSException("Method is not found");
+        checkAndClearException();
+        LOG_ERROR << "Class[" << getClassName(klass) << "], Method[" << method << "], Signature: [" << sig << "] is not found";
+        std::string errorMessage = "Method is not found: ";
+        errorMessage += method;
+        throw OMSException(errorMessage);
     }
 
     return mid;
@@ -227,4 +226,18 @@ jstring CurrentEnv::newStringUTF(const char *buf, bool global) {
     }
 
     return result;
+}
+
+std::string CurrentEnv::getClassName(jclass klass) {
+    jmethodID midToString = env->GetMethodID(klass, "toString", "()Ljava/lang/String;");
+    jstring objString = static_cast<jstring>(env->CallObjectMethod(klass, midToString));
+    const char* className = env->GetStringUTFChars(objString, NULL);
+    std::string name(className);
+    env->ReleaseStringUTFChars(objString, className);
+    std::string::size_type separator = name.find(" ");
+    if (separator == std::string::npos) {
+        return name;
+    } else {
+        return name.substr(separator + 1);
+    }
 }

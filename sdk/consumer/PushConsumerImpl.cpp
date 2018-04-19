@@ -20,6 +20,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
     void onMessage(JNIEnv *env, jobject object, jstring queue, jobject message, jobject context) {
         const char* queue_name_char_ptr = env->GetStringUTFChars(queue, NULL);
+        LOG_DEBUG << "Incoming Message Queue Name: " << queue_name_char_ptr;
         std::string queue_name(queue_name_char_ptr);
         NS::shared_ptr<MessageListener> messageListenerPtr;
         {
@@ -28,6 +29,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         }
 
         if (messageListenerPtr) {
+            LOG_DEBUG << "Message Listener Found";
             NS::shared_ptr<Message> messagePtr = NS::make_shared<ByteMessageImpl>(message);
             NS::shared_ptr<Context> contextPtr = NS::make_shared<ContextImpl>(context);
             messageListenerPtr->onMessage(messagePtr, contextPtr);
@@ -179,7 +181,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
                                             const KeyValuePtr &props) {
     CurrentEnv ctx;
 
-    jmethodID ctor = ctx.getMethodId(classMessageListenerAdaptor, "<init>", buildSignature(Types::String_, 0));
+    jmethodID ctor = ctx.getMethodId(classMessageListenerAdaptor, "<init>", buildSignature(Types::void_, 1, Types::String_));
     const char* queueNameChars = queueName.c_str();
     jstring jQueueName = ctx.newStringUTF(queueNameChars);
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);

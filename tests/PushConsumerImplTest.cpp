@@ -17,7 +17,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         }
 
         virtual void onMessage(MessagePtr &message, ContextPtr &context) {
-            std::cout << "A message received" << std::endl;
+            LOG_DEBUG << "A message received";
+            context->ack();
             latch.countdown();
         }
 
@@ -70,7 +71,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         pushConsumer->attachQueue(queueName, messageListener);
 
         pushConsumer->startup();
-        cout << "Push consumer starts OK" << endl;
+        LOG_DEBUG << "Push consumer starts OK";
         latch.await();
         pushConsumer->shutdown();
     }

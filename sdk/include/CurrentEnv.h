@@ -96,6 +96,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         jstring newStringUTF(const char *buf, bool global = false);
 
+        std::string getClassName(jclass klass);
+
     private:
         bool attached;
     };

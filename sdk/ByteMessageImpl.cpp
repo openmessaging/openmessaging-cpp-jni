@@ -43,9 +43,6 @@ ByteMessageImpl::~ByteMessageImpl() {
 NS::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {
     CurrentEnv current;
     jobject jSysHeader = current.callObjectMethod(objectByteMessage, midSysHeaders);
-    if (current.checkAndClearException()) {
-        abort();
-    }
     NS::shared_ptr<KeyValue> headers = NS::make_shared<KeyValueImpl>(current.newGlobalRef(jSysHeader));
     return headers;
 }

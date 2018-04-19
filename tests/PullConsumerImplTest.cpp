@@ -22,14 +22,12 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();
 
-        string topic = "TopicTest";
+        string queueName = "TopicTest";
         const char* data = "HELLO";
         MessageBody body(reinterpret_cast<signed char *>(const_cast<char *>(data)), strlen(data));
-        MessagePtr message = producer->createBytesMessage(topic, body);
+        MessagePtr message = producer->createBytesMessage(queueName, body);
         producer::SendResultPtr sendResultPtr = producer->send(message);
         LOG_INFO << "Send Message OK. Message Id: " << sendResultPtr->messageId();
-
-        std::string queueName("TopicTest");
 
         KeyValuePtr kv(newKeyValueImpl());
         const std::string value = "OMS_CONSUMER";
@@ -41,19 +39,24 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         ASSERT_TRUE(pullConsumer);
 
         pullConsumer->startup();
-        pullConsumer->receive();
 
-//        while (true) {
-//            MessagePtr msg = pullConsumer->receive();
-//            if (msg) {
-//                KeyValuePtr sysHeaders = message->sysHeaders();
-//                std::string msgId = sysHeaders->getString(MessageId);
-//                ASSERT_TRUE(!msgId.empty());
-//                ASSERT_NO_THROW(pullConsumer->ack(msgId));
-//                break;
-//            }
-//        }
+        bool stopped = false;
+        while (!stopped) {
+            MessagePtr msgPtr = pullConsumer->receive();
+            if (msgPtr) {
 
+                KeyValuePtr sysHeaders = msgPtr->sysHeaders();
+                if (sysHeaders) {
+                    std::string msgId = sysHeaders->getString(MESSAGE_ID);
+                    LOG_DEBUG << "A message received. MsgId: " << msgId;
+                    if (msgId == sendResultPtr->messageId()) {
+                        LOG_INFO << "Message which was just sent is received. Stop receiving immediately.";
+                        stopped = true;
+                    }
+                }
+            }
+        }
+        pullConsumer->shutdown();
     }
 
 END_NAMESPACE_2(io, openmessaging)

@@ -14,14 +14,9 @@
 
 // forward declaration
 BEGIN_NAMESPACE_2(io, openmessaging)
-    class KeyValue;
-
     class MessagingAccessPoint;
 END_NAMESPACE_2(io, openmessaging)
 
-typedef io::openmessaging::KeyValue KeyValue;
-typedef io::openmessaging::KeyValuePtr KeyValuePtr;
-typedef io::openmessaging::MessagingAccessPoint MessagingAccessPoint;
 typedef io::openmessaging::OMSException OMSException;
 
 
@@ -65,22 +60,22 @@ typedef io::openmessaging::OMSException OMSException;
             }
         }
 
-        static KeyValue* newKeyValue() {
+        static io::openmessaging::KeyValue* newKeyValue() {
             if (NULL == handle) {
                 throw OMSException("Please call load_library first");
             }
 
-            typedef KeyValue* (*Fn)();
+            typedef io::openmessaging::KeyValue* (*Fn)();
             Fn fn;
             fn = (Fn)dlsym(handle, "newKeyValueImpl");
             return fn();
         }
 
-        static MessagingAccessPoint*
+        static io::openmessaging::MessagingAccessPoint*
         getMessagingAccessPoint(const std::string &url,
-                                const KeyValuePtr &props = KeyValuePtr()) {
+                                const io::openmessaging::KeyValuePtr &props = io::openmessaging::KeyValuePtr()) {
 
-            typedef MessagingAccessPoint* (*Fn)(const std::string&, const KeyValuePtr &);
+            typedef io::openmessaging::MessagingAccessPoint* (*Fn)(const std::string&, const io::openmessaging::KeyValuePtr &);
 
             if (NULL == handle) {
                 load_library(url);
@@ -93,12 +88,12 @@ typedef io::openmessaging::OMSException OMSException;
             return fn(url, props);
         }
 
-        MessagingAccessPoint*
+        io::openmessaging::MessagingAccessPoint*
         getMessagingAccessPointImpl(const std::string &url,
-                                    const KeyValuePtr &props = KeyValuePtr());
+                                    const io::openmessaging::KeyValuePtr &props = io::openmessaging::KeyValuePtr());
 
 
-        KeyValue* newKeyValueImpl();
+        io::openmessaging::KeyValue* newKeyValueImpl();
 
 #ifdef __cplusplus
     }

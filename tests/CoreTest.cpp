@@ -31,7 +31,7 @@ TEST(CoreTest, testList) {
         FAIL();
     }
     std::string path = std::string(rocketmqHome) + "/lib";
-    std::vector<std::string> files = io::openmessaging::list(path, io::openmessaging::file_name_filter);
+    std::vector<std::string> files = io::openmessaging::list_files(path, io::openmessaging::file_name_filter);
     for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); it++) {
         std::cout << *it << std::endl;
     }

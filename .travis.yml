@@ -13,7 +13,7 @@ matrix:
             - g++-4.9
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
          - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
@@ -28,7 +28,7 @@ matrix:
             - g++-5
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
@@ -43,7 +43,7 @@ matrix:
             - g++-6
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
@@ -58,7 +58,7 @@ matrix:
             - g++-7
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
@@ -75,7 +75,7 @@ matrix:
             - clang-3.6
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
 
@@ -91,7 +91,7 @@ matrix:
             - clang-3.7
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-3.7 && CXX=clang++-3.7"
 
@@ -107,7 +107,7 @@ matrix:
             - clang-3.8
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-3.8 && CXX=clang++-3.8"
 
@@ -122,7 +122,7 @@ matrix:
             - clang-3.9
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
@@ -137,7 +137,7 @@ matrix:
             - clang-4.0
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
 
@@ -152,7 +152,7 @@ matrix:
             - clang-5.0
             - cmake-data
             - cmake
-            - oracle-java8-installer
+            - oracle-java8-set-default
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 

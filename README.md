@@ -17,6 +17,7 @@ far the best resource to consult.
 1. [Application Design Specification](doc/ApplicationDesignSpecification.md)
 2. [Avoid Debugging Pitfalls Guide](doc/Debug.md)
 3. [JNI Programmer Guide](doc/JNI_guide.pdf)
+4. [Development Guide](doc/DevelopmentGuide.md)
 
 ## Prerequisite 
 1. CMake 3.0+

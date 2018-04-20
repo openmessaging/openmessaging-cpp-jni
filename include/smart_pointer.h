@@ -3,8 +3,6 @@
 
 #include "OMSException.h"
 
-typedef io::openmessaging::OMSException OMSException;
-
 // In case C++11 or later version is available.
 #if __cplusplus >= 201103L
     #include <memory>
@@ -63,7 +61,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             if (index < len_) {
                 return *(payload_ + index);
             }
-            throw OMSException("IndexOutOfBoundary");
+            throw io::openmessaging::OMSException("IndexOutOfBoundary");
         }
 
     private:

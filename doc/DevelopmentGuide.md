@@ -5,7 +5,7 @@ The following softwares are assumed installed in your operating system.
 
 1. Git
 2. C++ Tool chain
-3. CMake 3.x
+3. CMake 3.x
 
 ## Build & Install Boost
 This client SDK contains two parts: Open Messaging Specification Interfaces described in C++ and an implemetnation taking advantage of Java Native Interface Invocation API. The former is set of pure abstract classes; while the latter requires Java JNI library and several Boost component libraries which are statically linked against our shared library. Boost libraries are not required for end developers.

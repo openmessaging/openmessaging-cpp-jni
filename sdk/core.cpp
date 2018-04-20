@@ -192,21 +192,32 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const char* ROCKETMQ_HOME_KEY = "ROCKETMQ_HOME";
         const char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
         if (NULL == rocketmqHome) {
-            const char *vendor = "/usr/local/lib/oms/vendor";
+            std::string vendor = "/usr/local/lib/oms/vendor";
             path vendor_jar_dir(vendor);
             if (exists(vendor_jar_dir)) {
-                rocketmqHome = vendor;
-                setenv(ROCKETMQ_HOME_KEY, vendor, 1);
+                LOG_DEBUG << "Found OMS vendor implementation: " << vendor;
+                rocketmqHome = vendor.c_str();
+                setenv(ROCKETMQ_HOME_KEY, vendor.c_str(), 1);
                 LOG_DEBUG << "set ROCKETMQ_HOME=" << vendor;
             } else {
-                const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
-                LOG_ERROR << msg;
-                throw OMSException(msg);
+                std::string home = getenv("HOME");
+                vendor = home + "/oms/vendor";
+                path alternative(vendor);
+                if (exists(alternative)) {
+                    LOG_DEBUG << "Found OMS vendor implementation: " << vendor;
+                    rocketmqHome = vendor.c_str();
+                    setenv(ROCKETMQ_HOME_KEY, vendor.c_str(), 1);
+                    LOG_DEBUG << "set ROCKETMQ_HOME=" << vendor;
+                } else {
+                    const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
+                    LOG_ERROR << msg;
+                    throw OMSException(msg);
+                }
             }
         }
         std::string lib_dir = std::string(rocketmqHome) + "/lib/*";
         std::string expanded_class_path = expand_class_path(lib_dir);
-        LOG_INFO << "Class Path: " << expanded_class_path;
+        LOG_DEBUG << "Class Path: " << expanded_class_path;
         return option + expanded_class_path;
     }
 

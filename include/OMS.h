@@ -17,9 +17,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     class MessagingAccessPoint;
 END_NAMESPACE_2(io, openmessaging)
 
-typedef io::openmessaging::OMSException OMSException;
-
-
 #ifdef __cplusplus
     extern "C" {
 #endif
@@ -55,14 +52,14 @@ typedef io::openmessaging::OMSException OMSException;
                     msg += ". Reason: ";
                     msg += dlerror();
                     std::cout << msg << std::endl;
-                    throw OMSException(msg);
+                    throw io::openmessaging::OMSException(msg);
                 }
             }
         }
 
         static io::openmessaging::KeyValue* newKeyValue() {
             if (NULL == handle) {
-                throw OMSException("Please call load_library first");
+                throw io::openmessaging::OMSException("Please call load_library first");
             }
 
             typedef io::openmessaging::KeyValue* (*Fn)();

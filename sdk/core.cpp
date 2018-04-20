@@ -196,6 +196,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             path vendor_jar_dir(vendor);
             if (exists(vendor_jar_dir)) {
                 rocketmqHome = vendor;
+                setenv(ROCKETMQ_HOME_KEY, vendor, 1);
+                LOG_DEBUG << "set ROCKETMQ_HOME=" << vendor;
             } else {
                 const char *msg = "Environment variable: ROCKETMQ_HOME is not set";
                 LOG_ERROR << msg;

@@ -11,7 +11,7 @@ cd ${HOME}/${BOOST}
 
 ./bootstrap.sh --prefix=/usr/local --with-libraries=system,filesystem,chrono,thread,date_time
 
-./bjam cflags="-fPIC" cxxflags="-fPIC" link=static \
+sudo   ./bjam cflags="-fPIC" cxxflags="-fPIC" link=static \
        --with-system --with-thread --with-date_time --with-filesystem --with-chrono  \
        -a install \
        > ${HOME}/build.log

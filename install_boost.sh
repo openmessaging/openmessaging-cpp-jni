@@ -15,3 +15,7 @@ cd ${HOME}/${BOOST}
        --with-system --with-thread --with-date_time --with-filesystem --with-chrono  \
        -a install \
        > ${HOME}/build.log
+
+if [ $? != 0 ]; then
+    tail -n 300 ${HOME}/build.log
+fi

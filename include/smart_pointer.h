@@ -59,6 +59,13 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             return len_;
         }
 
+        T& operator[](int index) {
+            if (index < len_) {
+                return *(payload_ + index);
+            }
+            throw OMSException("IndexOutOfBoundary");
+        }
+
     private:
         T* payload_;
         unsigned int len_;

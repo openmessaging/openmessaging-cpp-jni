@@ -4,7 +4,7 @@ add_executable(runUnitTests
         RunAllTest.cpp
         smart_pointer_test.cpp
         CountdownLatch.cpp
-        scoped_array_test.cpp
+        ManagedArrayTest.cpp
         ByteMessageImplTest.cpp
         UncopyableTest.cpp
         CoreTest.cpp

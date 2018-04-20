@@ -1,3 +1,7 @@
+## Build Status
+
+![Status](https://travis-ci.org/lizhanhui/openmessaging-cpp.svg?branch=develop)
+
 ## Introduction
 This project contains two modules: OpenMessaging C++ Specification API and JNI-based implementation.
 

@@ -1,160 +1,164 @@
 language: cpp
 
-script: ./ci.sh
-
 matrix:
   include:
-    # GCC 4.9
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-4.9
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
          - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
-    # GCC 5
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-5
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
-    # GCC 6
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-6
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-    # GCC 7
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-7
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-    # Clang 3.6
+
+
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
+            - george-edison55-precise-backports
           packages:
             - clang-3.6
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
 
-    # Clang 3.7
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
+            - george-edison55-precise-backports
           packages:
             - clang-3.7
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-3.7 && CXX=clang++-3.7"
 
-    # Clang 3.8
+    # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
+            - george-edison55-precise-backports
           packages:
             - clang-3.8
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-3.8 && CXX=clang++-3.8"
 
-    # Clang 3.9
+    # works on Trusty
     - os: linux
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-3.9
+            - george-edison55-precise-backports
           packages:
             - clang-3.9
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
 
-    # Clang 4.0
+    # works on Trusty
     - os: linux
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-4.0
+            - george-edison55-precise-backports
           packages:
             - clang-4.0
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
 
-    # Clang 5.0
+    # works on Trusty
     - os: linux
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-5.0
+            - george-edison55-precise-backports
           packages:
             - clang-5.0
             - cmake-data
             - cmake
-            - openjdk-8-jdk
-            - libboost-all-dev
+            - oracle-java8-installer
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
 before_install:
     - eval "${MATRIX_EVAL}"
+
+script:
+    - ./install_boost.sh
+    - ./ci.sh

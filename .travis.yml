@@ -161,4 +161,5 @@ before_install:
 
 script:
     - ./install_boost.sh
+    - ./install_oms_impl.sh
     - ./ci.sh

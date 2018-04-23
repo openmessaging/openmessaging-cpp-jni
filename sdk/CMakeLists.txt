@@ -30,7 +30,7 @@ target_link_libraries(oms_rocketmq
         ${BOOST_filesystem_LIBRARY}
         ${BOOST_system_LIBRARY})
 
-if (UNIX AND NOT APPLE)
+if (USE_EMBEDDED_VM)
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS "-Wl,-rpath,'$ORIGIN/vm/lib/amd64/server/'")
 endif ()
 

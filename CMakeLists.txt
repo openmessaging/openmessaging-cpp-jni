@@ -39,6 +39,7 @@ else()
                 ${CMAKE_SOURCE_DIR}/third_party/jdk8m/include/linux)
         set(JAVA_JVM_LIBRARY
                 ${CMAKE_SOURCE_DIR}/third_party/jdk8m/lib/amd64/server/libjvm.so)
+        option(USE_EMBEDDED_VM ON)
     else()
         find_package(JNI REQUIRED)
     endif ()

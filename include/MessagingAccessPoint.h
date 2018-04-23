@@ -16,16 +16,22 @@
 BEGIN_NAMESPACE_2(io, openmessaging)
 
     /**
-     * The {@code MessagingAccessPoint} obtained from {@link MessagingAccessPointFactory} is capable of creating {@code
-     * Producer}, {@code Consumer}, {@code ServiceEndPoint}, and so on. <p> For example:
+     * An instance of {@code MessagingAccessPoint} may be obtained from {@link OMS}, which is capable of creating {@code
+     * Producer}, {@code Consumer}, {@code ResourceManager}, and other facility entities.
+     * <p>
+     * For example:
      * <pre>
-     * MessagingAccessPoint messagingAccessPoint = MessagingAccessPointFactory.getMessagingAccessPoint("openmessaging:rocketmq://localhost:10911/namespace");
-     * Producer producer = messagingAccessPoint.createProducer();
-     * producer.send(producer.createTopicBytesMessage("HELLO_TOPIC", "HELLO_BODY".getBytes(Charset.forName("UTF-8"))));
+     * MessagingAccessPoint* accessPoint = getMessagingAccessPoint("oms:rocketmq://alice@rocketmq.apache.org/us-east:default_space");
+     * accessPoint->startup();
+     * ProducerPtr producer = accessPoint->createProducer();
+     * producer->startup();
+     * const char* body = "Hello OMS";
+     * MessagePtr msg = producer->createBytesMessage("HELLO_QUEUE", MessageBody(body, strlen(body));
+     * producer->send(msg);
      * </pre>
      *
-     * @version OMS 1.0
-     * @since OMS 1.0
+     * @version OMS 1.0.0
+     * @since OMS 1.0.0
      */
     class MessagingAccessPoint : public virtual ServiceLifecycle {
     public:

@@ -1,6 +1,6 @@
 #include <plog/Log.h>
 
-#include "NonStandardKeys.h"
+#include "BuiltinKeys.h"
 #include "OMS.h"
 #include "consumer/PullConsumer.h"
 #include "MessagingAccessPoint.h"
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
     KeyValuePtr subKV(newKeyValue());
     const std::string consumer_group_value = "OMS_CONSUMER";
-    subKV->put(CONSUMER_GROUP, consumer_group_value);
+    subKV->put(CONSUMER_ID, consumer_group_value);
 
 
     consumer::PullConsumerPtr pullConsumer = accessPoint->createPullConsumer(subKV);
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         MessagePtr msg = pullConsumer->receive();
         if (msg) {
             KeyValuePtr sysHeaders = msg->sysHeaders();
-            std::string msgId = sysHeaders->getString(MessageId);
+            std::string msgId = sysHeaders->getString(MESSAGE_ID);
             LOG_INFO << "Receive a new message. MsgId: " << msgId;
             pullConsumer->ack(msgId);
             LOG_INFO << "Acknowledging " << msgId << " OK";

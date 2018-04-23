@@ -1,5 +1,5 @@
 #include <plog/Log.h>
-#include "NonStandardKeys.h"
+#include "BuiltinKeys.h"
 #include "OMS.h"
 #include "consumer/MessageListener.h"
 #include "consumer/PushConsumer.h"
@@ -12,7 +12,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         virtual void onMessage(MessagePtr &message, ContextPtr &context) {
             KeyValuePtr sysHeaders = message->sysHeaders();
-            std::string msgId = sysHeaders->getString(MessageId);
+            std::string msgId = sysHeaders->getString(MESSAGE_ID);
             LOG_INFO << "A new message received. MsgId: " << msgId;
             context->ack();
         }
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
     KeyValuePtr subKV(newKeyValue());
     const std::string value = "OMS_CONSUMER";
-    subKV->put(CONSUMER_GROUP, value);
+    subKV->put(CONSUMER_ID, value);
 
     consumer::PushConsumerPtr pushConsumer = accessPoint->createPushConsumer(subKV);
 

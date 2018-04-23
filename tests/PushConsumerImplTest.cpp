@@ -3,10 +3,9 @@
 #include "consumer/PushConsumerImpl.h"
 #include "KeyValueImpl.h"
 #include "MessagingAccessPointImpl.h"
-#include "NonStandardKeys.h"
 #include "CountdownLatch.h"
 #include "BaseTest.h"
-#include "NonStandardKeys.h"
+#include "BuiltinKeys.h"
 
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
@@ -59,7 +58,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         KeyValuePtr kv(newKeyValueImpl());
         const std::string value = "OMS_CONSUMER";
-        kv->put(CONSUMER_GROUP, value);
+        kv->put(CONSUMER_ID, value);
 
         consumer::PushConsumerPtr pushConsumer = messagingAccessPoint->createPushConsumer(kv);
 

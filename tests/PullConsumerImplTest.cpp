@@ -3,7 +3,7 @@
 #include "MessagingAccessPoint.h"
 #include "core.h"
 #include "KeyValueImpl.h"
-#include "NonStandardKeys.h"
+#include "BuiltinKeys.h"
 #include "BaseTest.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         KeyValuePtr kv(newKeyValueImpl());
         const std::string value = "OMS_CONSUMER";
-        kv->put(CONSUMER_GROUP, value);
+        kv->put(CONSUMER_ID, value);
 
         consumer::PullConsumerPtr pullConsumer = messagingAccessPoint->createPullConsumer(kv);
         pullConsumer->attachQueue(queueName);

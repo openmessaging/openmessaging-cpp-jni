@@ -8,7 +8,7 @@ BOOST=boost_1_67_0
 
 if [ ! -d ${WORK_DIR}/third_party/${BOOST} ]; then
     wget -O ${WORK_DIR}/third_party/boost_1_67_0.tar.gz https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.gz
-    tar -xzf ${WORK_DIR}/boost_1_67_0.tar.gz -C ${WORK_DIR}/third_party
+    tar -xzf ${WORK_DIR}/third_party/boost_1_67_0.tar.gz -C ${WORK_DIR}/third_party
 fi
 
 cd ${WORK_DIR}/third_party/${BOOST}

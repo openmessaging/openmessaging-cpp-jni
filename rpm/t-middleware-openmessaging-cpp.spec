@@ -39,11 +39,15 @@ C++ Client of Open Messaging Specification
 
 # create dirs
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}
-SRC_DIR=$OLDPWD/../
+SRC_DIR=$OLDPWD/..
 cd $SRC_DIR/third_party
 wget -O vendor.tar.gz http://shutian.oss-cn-hangzhou.aliyuncs.com/vendor.tar.gz
 tar -xzvf vendor.tar.gz
-cd $SRC_DIR/build/; cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} ..; make %{_smp_mflags}; make install;
+mkdir -p $SRC_DIR/build
+cd $SRC_DIR/build
+cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} ..
+make %{_smp_mflags}
+make install;
 
 # create a crontab of the package
 #echo "

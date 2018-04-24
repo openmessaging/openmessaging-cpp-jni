@@ -70,3 +70,6 @@ if (BENCHMARK)
     include_directories(SYSTEM third_party/benchmark/include)
     add_subdirectory(benchmark)
 endif ()
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/third_party/vendor DESTINATION lib/oms)

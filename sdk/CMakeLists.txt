@@ -35,8 +35,8 @@ if (USE_EMBEDDED_VM)
 endif ()
 
 set_target_properties(oms_rocketmq PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        OUTPUT_NAME oms_jni
-        )
+                      LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                      OUTPUT_NAME oms_jni)
 
-install(TARGETS oms_rocketmq LIBRARY DESTINATION lib)
+install(TARGETS oms_rocketmq
+        LIBRARY DESTINATION lib)

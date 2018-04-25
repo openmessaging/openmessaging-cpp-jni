@@ -3,3 +3,5 @@ cmake-build-debug
 CMakeLists.txt.user
 dist
 dist.tar.gz
+third_party/vendor/
+third_party/vendor.tar.gz

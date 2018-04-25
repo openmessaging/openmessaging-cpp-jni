@@ -18,6 +18,14 @@ endif ()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wshadow")
 set(CMAKE_VERBOSE_MAKEFILE ON)
+math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
+
+if(BITS EQUAL 64)
+    set(LIB_NAME "lib64")
+else()
+    set(LIB_NAME "lib")
+endif()
+
 #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
 
 find_package(Boost REQUIRED)
@@ -72,4 +80,4 @@ if (BENCHMARK)
 endif ()
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/third_party/vendor DESTINATION lib/oms)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/third_party/vendor DESTINATION ${LIB_NAME}/oms)

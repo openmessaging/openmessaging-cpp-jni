@@ -192,7 +192,17 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         const char* ROCKETMQ_HOME_KEY = "ROCKETMQ_HOME";
         const char *rocketmqHome = getenv(ROCKETMQ_HOME_KEY);
         if (NULL == rocketmqHome) {
-            std::string vendor = "/usr/local/lib/oms/vendor";
+
+            // Construct default library path
+            int bits = 8 * sizeof(void*);
+            std::string vendor = "/usr/";
+            if (bits == 32) {
+                vendor += "lib";
+            } else {
+                vendor += "lib" + std::to_string(bits);
+            }
+            vendor += "/oms/vendor";
+
             path vendor_jar_dir(vendor);
             if (exists(vendor_jar_dir)) {
                 LOG_DEBUG << "Found OMS vendor implementation: " << vendor;

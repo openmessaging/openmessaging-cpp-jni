@@ -39,4 +39,4 @@ set_target_properties(oms_rocketmq PROPERTIES
                       OUTPUT_NAME oms_jni)
 
 install(TARGETS oms_rocketmq
-        LIBRARY DESTINATION lib)
+        LIBRARY DESTINATION ${LIB_NAME})

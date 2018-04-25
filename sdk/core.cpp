@@ -196,7 +196,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
             // Construct default library path
             int bits = 8 * sizeof(void*);
-            std::string vendor = "/usr/";
+            std::string vendor = "/usr/local/";
             if (bits == 32) {
                 vendor += "lib";
             } else {

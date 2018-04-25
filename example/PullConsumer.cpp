@@ -1,10 +1,6 @@
 #include <plog/Log.h>
 
-#include "BuiltinKeys.h"
-#include "OMS.h"
-#include "consumer/PullConsumer.h"
-#include "MessagingAccessPoint.h"
-
+#include <OpenMessaging.h>
 
 using namespace std;
 using namespace io::openmessaging;
@@ -13,8 +9,6 @@ int main(int argc, char *argv[]) {
 
     // Define access point
     const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
-
-    load_library(accessPointUrl);
 
     // Acquire messaging access point instance through factory method
     MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));

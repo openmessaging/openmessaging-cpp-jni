@@ -50,7 +50,9 @@ cd $SRC_DIR/build
 export JAVA_HOME=/opt/taobao/java
 cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} -D TEST=OFF ..
 make %{_smp_mflags}
-make install;
+make install
+mkdir -p ${RPM_BUILD_ROOT}/etc/ld.so.conf.d
+cp $SRC_DIR/oms.conf ${RPM_BUILD_ROOT}/etc/ld.so.conf.d/
 
 # create a crontab of the package
 #echo "

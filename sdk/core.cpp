@@ -67,7 +67,16 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         size_t max_file_size = 1024 * 1024 * 100;
         static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(file_name.c_str(), max_file_size, 10);
         static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-        plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+        const char* level = getenv("OMS_LOG_LEVEL");
+        if (NULL == level || std::string("debug") == level) {
+            plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+        } else if (std::string("info") == level) {
+            plog::init(plog::info, &fileAppender).addAppender(&consoleAppender);
+        } else if (std::string("warn") == level) {
+            plog::init(plog::warning, &fileAppender).addAppender(&consoleAppender);
+        } else {
+            plog::init(plog::fatal, &fileAppender).addAppender(&consoleAppender);
+        }
     }
 
     void init0() {
@@ -77,12 +86,41 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         NS::shared_ptr<JavaOption> jOptions = NS::make_shared<JavaOption>(JNI_VERSION_1_8);
         std::string class_path_option = build_class_path_option();
         jOptions->addOption(class_path_option);
-        jOptions->addOption("-Xms1G");
-        jOptions->addOption("-Xmx1G");
-        jOptions->addOption("-verbose");
-        jOptions->addOption("-Xcheck:jni");
-//        jOptions->addOption("-Drocketmq.namesrv.addr=localhost:9876");
-//        jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
+
+        const char* maxHeapSize = getenv("OMS_VM_MAX_HEAP");
+        if (NULL == maxHeapSize) {
+            jOptions->addOption("-Xmx1G");
+            LOG_INFO << "Default maximum heap size: 1G";
+        } else {
+            std::string max("-Xmx");
+            max += maxHeapSize;
+            jOptions->addOption(max);
+            LOG_INFO << "Maximum heap size: " << maxHeapSize;
+        }
+
+        const char* minHeapSize = getenv("OMS_VM_MIN_HEAP");
+        if (NULL == minHeapSize) {
+            jOptions->addOption("-Xms1G");
+            LOG_INFO << "Default minimum heap size: 1G";
+        } else {
+            std::string minHeap("-Xms");
+            minHeap += minHeapSize;
+            jOptions->addOption(minHeap);
+            LOG_INFO << "Min heap size: " << minHeapSize;
+        }
+
+        const char* verbose = getenv("OMS_VM_VERBOSE");
+        if (NULL != verbose && std::string("true") == verbose) {
+            jOptions->addOption("-verbose");
+            jOptions->addOption("-Xcheck:jni");
+            LOG_INFO << "Verbose output enabled";
+        }
+
+        const char* debug = getenv("OMS_VM_DEBUG");
+        if (NULL != debug && std::string("true") == debug) {
+            jOptions->addOption("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005");
+            LOG_INFO << "Debug enabled";
+        }
 
         int optionCount = jOptions->options.size();
         JavaVMOption *options = new JavaVMOption[optionCount];

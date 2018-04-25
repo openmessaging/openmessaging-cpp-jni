@@ -97,3 +97,4 @@ endif ()
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/third_party/vendor DESTINATION ${LIB_NAME}/oms)
+install(FILES ${CMAKE_SOURCE_DIR}/oms.conf DESTINATION /etc/ld.so.conf.d)

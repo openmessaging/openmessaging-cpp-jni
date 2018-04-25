@@ -9,8 +9,8 @@ Release: %(echo $RELEASE)%{?dist}
 # uncomment below
 Summary: C++ Client of Open Messaging Specification
 Group: alibaba/application
-License: Commercial
-%define _prefix /usr
+License: Apache License Version 2.0
+%define _prefix /usr/local
 
 
 
@@ -19,7 +19,6 @@ License: Commercial
 
 BuildRequires: cmake
 BuildRequires: t-middleware-openmessaging-boost
-BuildRequires: ali-jdk = 1.8.0_66
 
 # uncomment below, if depend on other packages
 
@@ -59,7 +58,7 @@ make install;
 #3 * * * * ads /home/a/bin/every_hour
 #" > %{_crontab}
 
-# package infomation
+# package information
 %files
 # set file attribute here
 %defattr(-,root,root)

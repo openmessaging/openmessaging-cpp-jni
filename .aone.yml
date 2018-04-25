@@ -1,3 +1,4 @@
 t-middleware-openmessaging-cpp:
   pkgpara:
     DOCKER: 1
+    jdk_version: JDK1.8.0.25

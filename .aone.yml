@@ -1,0 +1,3 @@
+t-middleware-openmessaging-cpp:
+  pkgpara:
+    DOCKER: 1

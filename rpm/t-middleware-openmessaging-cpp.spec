@@ -47,7 +47,7 @@ wget -O vendor.tar.gz http://shutian.oss-cn-hangzhou.aliyuncs.com/vendor.tar.gz
 tar -xzvf vendor.tar.gz
 mkdir -p $SRC_DIR/build
 cd $SRC_DIR/build
-cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} ..
+cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} -D TEST=OFF ..
 make %{_smp_mflags}
 make install;
 

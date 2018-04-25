@@ -11,6 +11,8 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
 
         ContextImpl(jobject proxy);
 
+        virtual ~ContextImpl();
+
         virtual KeyValuePtr attributes();
 
         virtual void ack();

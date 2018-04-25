@@ -16,6 +16,11 @@ ContextImpl::ContextImpl(jobject proxy) : _proxy(proxy) {
     midAck = current.getMethodId(classContext, "ack", buildSignature(Types::void_, 0));
 }
 
+ContextImpl::~ContextImpl() {
+    CurrentEnv context;
+    context.deleteRef(_proxy);
+}
+
 KeyValuePtr ContextImpl::attributes() {
     CurrentEnv current;
     jobject jPropertiesLocal = current.callObjectMethod(_proxy, midAttributes);

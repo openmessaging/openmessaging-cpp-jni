@@ -37,7 +37,7 @@ ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
 
 ByteMessageImpl::~ByteMessageImpl() {
     CurrentEnv current;
-    current.env->DeleteGlobalRef(objectByteMessage);
+    current.deleteRef(objectByteMessage);
 }
 
 NS::shared_ptr<KeyValue> ByteMessageImpl::sysHeaders() {

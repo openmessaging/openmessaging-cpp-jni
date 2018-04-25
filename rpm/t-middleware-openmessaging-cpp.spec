@@ -11,6 +11,7 @@ Summary: C++ Client of Open Messaging Specification
 Group: alibaba/application
 License: Apache License Version 2.0
 %define _prefix /usr/local
+%define _ld_conf /etc/ld.so.conf.d
 
 
 
@@ -51,8 +52,8 @@ export JAVA_HOME=/opt/taobao/java
 cmake -DCMAKE_INSTALL_PREFIX=${RPM_BUILD_ROOT}/%{_prefix} -D TEST=OFF ..
 make %{_smp_mflags}
 make install
-mkdir -p ${RPM_BUILD_ROOT}/etc/ld.so.conf.d
-cp $SRC_DIR/oms.conf ${RPM_BUILD_ROOT}/etc/ld.so.conf.d/
+mkdir -p ${RPM_BUILD_ROOT}/%{_ld_conf}
+cp $SRC_DIR/oms.conf ${RPM_BUILD_ROOT}/%{_ld_conf}
 
 # create a crontab of the package
 #echo "
@@ -66,6 +67,7 @@ cp $SRC_DIR/oms.conf ${RPM_BUILD_ROOT}/etc/ld.so.conf.d/
 %defattr(-,root,root)
 # need not list every file here, keep it as this
 %{_prefix}
+%{_ld_conf}
 ## create an empy dir
 
 # %dir %{_prefix}/var/log

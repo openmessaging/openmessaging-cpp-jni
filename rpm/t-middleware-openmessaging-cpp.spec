@@ -15,8 +15,10 @@ License: Commercial
 
 
 # uncomment below, if your building depend on other packages
-
 #BuildRequires: package_name = 1.0.0
+
+BuildRequires: cmake
+BuildRequires: t-middleware-openmessaging-boost
 
 # uncomment below, if depend on other packages
 

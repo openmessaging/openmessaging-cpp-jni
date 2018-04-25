@@ -3,6 +3,7 @@
 
 #include "core.h"
 
+#include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
 BEGIN_NAMESPACE_2(io, openmessaging)
@@ -199,7 +200,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             if (bits == 32) {
                 vendor += "lib";
             } else {
-                vendor += "lib" + std::to_string(bits);
+                vendor += "lib" + boost::lexical_cast<std::string>(bits);
             }
             vendor += "/oms/vendor";
 

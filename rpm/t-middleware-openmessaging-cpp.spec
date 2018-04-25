@@ -10,7 +10,7 @@ Release: %(echo $RELEASE)%{?dist}
 Summary: C++ Client of Open Messaging Specification
 Group: alibaba/application
 License: Commercial
-%define _prefix /usr/local
+%define _prefix /usr
 
 
 

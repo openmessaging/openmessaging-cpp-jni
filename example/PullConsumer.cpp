@@ -13,15 +13,11 @@ int main(int argc, char *argv[]) {
     // Acquire messaging access point instance through factory method
     MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
 
-    std::string queueName("TopicTest");
-
     KeyValuePtr subKV(newKeyValue());
-    const std::string consumer_group_value = "OMS_CONSUMER";
-    subKV->put(CONSUMER_ID, consumer_group_value);
-
-
+    subKV->put(CONSUMER_ID, "OMS_CONSUMER");
     consumer::PullConsumerPtr pullConsumer = accessPoint->createPullConsumer(subKV);
-    pullConsumer->attachQueue(queueName);
+
+    pullConsumer->attachQueue("TopicTest");
 
     pullConsumer->startup();
 

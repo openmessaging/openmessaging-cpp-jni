@@ -29,15 +29,11 @@ int main(int argc, char *argv[]) {
         producer->startup();
 
         // Now that producers are ready to deliver, we are about to create messages
-        const string topic = "TopicTest";
         const char *slogan = "OpenMessagingService is the NEXT generation of messaging system";
-        char* buffer = new char[strlen(slogan) + 1];
-        strcpy(buffer, slogan);
-
-        const MessageBody message_body(reinterpret_cast<signed char *>(buffer), strlen(buffer));
+        const MessageBody message_body((signed char*)slogan, strlen(slogan));
 
         // Create message by producer, which also plays the role of message factory
-        ByteMessagePtr message = producer->createBytesMessage(topic, message_body);
+        ByteMessagePtr message = producer->createBytesMessage("TopicTest", message_body);
 
         for (int i = 0; i < count; ++i) {
             // Send message

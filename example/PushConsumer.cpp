@@ -28,8 +28,6 @@ int main(int argc, char *argv[]) {
     // Acquire messaging access point instance through factory method
     MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
 
-    std::string queueName("TopicTest");
-
     KeyValuePtr subKV(newKeyValue());
     const std::string value = "OMS_CONSUMER";
     subKV->put(CONSUMER_ID, value);
@@ -40,7 +38,7 @@ int main(int argc, char *argv[]) {
     MessageListenerPtr messageListener(new ExampleMessageListener);
 
     // Attach listener to queue
-    pushConsumer->attachQueue(queueName, messageListener);
+    pushConsumer->attachQueue("TopicTest", messageListener);
 
     // Start push consumer
     pushConsumer->startup();

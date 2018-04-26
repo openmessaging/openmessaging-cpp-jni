@@ -19,6 +19,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             const char *NAME_SRV_ADDR_KEY = "NAMESRV_ADDR";
             const char *NAME_SRV_ADDR_VALUE = "localhost:9876";
 
+            setenv("OMS_RMQ_DIRECT_NAME_SRV", "true", overwrite);
             setenv(NAME_SRV_ADDR_KEY, NAME_SRV_ADDR_VALUE, overwrite);
 
             Initialize();

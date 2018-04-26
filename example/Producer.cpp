@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     if (argc > 1) {
         char* end;
-        count = static_cast<int>(std::strtol(argv[0], &end, 10));
+        count = static_cast<int>(std::strtol(argv[1], &end, 10));
     }
 
     // Define access point

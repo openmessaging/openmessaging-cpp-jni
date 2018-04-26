@@ -1,6 +1,5 @@
-#include <boost/lexical_cast.hpp>
 #include <plog/Log.h>
-
+#include <cstdlib>
 #include <OpenMessaging.h>
 
 using namespace std;
@@ -12,7 +11,8 @@ int main(int argc, char *argv[]) {
     int count = 128;
 
     if (argc > 1) {
-        count = boost::lexical_cast<int>(argv[1]);
+        char* end;
+        count = static_cast<int>(std::strtol(argv[0], &end, 10));
     }
 
     // Define access point

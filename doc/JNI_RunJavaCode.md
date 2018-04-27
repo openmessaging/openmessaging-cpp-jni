@@ -149,7 +149,7 @@ the added parts:
 ``jclass klass = env->FindClass("Ch02_1");`` requests embedded JVM to load class specified.
 Qualified class name is used, separated by '/'. For example, if we were to load class java.lang.String, we need
 to ```jclass klassString = env->FindClass("java/lang/String");``` If the class loader cannot find it,
-NULL will returned.
+NULL will be returned.
 
 Like Java Reflection API, before invoking a method, we need to acquire its method ID. In Invocation API,
 `GetStaiticMethodID` and `GetMethodID` is employed for static and member method respectively. Both of them

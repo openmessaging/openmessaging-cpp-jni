@@ -78,5 +78,6 @@ Clion has very good support of projects managed by CMake. Clone the source code 
 
 ## Build and Develop in Visual Studio Code
 
-## Familiarize Yourself with JNI
-1. [Launch and Shutdown JVM from Native](JNI_Introduction.md)
+## Hands-on JNI Seminar
+1. [Launch and Shutdown JVM](JNI_Introduction.md)
+2. [Run Java Code](JNI_RunJavaCode.md)

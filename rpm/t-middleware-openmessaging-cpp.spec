@@ -20,6 +20,7 @@ License: Apache License Version 2.0
 
 BuildRequires: cmake
 BuildRequires: t-middleware-openmessaging-boost
+BuildRequires: ali-jdk = 1.8.0_66
 
 # uncomment below, if depend on other packages
 

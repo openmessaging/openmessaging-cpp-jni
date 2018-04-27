@@ -65,10 +65,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         KeyValuePtr kv(newKeyValueImpl());
         ASSERT_TRUE(kv);
 
-        KeyValueImplPtr impl = NS::dynamic_pointer_cast<KeyValueImpl>(kv);
-        ASSERT_TRUE(impl);
-
-        jobject  proxy = impl->getProxy();
-        ASSERT_TRUE(proxy);
+        jobject attr = (dynamic_cast<KeyValueImpl*>(kv.get()))->getProxy();
+        ASSERT_TRUE(NULL != attr);
     }
 END_NAMESPACE_2(io, openmessaging)

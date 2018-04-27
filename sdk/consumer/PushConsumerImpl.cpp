@@ -193,8 +193,8 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
 
     jobject ret;
     if (props) {
-        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        ret = ctx.callObjectMethod(_proxy, midAttachQueue2, jQueueName, messageListener, ptr->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        ret = ctx.callObjectMethod(_proxy, midAttachQueue2, jQueueName, messageListener, kv);
     } else {
         ret = ctx.callObjectMethod(_proxy, midAttachQueue, jQueueName, messageListener);
     }

@@ -38,8 +38,8 @@ PullConsumer& PullConsumerImpl::attachQueue(const std::string &queueName, const 
     jstring jQueueName = current.newStringUTF(queueName.c_str());
     jobject jPullConsumer;
     if (properties) {
-        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(properties);
-        jPullConsumer = current.callObjectMethod(_proxy, midAttachQueue2, jQueueName, ptr->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(properties.get()))->getProxy();
+        jPullConsumer = current.callObjectMethod(_proxy, midAttachQueue2, jQueueName, kv);
     } else {
         jPullConsumer = current.callObjectMethod(_proxy, midAttachQueue, jQueueName);
     }
@@ -66,8 +66,8 @@ MessagePtr PullConsumerImpl::receive(const KeyValuePtr &props) {
 
     jobject jMessageLocal;
     if (props) {
-        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        jMessageLocal = current.callObjectMethod(_proxy, midReceive2, ptr->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        jMessageLocal = current.callObjectMethod(_proxy, midReceive2, kv);
     } else {
         jMessageLocal = current.callObjectMethod(_proxy, midReceive);
     }
@@ -89,8 +89,8 @@ void PullConsumerImpl::ack(const std::string &messageId, const KeyValuePtr &prop
 
     jstring msgId = current.newStringUTF(messageId.c_str());
     if (props) {
-        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        current.callObjectMethod(_proxy, midAck2, msgId, ptr->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        current.callObjectMethod(_proxy, midAck2, msgId, kv);
     } else {
         current.callObjectMethod(_proxy, midAck, msgId);
     }

@@ -28,8 +28,8 @@ getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValu
 
     jobject messagingAccessPoint;
     if (useKV) {
-        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        jobject prop = kv->getProxy();
+        KeyValue* ptr = props.get();
+        jobject prop = (dynamic_cast<KeyValueImpl*>(ptr))->getProxy();
         messagingAccessPoint = current.callStaticObjectMethod(classOMS,
                                                               midGetMessagingAccessPoint,
                                                               accessUrl,

@@ -19,8 +19,8 @@ BatchMessageSenderImpl::BatchMessageSenderImpl(const jobject &proxy) : proxy_(pr
 
 BatchMessageSender& BatchMessageSenderImpl::send(MessagePtr &message) {
     CurrentEnv context;
-    ByteMessageImplPtr msgPtr = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
-    jobject ret = context.callObjectMethod(proxy_, midSend, msgPtr->getProxy());
+    jobject msg = (dynamic_cast<ByteMessageImpl*>(message.get()))->getProxy();
+    jobject ret = context.callObjectMethod(proxy_, midSend, msg);
     context.deleteRef(ret);
     return *this;
 }

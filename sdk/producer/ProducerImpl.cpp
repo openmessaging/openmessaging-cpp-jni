@@ -190,15 +190,14 @@ KeyValuePtr ProducerImpl::attributes() {
 
 SendResultPtr ProducerImpl::send(const MessagePtr &message, const KeyValuePtr &props) {
     CurrentEnv current;
-
-    ByteMessageImplPtr msg = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
+    jobject msg = (dynamic_cast<ByteMessageImpl*>(message.get()))->getProxy();
     jobject jSendResult;
     if (props) {
-        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        jobject ret = current.callObjectMethod(_proxy, midSend2, msg->getProxy(), kv->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        jobject ret = current.callObjectMethod(_proxy, midSend2, msg, kv);
         jSendResult = current.newGlobalRef(ret);
     } else {
-        jobject ret = current.callObjectMethod(_proxy, midSend, msg->getProxy());
+        jobject ret = current.callObjectMethod(_proxy, midSend, msg);
         jSendResult = current.newGlobalRef(ret);
     }
 
@@ -223,61 +222,46 @@ ByteMessagePtr ProducerImpl::createBytesMessage(const std::string &topic, const 
 SendResultPtr ProducerImpl::send(const MessagePtr &message,
                                  const LocalTransactionExecutorPtr &executor,
                                  const KeyValuePtr &props) {
-
-    ByteMessageImplPtr messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
-    NS::shared_ptr<LocalTransactionExecutorImpl> executorImpl =
-            NS::dynamic_pointer_cast<LocalTransactionExecutorImpl>(executor);
-    NS::shared_ptr<KeyValueImpl> propertiesImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
     CurrentEnv current;
-    jobject jSendResult = current.callObjectMethod(_proxy, midSend3, messageImpl->getProxy(),
-                                                        executorImpl->getProxy(), NULL, propertiesImpl->getProxy());
+    jobject msg = (dynamic_cast<ByteMessageImpl*>(message.get()))->getProxy();
+    jobject exec = (dynamic_cast<LocalTransactionExecutorImpl*>(executor.get()))->getProxy();
+    jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+    jobject jSendResult = current.callObjectMethod(_proxy, midSend3, msg, exec, NULL, kv);
 
     NS::shared_ptr<SendResultImpl> ret = NS::make_shared<SendResultImpl>(current.newGlobalRef(jSendResult));
     return ret;
 }
 
 FuturePtr ProducerImpl::sendAsync(const MessagePtr &message, const KeyValuePtr &props) {
-
-    NS::shared_ptr<ByteMessageImpl> messageImpl = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
-
-    if (messageImpl) {
-        CurrentEnv current;
-        NS::shared_ptr<Promise> ft = NS::make_shared<PromiseImpl>();
-        long long opaque;
-        {
-            opaque = ++sendOpaque;
-            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
-            sendAsyncMap[opaque] = ft;
-        }
-        if (props) {
-            NS::shared_ptr<KeyValueImpl> propertiesImpl = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-            if (!propertiesImpl) {
-                LOG_ERROR << "Dynamic casting failed";
-            }
-            current.callVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, messageImpl->getProxy(),
-                                   propertiesImpl->getProxy());
-        } else {
-            current.callVoidMethod(objectProducerAdaptor, midSendAsync, opaque, messageImpl->getProxy());
-        }
-        return ft;
-    } else {
-        LOG_ERROR << "Dynamic casting failed";
-        abort();
+    CurrentEnv current;
+    jobject msg = (dynamic_cast<ByteMessageImpl*>(message.get()))->getProxy();
+    NS::shared_ptr<Promise> ft = NS::make_shared<PromiseImpl>();
+    long long opaque;
+    {
+        opaque = ++sendOpaque;
+        boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
+        sendAsyncMap[opaque] = ft;
     }
+    if (props) {
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        current.callVoidMethod(objectProducerAdaptor, midSendAsync2, opaque, msg, kv);
+    } else {
+        current.callVoidMethod(objectProducerAdaptor, midSendAsync, opaque, msg);
+    }
+    return ft;
 }
 
 void ProducerImpl::sendOneway(const MessagePtr &message, const KeyValuePtr &properties) {
     CurrentEnv context;
 
-    ByteMessageImplPtr msgPtr = NS::dynamic_pointer_cast<ByteMessageImpl>(message);
-
+    jobject msg = (dynamic_cast<ByteMessageImpl*>(message.get()))->getProxy();
     if (properties) {
-        KeyValueImplPtr ptr = NS::dynamic_pointer_cast<KeyValueImpl>(properties);
-        context.callVoidMethod(_proxy, midSendOneway2, msgPtr->getProxy(), ptr->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(properties.get()))->getProxy();
+        context.callVoidMethod(_proxy, midSendOneway2, msg, kv);
         return;
     }
 
-    context.callVoidMethod(_proxy, midSendOneway, msgPtr->getProxy());
+    context.callVoidMethod(_proxy, midSendOneway, msg);
 }
 
 BatchMessageSenderPtr ProducerImpl::createSequenceBatchMessageSender() {

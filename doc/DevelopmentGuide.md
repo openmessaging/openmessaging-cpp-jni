@@ -1,7 +1,7 @@
 # Development Guide
 
 ## Prerequisites
-The following softwares are assumed installed in your operating system.
+The following software are assumed installed in your operating system.
 
 1. Git
 2. C++ Tool chain
@@ -77,3 +77,6 @@ Clion has very good support of projects managed by CMake. Clone the source code 
 ## Build and Develop in Qt Creator
 
 ## Build and Develop in Visual Studio Code
+
+## Familiarize Yourself with JNI
+1. [Launch and Shutdown JVM from Native](JNI_Introduction.md)

@@ -59,8 +59,8 @@ ProducerPtr MessagingAccessPointImpl::createProducer(const KeyValuePtr &props) {
     CurrentEnv current;
     jobject producerLocal;
     if (props) {
-        KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        producerLocal = current.callObjectMethod(_proxy, midCreateProducer2, kv->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        producerLocal = current.callObjectMethod(_proxy, midCreateProducer2, kv);
     } else {
         producerLocal = current.callObjectMethod(_proxy, midCreateProducer);
     }
@@ -75,9 +75,8 @@ consumer::PushConsumerPtr MessagingAccessPointImpl::createPushConsumer(const Key
     CurrentEnv current;
     jobject pushConsumerLocal;
     if (props) {
-        KeyValueImplPtr kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        pushConsumerLocal = current.callObjectMethod(_proxy, midCreatePushConsumer2, kv->getProxy());
-
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        pushConsumerLocal = current.callObjectMethod(_proxy, midCreatePushConsumer2, kv);
     } else {
         pushConsumerLocal = current.callObjectMethod(_proxy, midCreatePushConsumer);
     }
@@ -90,10 +89,9 @@ consumer::PushConsumerPtr MessagingAccessPointImpl::createPushConsumer(const Key
 consumer::PullConsumerPtr MessagingAccessPointImpl::createPullConsumer(const KeyValuePtr &props) {
     CurrentEnv current;
     jobject pullConsumerLocal;
-
     if (props) {
-        NS::shared_ptr<KeyValueImpl> kv = NS::dynamic_pointer_cast<KeyValueImpl>(props);
-        pullConsumerLocal = current.callObjectMethod(_proxy, midCreatePullConsumer2, kv->getProxy());
+        jobject kv = (dynamic_cast<KeyValueImpl*>(props.get()))->getProxy();
+        pullConsumerLocal = current.callObjectMethod(_proxy, midCreatePullConsumer2, kv);
     } else {
         pullConsumerLocal = current.callObjectMethod(_proxy, midCreatePullConsumer);
     }

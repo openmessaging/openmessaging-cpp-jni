@@ -155,3 +155,7 @@ Like Java Reflection API, before invoking a method, we need to acquire its metho
 `GetStaiticMethodID` and `GetMethodID` is employed for static and member method respectively. Both of them
 takes 3 parameters: class, method name, and [method signature](https://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html).
 Take **()V** for example, **V** here indicates the return type is **void**; **()** hints the method takes no parameter.
+
+To call a Java method, JNI provides a collection of methods to choose. If the method is static, choose those matching
+patter of CallStaticXXXMethodID; If the method returns primitive types, say int, then Call[Static]IntMethodID; If class
+ type, then Call[Static]ObjectMethodID.

@@ -12,7 +12,7 @@ ByteMessageImpl::ByteMessageImpl(jobject proxy) : objectByteMessage(proxy) {
     midSysHeaders = current.getMethodId(classByteMessage, "sysHeaders", buildSignature(Types::KeyValue_, 0));
     midUserHeaders = current.getMethodId(classByteMessage, "userHeaders", buildSignature(Types::KeyValue_, 0));
 
-    midGetBody = current.getMethodId(classByteMessage, "getBody", buildSignature(Types::byteArray_, 0));
+    midGetBody = current.getMethodId(classByteMessage, "getBody", buildSignature(Types::Object_, 1, Types::Class_));
 
     midSetBody = current.getMethodId(classByteMessage, "setBody",
                                      buildSignature(Types::ByteMessage_, 1, Types::byteArray_));
@@ -54,9 +54,20 @@ NS::shared_ptr<KeyValue> ByteMessageImpl::userHeaders() {
     return headers;
 }
 
-MessageBody ByteMessageImpl::getBody() {
+MessageBody ByteMessageImpl::getBody(MessageType type) {
     CurrentEnv current;
-    jbyteArray jBody = static_cast<jbyteArray>(current.callObjectMethod(objectByteMessage, midGetBody));
+
+    jclass messageBodyType;
+
+    switch (type) {
+        case BYTE_ARRAY:
+            messageBodyType = current.findClass(Types::byteArray_);
+            break;
+        default:
+            throw OMSException("Unknown message type");
+    }
+
+    jbyteArray jBody = static_cast<jbyteArray>(current.callObjectMethod(objectByteMessage, midGetBody, messageBodyType));
     jbyte *pArray = current.env->GetByteArrayElements(jBody, NULL);
     jsize len = current.env->GetArrayLength(jBody);
     MessageBody result(pArray, len);

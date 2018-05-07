@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual NS::shared_ptr<KeyValue> userHeaders();
 
-        virtual MessageBody getBody();
+        virtual MessageBody getBody(MessageType type);
 
         virtual ByteMessage& setBody(const MessageBody &body);
 

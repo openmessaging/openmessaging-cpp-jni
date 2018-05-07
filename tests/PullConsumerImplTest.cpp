@@ -53,6 +53,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                         LOG_INFO << "Message which was just sent is received. Stop receiving immediately.";
                         stopped = true;
                     }
+                    signed char* data = msgPtr->getBody().get();
+                    std::cout << data << std::endl;
                 }
             }
         }

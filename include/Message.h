@@ -11,6 +11,10 @@
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
+    enum MessageType {
+        BYTE_ARRAY
+    };
+
     /**
      * The {@code Message} interface is the root interface of all OMS messages, and the most commonly used OMS message is
      * {@link BytesMessage}.
@@ -60,6 +64,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         virtual Message& putUserHeaders(const std::string &key, const std::string &value) = 0;
 
+        virtual MessageBody getBody(MessageType type = BYTE_ARRAY)  = 0;
     };
 
     typedef NS::shared_ptr<Message> MessagePtr;

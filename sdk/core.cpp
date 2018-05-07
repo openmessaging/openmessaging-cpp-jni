@@ -41,6 +41,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const char* Types::BatchMessageSender_ = "Lio/openmessaging/producer/BatchMessageSender;";
     const char* Types::OMSException_ = "Lio/openmessaging/exception/OMSException;";
     const char* Types::Future_ = "Lio/openmessaging/Future;";
+    const char* Types::Class_ = "Ljava/lang/Class;";
 
     std::string buildSignature(const std::string &return_type, int n, ...) {
         std::string signature = "(";

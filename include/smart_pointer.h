@@ -21,6 +21,7 @@
 
 #endif
 
+#include <cstring>
 #include <string>
 BEGIN_NAMESPACE_2(io, openmessaging)
 

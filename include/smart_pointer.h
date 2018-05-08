@@ -21,7 +21,7 @@
 
 #endif
 
-#include <cstring>
+#include <string>
 BEGIN_NAMESPACE_2(io, openmessaging)
 
     template <typename T>
@@ -36,7 +36,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             }
         }
 
-        ManagedArray(ManagedArray &other) {
+        ManagedArray(const ManagedArray &other) {
             len_ = other.len_;
             copy_ = true;
             payload_ = new T[len_];
@@ -62,6 +62,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                 return *(payload_ + index);
             }
             throw io::openmessaging::OMSException("IndexOutOfBoundary");
+        }
+
+        std::string toString() {
+            return std::string(reinterpret_cast<char*>(payload_), len_);
         }
 
     private:

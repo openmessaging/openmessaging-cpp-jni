@@ -15,7 +15,7 @@ public:
 
 TEST_F(KeyValueImplTest, testPutGetInt) {
     using namespace io::openmessaging;
-    KeyValuePtr kvPtr(newKeyValueImpl());
+    KeyValuePtr kvPtr = newKeyValueImpl();
     std::string k = "a";
     int value = 1;
     kvPtr->put(k, value);
@@ -26,7 +26,7 @@ TEST_F(KeyValueImplTest, testPutGetInt) {
 
 TEST_F(KeyValueImplTest, testPutGetLong) {
     using namespace io::openmessaging;
-    KeyValuePtr kvPtr(newKeyValueImpl());
+    KeyValuePtr kvPtr = newKeyValueImpl();
     std::string k = "a";
     long value = 1;
     kvPtr->put(k, value);
@@ -37,7 +37,7 @@ TEST_F(KeyValueImplTest, testPutGetLong) {
 
 TEST_F(KeyValueImplTest, testPutGetDouble) {
     using namespace io::openmessaging;
-    KeyValuePtr kvPtr(newKeyValueImpl());
+    KeyValuePtr kvPtr = newKeyValueImpl();
     std::string k = "a";
     double value = 1.0;
     kvPtr->put(k, value);
@@ -49,7 +49,7 @@ TEST_F(KeyValueImplTest, testPutGetDouble) {
 TEST_F(KeyValueImplTest, testKeySet) {
     using namespace io::openmessaging;
 
-    KeyValuePtr kvPtr(newKeyValueImpl());
+    KeyValuePtr kvPtr = newKeyValueImpl();
 
     std::string k1 = "a";
     int v1 = 1;

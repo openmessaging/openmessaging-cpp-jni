@@ -44,10 +44,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     const string ProducerImplTest::driverClass = "io.openmessaging.rocketmq.MessagingAccessPointImpl";
 
     TEST_F(ProducerImplTest, testSend_accuracy) {
-        KeyValuePtr properties(newKeyValueImpl());
+        KeyValuePtr properties = newKeyValueImpl();
         properties->put(driverClassKey, driverClass);
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl, properties);
 
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();
@@ -64,10 +64,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     }
 
     TEST_F(ProducerImplTest, testAsynchrousSend) {
-        KeyValuePtr properties(newKeyValueImpl());
+        KeyValuePtr properties = newKeyValueImpl();
         properties->put(driverClassKey, driverClass);
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl, properties));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl, properties);
 
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();

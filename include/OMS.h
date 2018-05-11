@@ -15,6 +15,7 @@
 // forward declaration
 BEGIN_NAMESPACE_2(io, openmessaging)
     class MessagingAccessPoint;
+    typedef NS::shared_ptr<MessagingAccessPoint> MessagingAccessPointPtr;
 END_NAMESPACE_2(io, openmessaging)
 
 #ifdef __cplusplus
@@ -57,22 +58,22 @@ END_NAMESPACE_2(io, openmessaging)
             }
         }
 
-        static io::openmessaging::KeyValue* newKeyValue() {
+        static io::openmessaging::KeyValuePtr newKeyValue() {
             if (NULL == handle) {
                 throw io::openmessaging::OMSException("Please call load_library first");
             }
 
-            typedef io::openmessaging::KeyValue* (*Fn)();
+            typedef io::openmessaging::KeyValuePtr (*Fn)();
             Fn fn;
             fn = (Fn)dlsym(handle, "newKeyValueImpl");
             return fn();
         }
 
-        static io::openmessaging::MessagingAccessPoint*
+        static io::openmessaging::MessagingAccessPointPtr
         getMessagingAccessPoint(const std::string &url,
                                 const io::openmessaging::KeyValuePtr &props = io::openmessaging::KeyValuePtr()) {
 
-            typedef io::openmessaging::MessagingAccessPoint* (*Fn)(const std::string&, const io::openmessaging::KeyValuePtr &);
+            typedef io::openmessaging::MessagingAccessPointPtr (*Fn)(const std::string&, const io::openmessaging::KeyValuePtr &);
 
             if (NULL == handle) {
                 load_library(url);
@@ -85,12 +86,12 @@ END_NAMESPACE_2(io, openmessaging)
             return fn(url, props);
         }
 
-        io::openmessaging::MessagingAccessPoint*
+        io::openmessaging::MessagingAccessPointPtr
         getMessagingAccessPointImpl(const std::string &url,
                                     const io::openmessaging::KeyValuePtr &props = io::openmessaging::KeyValuePtr());
 
 
-        io::openmessaging::KeyValue* newKeyValueImpl();
+        io::openmessaging::KeyValuePtr newKeyValueImpl();
 
 #ifdef __cplusplus
     }

@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(PullConsumerImplTest, testCreatePullConsumer) {
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl);
 
         // First send a message
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         producer::SendResultPtr sendResultPtr = producer->send(message);
         LOG_INFO << "Send Message OK. Message Id: " << sendResultPtr->messageId();
 
-        KeyValuePtr kv(newKeyValueImpl());
+        KeyValuePtr kv = newKeyValueImpl();
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_ID, value);
 

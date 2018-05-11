@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
     try {
         // Acquire messaging access point instance through factory method
-        MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
+        MessagingAccessPointPtr accessPoint = getMessagingAccessPoint(accessPointUrl);
 
         // Create a producer instance via MessageAccessPoint instance
         ProducerPtr producer = accessPoint->createProducer();

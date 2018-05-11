@@ -5,7 +5,7 @@
 
 using namespace io::openmessaging;
 
-MessagingAccessPoint*
+MessagingAccessPointPtr
 getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValue> &props) {
 
     Initialize();
@@ -43,15 +43,15 @@ getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValu
     current.deleteRef(accessUrl);
     current.deleteRef(classOMS);
     jobject globalRef = current.newGlobalRef(messagingAccessPoint);
-    return new MessagingAccessPointImpl(url, props, globalRef);
+    return NS::make_shared<MessagingAccessPointImpl>(url, props, globalRef);
 }
 
-KeyValue* newKeyValueImpl() {
+KeyValuePtr newKeyValueImpl() {
     Initialize();
     CurrentEnv current;
     const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";
     jclass classDefaultKeyValue = current.findClass(klassDefaultKeyValue);
     jmethodID ctor = current.getMethodId(classDefaultKeyValue, "<init>", "()V");
     jobject objectDefaultKeyValue = current.newObject(classDefaultKeyValue, ctor);
-    return new KeyValueImpl(objectDefaultKeyValue);
+    return NS::make_shared<KeyValueImpl>(objectDefaultKeyValue);
 }

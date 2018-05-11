@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl);
 
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
         producer->startup();
@@ -40,9 +40,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl);
 
-        KeyValuePtr kv(newKeyValueImpl());
+        KeyValuePtr kv = newKeyValueImpl();
         const std::string key = "consumer.id";
         const std::string value = "OMS_CONSUMER";
         kv->put(key, value);
@@ -62,7 +62,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     TEST_F(OmsTest, testNewKeyValue) {
         using namespace io::openmessaging;
 
-        KeyValuePtr kv(newKeyValueImpl());
+        KeyValuePtr kv = newKeyValueImpl();
         ASSERT_TRUE(kv);
 
         jobject attr = (dynamic_cast<KeyValueImpl*>(kv.get()))->getProxy();

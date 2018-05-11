@@ -41,7 +41,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         string accessPointUrl = "oms:rocketmq://localhost:9876/default:default";
 
-        MessagingAccessPointPtr messagingAccessPoint(getMessagingAccessPointImpl(accessPointUrl));
+        MessagingAccessPointPtr messagingAccessPoint = getMessagingAccessPointImpl(accessPointUrl);
 
         // First send a message
         producer::ProducerPtr producer = messagingAccessPoint->createProducer();
@@ -56,7 +56,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         std::string queueName("TopicTest");
 
-        KeyValuePtr kv(newKeyValueImpl());
+        KeyValuePtr kv = newKeyValueImpl();
         const std::string value = "OMS_CONSUMER";
         kv->put(CONSUMER_ID, value);
 

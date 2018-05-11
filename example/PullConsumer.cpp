@@ -11,9 +11,9 @@ int main(int argc, char *argv[]) {
     const string accessPointUrl = "oms:rocketmq://ons3.dev:9876/default:default";
 
     // Acquire messaging access point instance through factory method
-    MessagingAccessPointPtr accessPoint(getMessagingAccessPoint(accessPointUrl));
+    MessagingAccessPointPtr accessPoint = getMessagingAccessPoint(accessPointUrl);
 
-    KeyValuePtr subKV(newKeyValue());
+    KeyValuePtr subKV = newKeyValue();
     subKV->put(CONSUMER_ID, "OMS_CONSUMER");
     consumer::PullConsumerPtr pullConsumer = accessPoint->createPullConsumer(subKV);
 

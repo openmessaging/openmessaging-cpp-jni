@@ -36,8 +36,15 @@ int main(int argc, char *argv[]) {
         ByteMessagePtr message = producer->createBytesMessage("TopicTest", message_body);
 
         for (int i = 0; i < count; ++i) {
+
+            SendResultPtr sendResult;
             // Send message
-            SendResultPtr sendResult = producer->send(message);
+            try {
+                sendResult = producer->send(message);
+            } catch (OMSException &e) {
+                // Error handling when sending message experiences failure.
+                LOG_ERROR << e.what();
+            }
 
             // SendResult instance holds meta data including message id which may be employed to query various info on messaging
             // console

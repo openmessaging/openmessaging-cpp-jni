@@ -128,5 +128,23 @@ TEST(smart_pointer_test, test_work_with_map_3) {
     }
 }
 
+struct St {
+    St() {
+        std::cout << "Ctor" << std::endl;
+    }
+
+    ~St() {
+        std::cout << "~Dtor" << std::endl;
+    }
+};
+
+TEST(smart_pointer_test, test_atomic_count) {
+    {
+        shared_ptr<St> ptr = make_shared<St>();
+        shared_ptr<St> ptr2 = ptr;
+    }
+    std::cout << "Should have destructed" << std::endl;
+}
+
 // pre C++11
 #endif

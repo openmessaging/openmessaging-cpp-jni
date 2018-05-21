@@ -71,7 +71,8 @@ public:
             }
             else
             {
-                ++(*pn);
+//                ++(*pn);
+                __sync_fetch_and_add(pn, 1);
             }
         }
     }
@@ -81,7 +82,8 @@ public:
     {
         if (NULL != pn)
         {
-            --(*pn);
+//            --(*pn);
+            __sync_fetch_and_sub(pn, 1);
             if (0 == *pn)
             {
                 delete p;
@@ -236,7 +238,7 @@ private:
 };
 
 
-// comparaison operators
+// comparison operators
 template<class T, class U> inline bool operator==(const shared_ptr<T>& l, const shared_ptr<U>& r) throw() // never throws
 {
     return (l.get() == r.get());
@@ -301,6 +303,12 @@ shared_ptr<T> make_shared(U arg) {
 template<typename T, typename U, typename V>
 shared_ptr<T> make_shared(U arg0, V arg1) {
     T* t = new T(arg0, arg1);
+    return shared_ptr<T>(t);
+}
+
+template<typename T, typename A1, typename A2, typename A3>
+shared_ptr<T> make_shared(A1 a1, A2 a2, A3 a3) {
+    T* t = new T(a1, a2, a3);
     return shared_ptr<T>(t);
 }
 

@@ -14,6 +14,7 @@
 #include "JavaOption.h"
 #include "Namespace.h"
 #include "CurrentEnv.h"
+#include "Uncopyable.h"
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
@@ -53,9 +54,33 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         static const char *Class_;
     };
 
-    std::string buildSignature(const std::string &return_type, int n, ...);
+    class VM : Uncopyable {
+    public:
+        VM() {
+            init_logging();
+            init();
+        }
 
-    void Initialize();
+        ~VM() {
+            if (jvm) {
+                jvm->DestroyJavaVM();
+            }
+        }
+
+        JavaVM* get() {
+            return jvm;
+        }
+
+    private:
+        JavaVM *jvm;
+        JNIEnv *env;
+
+        void init_logging();
+
+        void init();
+    };
+
+    std::string buildSignature(const std::string &return_type, int n, ...);
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
 

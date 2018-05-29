@@ -22,8 +22,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             setenv("OMS_RMQ_DIRECT_NAME_SRV", "true", overwrite);
             setenv(NAME_SRV_ADDR_KEY, NAME_SRV_ADDR_VALUE, overwrite);
 
-            Initialize();
-
             CurrentEnv context;
             const char* klassNameSrvStartup = "org/apache/rocketmq/namesrv/NamesrvStartup";
             classNamesrvStartup = context.findClass(klassNameSrvStartup);

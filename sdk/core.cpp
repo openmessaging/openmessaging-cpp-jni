@@ -61,9 +61,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     JNIEnv *env;
 
-    pthread_once_t once_flag = PTHREAD_ONCE_INIT;
-
-    void init_logging() {
+    void VM::init_logging() {
         char *home = getenv("HOME");
         std::string file_name = std::string(home) + "/oms.log";
         size_t max_file_size = 1024 * 1024 * 100;
@@ -81,10 +79,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         }
     }
 
-    void init0() {
-
-        init_logging();
-
+    void VM::init() {
         NS::shared_ptr<JavaOption> jOptions = NS::make_shared<JavaOption>(JNI_VERSION_1_8);
         std::string class_path_option = build_class_path_option();
         jOptions->addOption(class_path_option);
@@ -147,10 +142,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         jint version = env->GetVersion();
         LOG_INFO << "JVM starts OK. Version: " << ((version >> 16) & 0x0f) << "." << (version & 0x0f);
-    }
-
-    void Initialize() {
-        pthread_once(&once_flag, init0);
     }
 
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {

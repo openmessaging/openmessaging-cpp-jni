@@ -100,6 +100,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     private:
         bool attached;
+        JavaVM* jvm;
     };
 
 END_NAMESPACE_2(io, openmessaging)

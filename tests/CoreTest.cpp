@@ -11,11 +11,6 @@ TEST(CoreTest, testBuildSignature) {
     ASSERT_TRUE(signature == expectedResult);
 }
 
-TEST(CoreTest, testInitializeAndShutdown) {
-    using namespace io::openmessaging;
-    Initialize();
-}
-
 TEST(CoreTest, testStringEndsWith) {
     std::string s("/home/lib/*");
     std::string ext("*");

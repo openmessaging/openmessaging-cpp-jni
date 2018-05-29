@@ -2,14 +2,11 @@
 
 #include "core.h"
 #include "OMSException.h"
-
-BEGIN_NAMESPACE_2(io, openmessaging)
-    extern JavaVM *jvm;
-END_NAMESPACE_2(io, openmessaging)
+#include "Singleton.h"
 
 using namespace io::openmessaging;
 
-CurrentEnv::CurrentEnv() : attached(false) {
+CurrentEnv::CurrentEnv() : attached(false), jvm(Singleton<VM>::instance().get()) {
     if (jvm->GetEnv(reinterpret_cast<void **>(&(this->env)), JNI_VERSION_1_8) != JNI_OK) {
         if (jvm->AttachCurrentThread(reinterpret_cast<void **>(&(this->env)), NULL) == JNI_OK) {
             attached = true;
@@ -23,6 +20,7 @@ CurrentEnv::CurrentEnv(JNIEnv *ctx) : env(ctx), attached(false) {
 }
 
 CurrentEnv::~CurrentEnv() {
+
     if (attached) {
         jvm->DetachCurrentThread();
     }

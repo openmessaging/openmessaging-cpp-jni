@@ -7,9 +7,6 @@ using namespace io::openmessaging;
 
 MessagingAccessPointPtr
 getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValue> &props) {
-
-    Initialize();
-
     CurrentEnv current;
     const char* klassOMS = "io/openmessaging/OMS";
     jclass classOMS = current.findClass(klassOMS);
@@ -47,7 +44,6 @@ getMessagingAccessPointImpl(const std::string &url, const NS::shared_ptr<KeyValu
 }
 
 KeyValuePtr newKeyValueImpl() {
-    Initialize();
     CurrentEnv current;
     const char *klassDefaultKeyValue = "io/openmessaging/internal/DefaultKeyValue";
     jclass classDefaultKeyValue = current.findClass(klassDefaultKeyValue);

@@ -28,7 +28,6 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     class PromiseImplTest : public ::testing::Test {
     public:
         virtual void SetUp() {
-            Initialize();
             CurrentEnv ctx;
             const char *klassSendResultImpl = "io/openmessaging/rocketmq/domain/SendResultImpl";
             classSendResult = ctx.findClass(klassSendResultImpl);

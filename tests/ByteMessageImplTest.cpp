@@ -13,8 +13,6 @@ public:
     }
 
     void SetUp() {
-        Initialize();
-
         if (NULL == byteMessage) {
             try {
                 CurrentEnv context;

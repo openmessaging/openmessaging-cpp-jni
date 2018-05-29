@@ -6,7 +6,6 @@ using namespace io::openmessaging;
 class CurrentEnvTest : public ::testing::Test {
 public:
     virtual void SetUp() {
-        io::openmessaging::Initialize();
     }
 };
 

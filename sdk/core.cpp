@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdarg>
+#include <pthread.h>
 
 #include "core.h"
 
@@ -60,7 +61,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
     JNIEnv *env;
 
-    boost::once_flag once_flag = BOOST_ONCE_INIT;
+    pthread_once_t once_flag = PTHREAD_ONCE_INIT;
 
     void init_logging() {
         char *home = getenv("HOME");
@@ -149,7 +150,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
     }
 
     void Initialize() {
-        boost::call_once(once_flag, init0);
+        pthread_once(&once_flag, init0);
     }
 
     std::set<std::string> toNativeSet(CurrentEnv &current, jobject s) {

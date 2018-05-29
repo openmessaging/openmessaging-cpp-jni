@@ -16,6 +16,7 @@ add_executable(runUnitTests
         ProducerImplTest.cpp
         PullConsumerImplTest.cpp
         PushConsumerImplTest.cpp
+        SingletonTest.cpp
         )
 
 target_link_libraries(runUnitTests

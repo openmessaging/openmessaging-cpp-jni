@@ -44,14 +44,6 @@ endif()
 
 #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN/jdk8m/lib/amd64/server/'")
 
-find_package(Boost REQUIRED)
-
-find_library(BOOST_chrono_LIBRARY NAMES libboost_chrono.a libboost_chrono-mt.a)
-find_library(BOOST_date_time_LIBRARY NAMES libboost_date_time.a libboost_date_time-mt.a)
-find_library(BOOST_thread_LIBRARY NAMES libboost_thread.a libboost_thread-mt.a)
-find_library(BOOST_filesystem_LIBRARY NAMES libboost_filesystem.a libboost_filesystem-mt.a)
-find_library(BOOST_system_LIBRARY NAMES libboost_system.a libboost_system-mt.a)
-
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sdk/include)
 
 if(DEFINED ENV{JAVA_HOME})

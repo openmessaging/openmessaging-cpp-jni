@@ -4,10 +4,10 @@
 #include <set>
 #include <string>
 
+#include <pthread.h>
+
 #include "smart_pointer.h"
 
-#include <boost/thread.hpp>
-#include <boost/date_time.hpp>
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 
@@ -80,17 +80,151 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         void init();
     };
 
+#ifdef CHECK_PTHREAD_RETURN_VALUE
+
+#ifdef NDEBUG
+__BEGIN_DECLS
+extern void __assert_perror_fail (int errnum,
+                                  const char *file,
+                                  unsigned int line,
+                                  const char *function)
+    __THROW __attribute__ ((__noreturn__));
+__END_DECLS
+#endif
+
+#define MCHECK(ret) ({ __typeof__ (ret) errnum = (ret);         \
+                       if (__builtin_expect(errnum != 0, 0))    \
+                         __assert_perror_fail (errnum, __FILE__, __LINE__, __func__);})
+
+#else  // CHECK_PTHREAD_RETURN_VALUE
+
+#define MCHECK(ret) ({ __typeof__ (ret) errnum = (ret);         \
+                       assert(errnum == 0); (void) errnum;})
+
+#endif // CHECK_PTHREAD_RETURN_VALUE
+
+    class Mutex : Uncopyable {
+    public:
+        Mutex() {
+            MCHECK(pthread_mutex_init(&mtx_, NULL));
+        }
+
+        ~Mutex() {
+            MCHECK(pthread_mutex_destroy(&mtx_));
+        }
+
+        pthread_mutex_t* get() {
+            return &mtx_;
+        }
+
+        void lock() {
+            MCHECK(pthread_mutex_lock(&mtx_));
+        }
+
+        void unlock() {
+            MCHECK(pthread_mutex_unlock(&mtx_));
+        }
+
+    private:
+        pthread_mutex_t mtx_;
+    };
+
+    class LockGuard : Uncopyable {
+    public:
+        LockGuard(Mutex& mutex) : mtx(mutex) {
+            mtx.lock();
+        }
+
+        ~LockGuard() {
+            mtx.unlock();
+        }
+
+    private:
+        Mutex& mtx;
+    };
+
+#define LockGuard(x) error "Missing lock guard object name"
+
+    class Condition : Uncopyable {
+    public:
+        explicit Condition(Mutex& mutex) : mtx(mutex) {
+            pthread_cond_init(&cv, NULL);
+        }
+
+        ~Condition() {
+            pthread_cond_destroy(&cv);
+        }
+
+        void wait() {
+            LockGuard lk(mtx);
+            pthread_cond_wait(&cv, mtx.get());
+        }
+
+        template<typename Predicate>
+        void wait(Predicate predicate) {
+            LockGuard lk(mtx);
+            while (!predicate()) {
+                pthread_cond_wait(&cv, mtx.get());
+            }
+        }
+
+        void wait(unsigned long milliseconds) {
+            struct timespec ts;
+            add(ts, milliseconds);
+            LockGuard lk(mtx);
+            pthread_cond_timedwait(&cv, mtx.get(), &ts);
+        }
+
+        template<typename Predicate>
+        void wait(unsigned long milliseconds, Predicate predicate) {
+            struct timespec ts;
+            add(ts, milliseconds);
+            long abs_time = ts.tv_sec * one_second_in_nano + ts.tv_nsec;
+            struct timeval tv;
+            LockGuard lk(mtx);
+            while (!predicate()) {
+                gettimeofday(&tv, NULL);
+                if (tv.tv_sec * one_second_in_nano + tv.tv_usec * one_micro_second_in_nano >= abs_time) {
+                    break;
+                }
+                pthread_cond_timedwait(&cv, mtx.get(), &ts);
+            }
+        }
+
+        void notify() {
+            LockGuard lk(mtx);
+            pthread_cond_signal(&cv);
+        }
+
+        void notifyAll() {
+            LockGuard lk(mtx);
+            pthread_cond_broadcast(&cv);
+        }
+
+    private:
+        Mutex& mtx;
+        pthread_cond_t cv;
+
+        void add(struct timespec& ts, long timeout) {
+            struct timeval tv;
+            gettimeofday(&tv, NULL);
+            ts.tv_sec = tv.tv_sec + timeout / one_second_in_milli;
+            ts.tv_nsec = tv.tv_usec * one_micro_second_in_nano + (timeout % one_second_in_milli) * one_milli_second_in_nano;
+            if (ts.tv_nsec >= one_second_in_nano) {
+                ts.tv_sec = ts.tv_sec + (ts.tv_nsec / one_second_in_nano);
+                ts.tv_nsec = ts.tv_nsec % one_second_in_nano;
+            }
+        }
+
+        const static long one_second_in_nano;
+        const static long one_milli_second_in_nano;
+        const static long one_micro_second_in_nano;
+        const static long one_second_in_milli;
+    };
+
     std::string buildSignature(const std::string &return_type, int n, ...);
 
     std::set<std::string> toNativeSet(CurrentEnv &env, jobject s);
-
-    std::string expand_class_path(const std::string& wildcard);
-
-    std::vector<std::string> list_files(const std::string &dir, bool (*f)(const std::string&));
-
-    bool stringEndsWith(const std::string &s, const std::string &ext);
-
-    bool file_name_filter(const std::string &file_name);
 
     std::string build_class_path_option();
 

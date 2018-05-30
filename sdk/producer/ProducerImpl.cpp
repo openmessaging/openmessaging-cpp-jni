@@ -14,18 +14,18 @@ using namespace io::openmessaging::producer;
 BEGIN_NAMESPACE_3(io, openmessaging, producer)
 
     long long sendOpaque = 0;
-    boost::mutex sendAsyncMutex;
+    Mutex sendAsyncMutex;
     std::map<long long, PromisePtr> sendAsyncMap;
 
     int interceptorIndex = 0;
-    boost::mutex interceptorMutex;
+    Mutex interceptorMutex;
     std::map<int, interceptor::ProducerInterceptorPtr> interceptorMap;
 
     void operationComplete(JNIEnv *env, jobject object, jlong opaque, jobject jFuture) {
 
         NS::shared_ptr<Promise> promise;
         {
-            boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
+            LockGuard lk(sendAsyncMutex);
             promise = sendAsyncMap[opaque];
             sendAsyncMap.erase(opaque);
         }
@@ -74,7 +74,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         ByteMessageImplPtr msg(new ByteMessageImpl(message));
         KeyValueImplPtr attr(new KeyValueImpl(attributes));
         {
-            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            LockGuard lk(interceptorMutex);
             std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.find(index);
             if (it != interceptorMap.end()) {
                 it->second->preSend(msg, attr);
@@ -86,7 +86,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, producer)
         ByteMessageImplPtr msg(new ByteMessageImpl(message));
         KeyValueImplPtr attr(new KeyValueImpl(attributes));
         {
-            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            LockGuard lk(interceptorMutex);
             std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.find(index);
             if (it != interceptorMap.end()) {
                 it->second->postSend(msg, attr);
@@ -239,7 +239,7 @@ FuturePtr ProducerImpl::sendAsync(const MessagePtr &message, const KeyValuePtr &
     long long opaque;
     {
         opaque = ++sendOpaque;
-        boost::lock_guard<boost::mutex> lk(sendAsyncMutex);
+        LockGuard lk(sendAsyncMutex);
         sendAsyncMap[opaque] = ft;
     }
     if (props) {
@@ -275,7 +275,7 @@ void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &int
     CurrentEnv context;
     int index;
     {
-        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        LockGuard lk(interceptorMutex);
         index = ++interceptorIndex;
         interceptorMap[index] = interceptor;
     }
@@ -288,7 +288,7 @@ void ProducerImpl::addInterceptor(const interceptor::ProducerInterceptorPtr &int
 void ProducerImpl::removeInterceptor(const interceptor::ProducerInterceptorPtr &interceptor) {
     CurrentEnv context;
     {
-        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        LockGuard lk(interceptorMutex);
         for (std::map<int, interceptor::ProducerInterceptorPtr>::iterator it = interceptorMap.begin();
                 it != interceptorMap.end(); it++) {
             if (it->second == interceptor) {

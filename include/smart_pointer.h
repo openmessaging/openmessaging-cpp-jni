@@ -2,27 +2,12 @@
 #define OMS_SMART_POINTER_H
 
 #include "OMSException.h"
-
-// In case C++11 or later version is available.
-#if __cplusplus >= 201103L
-    #include <memory>
-    #define NS std
-    #define USE_CXX_11 1
-#else
-    // If boost is used, we would use Boost.SmartPointer
-    #ifdef USE_BOOST
-        #include <boost/smart_ptr.hpp>
-        #define NS boost
-    #else
-        #include "shared_ptr.hpp"
-        #include <cstring>
-        #define NS io::openmessaging
-    #endif
-
-#endif
-
 #include <cstring>
 #include <string>
+#include "shared_ptr.hpp"
+
+#define NS io::openmessaging
+
 BEGIN_NAMESPACE_2(io, openmessaging)
 
     template <typename T>

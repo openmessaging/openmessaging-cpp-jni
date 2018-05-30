@@ -23,12 +23,7 @@ add_library(oms_rocketmq SHARED
 
 target_link_libraries(oms_rocketmq
         dl
-        ${JAVA_JVM_LIBRARY}
-        ${BOOST_chrono_LIBRARY}
-        ${BOOST_date_time_LIBRARY}
-        ${BOOST_thread_LIBRARY}
-        ${BOOST_filesystem_LIBRARY}
-        ${BOOST_system_LIBRARY})
+        ${JAVA_JVM_LIBRARY})
 
 if (USE_EMBEDDED_VM)
     set_target_properties(oms_rocketmq PROPERTIES LINK_FLAGS "-Wl,-rpath,'$ORIGIN/vm/lib/amd64/server/'")

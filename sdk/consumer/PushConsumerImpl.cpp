@@ -1,5 +1,7 @@
 #include <map>
 
+#include <pthread.h>
+
 #include "core.h"
 #include "consumer/PushConsumerImpl.h"
 #include "KeyValueImpl.h"
@@ -11,11 +13,12 @@ using namespace io::openmessaging;
 using namespace io::openmessaging::consumer;
 
 BEGIN_NAMESPACE_3(io, openmessaging, consumer)
-    boost::mutex listener_mutex;
+    Mutex listener_mutex;
+
     std::map<std::string, MessageListenerPtr> queue_listener_map;
 
     int interceptorIndex;
-    boost::mutex interceptorMutex;
+    Mutex interceptorMutex;
     std::map<int, interceptor::ConsumerInterceptorPtr> interceptorMap;
 
     void onMessage(JNIEnv *env, jobject object, jstring queue, jobject message, jobject context) {
@@ -24,7 +27,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
         std::string queue_name(queue_name_char_ptr);
         NS::shared_ptr<MessageListener> messageListenerPtr;
         {
-            boost::lock_guard<boost::mutex> lk(listener_mutex);
+            LockGuard lk(listener_mutex);
             messageListenerPtr = queue_listener_map[queue_name];
         }
 
@@ -39,7 +42,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     void doPreReceive(JNIEnv *env, jobject object, jint index, jobject message, jobject attributes) {
         interceptor::ConsumerInterceptorPtr ptr;
         {
-            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            LockGuard lk(interceptorMutex);
             std::map<int, interceptor::ConsumerInterceptorPtr>::iterator search = interceptorMap.find(index);
             if (search != interceptorMap.end()) {
                 ptr = search->second;
@@ -57,7 +60,7 @@ BEGIN_NAMESPACE_3(io, openmessaging, consumer)
     void doPostReceive(JNIEnv *env, jobject object, jint index, jobject message, jobject attributes) {
         interceptor::ConsumerInterceptorPtr ptr;
         {
-            boost::lock_guard<boost::mutex> lk(interceptorMutex);
+            LockGuard lk(interceptorMutex);
             std::map<int, interceptor::ConsumerInterceptorPtr>::iterator search = interceptorMap.find(index);
             if (search != interceptorMap.end()) {
                 ptr = search->second;
@@ -187,7 +190,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
     jobject messageListener = ctx.newObject(classMessageListenerAdaptor, ctor, jQueueName);
     LOG_DEBUG << "MessageListenerAdaptor instance created";
     {
-        boost::lock_guard<boost::mutex> lk(listener_mutex);
+        LockGuard lk(listener_mutex);
         queue_listener_map[queueName] = listener;
     }
 
@@ -208,7 +211,7 @@ PushConsumer &PushConsumerImpl::attachQueue(const std::string &queueName,
 PushConsumer &PushConsumerImpl::detachQueue(const std::string &queueName) {
 
     {
-        boost::lock_guard<boost::mutex> lk(listener_mutex);
+        LockGuard lk(listener_mutex);
         queue_listener_map.erase(queueName);
     }
 
@@ -224,7 +227,7 @@ void PushConsumerImpl::addInterceptor(const interceptor::ConsumerInterceptorPtr 
     CurrentEnv context;
     int index;
     {
-        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        LockGuard lk(interceptorMutex);
         index = ++interceptorIndex;
         interceptorMap[index] = interceptor;
     }
@@ -238,7 +241,7 @@ void PushConsumerImpl::addInterceptor(const interceptor::ConsumerInterceptorPtr 
 void PushConsumerImpl::removeInterceptor(const interceptor::ConsumerInterceptorPtr &interceptor) {
     CurrentEnv context;
     {
-        boost::lock_guard<boost::mutex> lk(interceptorMutex);
+        LockGuard lk(interceptorMutex);
         for(std::map<int, interceptor::ConsumerInterceptorPtr>::iterator it = interceptorMap.begin();
                 it != interceptorMap.end(); it++) {
             if (it->second == interceptor) {

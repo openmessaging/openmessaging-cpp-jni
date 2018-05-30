@@ -1,15 +1,15 @@
 #include <cstdlib>
+#include <sstream>
 #include <cstdarg>
+
 #include <pthread.h>
+
+#include <sys/stat.h>
+#include <dirent.h>
 
 #include "core.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/filesystem.hpp>
-
 BEGIN_NAMESPACE_2(io, openmessaging)
-
-    using namespace boost::filesystem;
 
     const char* Types::void_ = "V";
     const char* Types::boolean_ = "Z";
@@ -171,52 +171,42 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         return nativeSet;
     }
 
-    bool file_name_filter(const std::string &file_name) {
-        const std::string file_extension = ".jar";
-        return stringEndsWith(file_name, file_extension);
-    }
-
-    std::string expand_class_path(const std::string& path_with_wildcard) {
+    std::string list_jars(const char* path) {
+        DIR *dir;
+        struct dirent *ent;
         std::string result;
-        const std::string wildcard = "*";
-        if (stringEndsWith(path_with_wildcard, wildcard)) {
-            const std::string dir = path_with_wildcard.substr(0, path_with_wildcard.size() - wildcard.size());
-            std::vector<std::string> files = list_files(dir, file_name_filter);
-            for (std::vector<std::string>::size_type i = 0; i < files.size(); ++i) {
-                if (result.empty()) {
-                    result = files[i];
-                } else {
-                    result += ":" + files[i];
+        if (NULL != (dir = opendir(path))) {
+
+            size_t len = strlen(path);
+            bool hasTrailingPathSeparator = (*(path + len - 1) == '/');
+
+            while (NULL != (ent = readdir(dir))) {
+                if ((ent->d_type & DT_DIR) == DT_DIR) {
+                    continue;
                 }
+
+                if ((ent->d_name)[0] == '.') {
+                    continue;
+                }
+
+                result += path;
+                if (!hasTrailingPathSeparator) {
+                    result += "/";
+                }
+                result += ent->d_name;
+                result += ":";
             }
+            closedir(dir);
         }
+
         return result;
     }
 
-    bool stringEndsWith(const std::string &s, const std::string &ext) {
-        if (s.size() < ext.size()) {
-            return false;
-        }
 
-        return s.substr(s.size() - ext.size()) == ext;
-    }
-
-    std::vector<std::string> list_files(const std::string &dir, bool (*f)(const std::string&)) {
-        path p(dir);
-        std::vector<std::string> result;
-        if (is_directory(p)) {
-            directory_iterator iterator(p);
-            directory_iterator end;
-            while (iterator != end) {
-                directory_entry &entry = *iterator;
-                std::string full_file_name = entry.path().string();
-                if (f(full_file_name)) {
-                    result.push_back(full_file_name);
-                }
-                iterator++;
-            }
-        }
-        return result;
+    bool exists(const char* path) {
+        struct stat st;
+        int ret = stat(path, &st);
+        return !ret && (st.st_mode & S_IFDIR) == S_IFDIR;
     }
 
     std::string build_class_path_option() {
@@ -231,12 +221,13 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             if (bits == 32) {
                 vendor += "lib";
             } else {
-                vendor += "lib" + boost::lexical_cast<std::string>(bits);
+                std::ostringstream oss;
+                oss << bits;
+                vendor += "lib" + oss.str();
             }
             vendor += "/oms/vendor";
 
-            path vendor_jar_dir(vendor);
-            if (exists(vendor_jar_dir)) {
+            if (exists(vendor.c_str())) {
                 LOG_DEBUG << "Found OMS vendor implementation: " << vendor;
                 rocketmqHome = vendor.c_str();
                 setenv(ROCKETMQ_HOME_KEY, vendor.c_str(), 1);
@@ -244,8 +235,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             } else {
                 std::string home = getenv("HOME");
                 vendor = home + "/oms/vendor";
-                path alternative(vendor);
-                if (exists(alternative)) {
+                if (exists(vendor.c_str())) {
                     LOG_DEBUG << "Found OMS vendor implementation: " << vendor;
                     rocketmqHome = vendor.c_str();
                     setenv(ROCKETMQ_HOME_KEY, vendor.c_str(), 1);
@@ -257,10 +247,15 @@ BEGIN_NAMESPACE_2(io, openmessaging)
                 }
             }
         }
-        std::string lib_dir = std::string(rocketmqHome) + "/lib/*";
-        std::string expanded_class_path = expand_class_path(lib_dir);
+        std::string lib_dir = std::string(rocketmqHome) + "/lib/";
+        std::string expanded_class_path = list_jars(lib_dir.c_str());
         LOG_DEBUG << "Class Path: " << expanded_class_path;
         return option + expanded_class_path;
     }
+
+        const long Condition::one_second_in_nano = 1000000000;
+        const long Condition::one_milli_second_in_nano = 1000000;
+        const long Condition::one_micro_second_in_nano = 1000;
+        const long Condition::one_second_in_milli = 1000;
 
 END_NAMESPACE_2(io, openmessaging)

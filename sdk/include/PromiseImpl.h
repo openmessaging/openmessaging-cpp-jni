@@ -5,7 +5,6 @@
 
 #include "smart_pointer.h"
 
-#include <boost/thread.hpp>
 #include "Promise.h"
 #include "producer/SendResult.h"
 
@@ -40,8 +39,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool cancelled;
         std::exception m_e;
         std::vector<NS::shared_ptr<FutureListener> > _listeners;
-        boost::mutex _mtx;
-        boost::condition_variable _cv;
+        Mutex _mtx;
+        Condition _cv;
         NS::shared_ptr<producer::SendResult> _value;
     };
 

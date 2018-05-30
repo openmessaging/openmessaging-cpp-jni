@@ -1,9 +1,10 @@
+#include "core.h"
 #include "PromiseImpl.h"
 #include <plog/Log.h>
 
 using namespace io::openmessaging;
 
-PromiseImpl::PromiseImpl() : done(false), failed(false), cancelled(false) {
+PromiseImpl::PromiseImpl() : done(false), failed(false), cancelled(false), _mtx(), _cv(_mtx) {
 
 }
 
@@ -30,7 +31,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
     }
 
     {
-        boost::unique_lock<boost::mutex> lk(_mtx);
+        LockGuard lk(_mtx);
         if (cancelled) {
             return sr_nullptr;
         }
@@ -38,8 +39,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
         if (done) {
             return _value;
         }
-
-        _cv.wait_for(lk, boost::chrono::milliseconds(timeout));
+        _cv.wait(timeout);
 
         if (cancelled) {
             return sr_nullptr;
@@ -54,7 +54,7 @@ NS::shared_ptr<producer::SendResult> PromiseImpl::get(unsigned long timeout) {
 }
 
 Future& PromiseImpl::addListener(NS::shared_ptr<FutureListener> listener) {
-    boost::lock_guard<boost::mutex> lk(_mtx);
+    LockGuard lk(_mtx);
     if (done) {
         listener->operationComplete(*this);
     } else if (cancelled) {
@@ -75,14 +75,14 @@ bool PromiseImpl::cancel(bool interruptIfRunning) {
     }
 
     {
-        boost::lock_guard<boost::mutex> lk(_mtx);
+        LockGuard lk(_mtx);
         if(done) {
             return false;
         }
         cancelled = true;
     }
 
-    _cv.notify_all();
+    _cv.notifyAll();
     return true;
 }
 
@@ -92,10 +92,10 @@ bool PromiseImpl::set(NS::shared_ptr<producer::SendResult> &value) {
     }
 
     {
-        boost::unique_lock<boost::mutex> lk(_mtx);
+        LockGuard lk(_mtx);
         _value = value;
         done = true;
-        _cv.notify_all();
+        _cv.notifyAll();
     }
 
     for (std::vector<NS::shared_ptr<FutureListener> >::iterator it = _listeners.begin(); it != _listeners.end(); it++) {
@@ -106,7 +106,7 @@ bool PromiseImpl::set(NS::shared_ptr<producer::SendResult> &value) {
 }
 
 bool PromiseImpl::setFailure(std::exception &e) {
-    boost::lock_guard<boost::mutex> lk(_mtx);
+    LockGuard lk(_mtx);
     done = true;
     failed = true;
     m_e = e;

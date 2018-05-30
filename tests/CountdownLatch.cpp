@@ -3,11 +3,11 @@
 using namespace io::openmessaging;
 
 CountdownLatch::CountdownLatch(unsigned int count)  : _count(count) {
-
+    pthread_cond_init(&cv, NULL);
 }
 
 void CountdownLatch::countdown() {
-    boost::unique_lock<boost::mutex> lk(_mtx);
+    LockGuard lk(_mtx);
     if (_count <= 0) {
         return;
     }
@@ -15,7 +15,7 @@ void CountdownLatch::countdown() {
     _count--;
 
     if (0 == _count) {
-        cv.notify_all();
+        pthread_cond_broadcast(&cv);
     }
 }
 
@@ -25,9 +25,9 @@ void CountdownLatch::await() {
     }
 
     {
-        boost::unique_lock<boost::mutex> lk(_mtx);
-        if(_count) {
-            cv.wait(lk, boost::bind(&CountdownLatch::predicate, this));
+        LockGuard lk(_mtx);
+        while (_count > 0) {
+            pthread_cond_wait(&cv, _mtx.get());
         }
     }
 }
@@ -37,21 +37,42 @@ bool CountdownLatch::await(long long timeout) {
         return true;
     }
 
-    {
-        boost::unique_lock<boost::mutex> lk(_mtx);
-        if (_count) {
+    if (timeout <= 0) {
+        return true;
+    }
 
-            const boost::system_time timeout_point =
-                    boost::get_system_time() + boost::posix_time::milliseconds(timeout);
-            cv.timed_wait(lk, timeout_point, boost::bind(&CountdownLatch::predicate, this));
-            if (_count) {
-                return false;
+    {
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        struct timespec ts;
+
+        long one_second_in_nano = 1000000000;
+        long one_milli_second_in_nano = 1000000;
+        long one_micro_second_in_nano = 1000;
+        long one_second_in_milli = 1000;
+
+        ts.tv_sec = tv.tv_sec + timeout / one_second_in_milli;
+        ts.tv_nsec = tv.tv_usec * one_micro_second_in_nano + (timeout % one_second_in_milli) * one_milli_second_in_nano;
+        if (ts.tv_nsec >= one_second_in_nano) {
+            ts.tv_sec = ts.tv_sec + (ts.tv_nsec / one_second_in_nano);
+            ts.tv_nsec = ts.tv_nsec % one_second_in_nano;
+        }
+
+        long abs_time = ts.tv_sec * one_second_in_nano + ts.tv_nsec;
+
+        LockGuard lk(_mtx);
+        while (true) {
+            if (!_count) {
+                return true;
             }
+
+            gettimeofday(&tv, NULL);
+            if (tv.tv_sec * one_second_in_nano + tv.tv_usec * one_micro_second_in_nano > abs_time) {
+                if (_count) {
+                    return false;
+                }
+            }
+            pthread_cond_timedwait(&cv, _mtx.get(), &ts);
         }
     }
-    return true;
-}
-
-bool CountdownLatch::predicate()  {
-    return _count <= 0;
 }

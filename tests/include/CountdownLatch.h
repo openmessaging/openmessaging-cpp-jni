@@ -16,12 +16,10 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         bool await(long long timeout);
 
     private:
-        boost::mutex _mtx;
+        Mutex _mtx;
         unsigned int _count;
 
-        boost::condition_variable cv;
-
-        bool predicate();
+        pthread_cond_t cv;
     };
 END_NAMESPACE_2(io, openmessaging)
 

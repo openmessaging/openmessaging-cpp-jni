@@ -61,6 +61,7 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         promise.addListener(listener);
         producer::SendResultPtr pSendResult(new producer::SendResultImpl(objectSendResult));
         promise.set(pSendResult);
+
         ASSERT_TRUE(countdownLatch.await(10000));
     }
 

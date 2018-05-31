@@ -3,21 +3,22 @@
 #include <Uncopyable.h>
 #include <Namespace.h>
 #include <iostream>
+#include <plog/Log.h>
 
 BEGIN_NAMESPACE_2(io, openmessaging)
 
 class VirtualMachine : Uncopyable  {
 public:
     VirtualMachine() {
-        std::cout << "Ctor" << std::endl;
+        LOG_DEBUG << "VirtualMachine()";
     }
 
     ~VirtualMachine() {
-        std::cout << "~Ctor" << std::endl;
+        LOG_DEBUG << "~VirtualMachine()";
     }
 
     void f() {
-        std::cout << "f()" << std::endl;
+        LOG_DEBUG << "VirtualMachine::f()";
     }
 };
 

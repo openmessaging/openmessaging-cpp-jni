@@ -13,13 +13,13 @@ BEGIN_NAMESPACE_2(io, openmessaging)
 
         void await();
 
-        bool await(long long timeout);
+        bool await(unsigned long timeout);
 
     private:
         Mutex _mtx;
         unsigned int _count;
 
-        pthread_cond_t cv;
+        Condition cv;
     };
 END_NAMESPACE_2(io, openmessaging)
 

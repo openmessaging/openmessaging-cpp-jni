@@ -110,6 +110,7 @@ __END_DECLS
         }
 
         ~Mutex() {
+            std::cout << "Destroying mutex" << std::endl;
             MCHECK(pthread_mutex_destroy(&mtx_));
         }
 

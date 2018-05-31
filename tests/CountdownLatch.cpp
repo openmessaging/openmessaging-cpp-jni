@@ -2,20 +2,21 @@
 
 using namespace io::openmessaging;
 
-CountdownLatch::CountdownLatch(unsigned int count)  : _count(count) {
-    pthread_cond_init(&cv, NULL);
+CountdownLatch::CountdownLatch(unsigned int count)  : _count(count), _mtx(), cv(_mtx) {
 }
 
 void CountdownLatch::countdown() {
-    LockGuard lk(_mtx);
     if (_count <= 0) {
         return;
     }
 
-    _count--;
-
-    if (0 == _count) {
-        pthread_cond_broadcast(&cv);
+    {
+        __sync_fetch_and_sub(&_count, 1);
+        std::cout << "Count down [OK]" << std::endl;
+        if (0 == _count) {
+            cv.notifyAll();
+            std::cout << "Notify [OK]" << std::endl;
+        }
     }
 }
 
@@ -25,14 +26,15 @@ void CountdownLatch::await() {
     }
 
     {
-        LockGuard lk(_mtx);
         while (_count > 0) {
-            pthread_cond_wait(&cv, _mtx.get());
+            std::cout << "Begin to wait" << std::endl;
+            cv.wait();
+            std::cout << "Wake up, due to signal or spuriously due to interrupt" << std::endl;
         }
     }
 }
 
-bool CountdownLatch::await(long long timeout) {
+bool CountdownLatch::await(unsigned long timeout) {
     if (0 == _count) {
         return true;
     }
@@ -41,38 +43,7 @@ bool CountdownLatch::await(long long timeout) {
         return true;
     }
 
-    {
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-        struct timespec ts;
+    cv.wait(timeout);
 
-        long one_second_in_nano = 1000000000;
-        long one_milli_second_in_nano = 1000000;
-        long one_micro_second_in_nano = 1000;
-        long one_second_in_milli = 1000;
-
-        ts.tv_sec = tv.tv_sec + timeout / one_second_in_milli;
-        ts.tv_nsec = tv.tv_usec * one_micro_second_in_nano + (timeout % one_second_in_milli) * one_milli_second_in_nano;
-        if (ts.tv_nsec >= one_second_in_nano) {
-            ts.tv_sec = ts.tv_sec + (ts.tv_nsec / one_second_in_nano);
-            ts.tv_nsec = ts.tv_nsec % one_second_in_nano;
-        }
-
-        long abs_time = ts.tv_sec * one_second_in_nano + ts.tv_nsec;
-
-        LockGuard lk(_mtx);
-        while (true) {
-            if (!_count) {
-                return true;
-            }
-
-            gettimeofday(&tv, NULL);
-            if (tv.tv_sec * one_second_in_nano + tv.tv_usec * one_micro_second_in_nano > abs_time) {
-                if (_count) {
-                    return false;
-                }
-            }
-            pthread_cond_timedwait(&cv, _mtx.get(), &ts);
-        }
-    }
+    return _count <= 0;
 }

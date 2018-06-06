@@ -61,6 +61,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
             producer::SendResultPtr sendResultPtr = producer->send(message);
             LOG_DEBUG << "Send OK. Message Id: " << sendResultPtr->messageId();
         }
+
+        producer->shutdown();
     }
 
     TEST_F(ProducerImplTest, testAsynchrousSend) {
@@ -83,6 +85,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         FuturePtr future = producer->sendAsync(message);
         future->addListener(listener);
         latch.await();
+
+        producer->shutdown();
     }
 END_NAMESPACE_2(io, openmessaging)
 

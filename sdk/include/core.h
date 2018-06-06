@@ -110,8 +110,9 @@ __END_DECLS
         }
 
         ~Mutex() {
-            std::cout << "Destroying mutex" << std::endl;
+            LOG_DEBUG << "Try to destroy mutex: " << &mtx_;
             MCHECK(pthread_mutex_destroy(&mtx_));
+            LOG_DEBUG << "Mutex " << &mtx_ << " destroyed [OK]";
         }
 
         pthread_mutex_t* get() {
@@ -119,11 +120,15 @@ __END_DECLS
         }
 
         void lock() {
+            LOG_DEBUG << "Try to lock: " << &mtx_;
             MCHECK(pthread_mutex_lock(&mtx_));
+            LOG_DEBUG << "Lock: " << &mtx_ << "[OK]";
         }
 
         void unlock() {
+            LOG_DEBUG << "Try to unlock: " << &mtx_;
             MCHECK(pthread_mutex_unlock(&mtx_));
+            LOG_DEBUG << "Unlock: " << &mtx_ << " [OK]";
         }
 
     private:

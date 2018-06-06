@@ -1,12 +1,11 @@
 #ifndef OMS_BASE_TEST_H
 #define OMS_BASE_TEST_H
 
-#include <boost/thread.hpp>
-#include <boost/chrono.hpp>
 #include <gtest/gtest.h>
 #include "Namespace.h"
 #include "CurrentEnv.h"
 #include "core.h"
+#include "Singleton.h"
 #include <cstdlib>
 
 BEGIN_NAMESPACE_2(io, openmessaging)

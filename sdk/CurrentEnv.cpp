@@ -89,7 +89,7 @@ void CurrentEnv::callStaticVoidMethod(jclass clazz, jmethodID mid, ...) {
     va_end(args);
 
     if (checkAndClearException()) {
-        const char *msg = "Exception raised while call Java Method: callVoidMethod";
+        const char *msg = "Exception raised while call Java Method: callStaticVoidMethod";
         LOG_ERROR << msg;
         throw OMSException(msg);
     }

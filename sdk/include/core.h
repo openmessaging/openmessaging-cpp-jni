@@ -198,12 +198,10 @@ __END_DECLS
         }
 
         void notify() {
-            LockGuard lk(mtx);
             pthread_cond_signal(&cv);
         }
 
         void notifyAll() {
-            LockGuard lk(mtx);
             pthread_cond_broadcast(&cv);
         }
 

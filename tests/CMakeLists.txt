@@ -14,8 +14,6 @@ add_executable(runUnitTests
         OMSTest.cpp
         PromiseImplTest.cpp
         ProducerImplTest.cpp
-        PullConsumerImplTest.cpp
-        PushConsumerImplTest.cpp
         SingletonTest.cpp
         )
 

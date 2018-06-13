@@ -54,6 +54,9 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         producer->send(message);
         // Send message OK
 
+        producer->shutdown();
+        LOG_INFO << "The producer instance shuts down OK";
+
         std::string queueName("TopicTest");
 
         KeyValuePtr kv = newKeyValueImpl();

@@ -28,6 +28,8 @@ BEGIN_NAMESPACE_2(io, openmessaging)
         MessagePtr message = producer->createBytesMessage(queueName, body);
         producer::SendResultPtr sendResultPtr = producer->send(message);
         LOG_INFO << "Send Message OK. Message Id: " << sendResultPtr->messageId();
+        producer->shutdown();
+        LOG_INFO << "The producer instance shuts down OK";
 
         KeyValuePtr kv = newKeyValueImpl();
         const std::string value = "OMS_CONSUMER";

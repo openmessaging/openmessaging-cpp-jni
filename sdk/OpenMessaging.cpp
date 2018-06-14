@@ -1,5 +1,6 @@
 #include "OpenMessaging.h"
 #include <string>
+#include "plog/Log.h"
 
 typedef io::openmessaging::producer::SendResult SR;
 typedef io::openmessaging::producer::Producer P;
@@ -21,6 +22,17 @@ struct Producer* createProducer(struct AccessPoint* accessPoint) {
     return p;
 }
 
+int startProducer(struct Producer* producer) {
+    P* ptr = reinterpret_cast<P*>(producer);
+    try {
+        ptr->startup();
+        return 0;
+    } catch (...) {
+        LOG_ERROR << "Start producer failed";
+    }
+    return -1;
+}
+
 struct Message* createByteMessage(struct Producer* pro, const char* topic, signed char* body, unsigned int len) {
     P* ptr = reinterpret_cast<P*>(pro);
     io::openmessaging::MessageBody msgBody(body, len);
@@ -32,11 +44,34 @@ struct SendResult* sendSync(struct Producer* producer, struct Message* message) 
     P* ptr = reinterpret_cast<P*>(producer);
     BM* msg = reinterpret_cast<BM*>(message);
     io::openmessaging::MessagePtr msgPtr(msg);
-    io::openmessaging::producer::SendResultPtr sendResultPtr = ptr->send(msgPtr);
-    return reinterpret_cast<struct SendResult*>(sendResultPtr.raw());
+    try {
+        io::openmessaging::producer::SendResultPtr sendResultPtr = ptr->send(msgPtr);
+        return reinterpret_cast<struct SendResult*>(sendResultPtr.raw());
+    } catch (...) {
+        LOG_ERROR << "Sending message failed";
+    }
+    return NULL;
 }
 
 const char* msgId(struct SendResult* sendResult) {
     SR* sr = reinterpret_cast<SR*>(sendResult);
     return sr->messageId().c_str();
+}
+
+int shutdownProducer(struct Producer* producer) {
+    P* ptr = reinterpret_cast<P*>(producer);
+    try {
+        ptr->shutdown();
+    } catch (...) {
+        return -1;
+    }
+    return 0;
+}
+
+void freeMessage(struct Message* message) {
+    delete message;
+}
+
+void freeProducer(struct Producer* producer) {
+    delete producer;
 }

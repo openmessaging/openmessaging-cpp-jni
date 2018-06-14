@@ -4,8 +4,13 @@ add_executable(pushConsumer PushConsumer.cpp)
 
 add_executable(c_producer Producer.c)
 
-macro(link_example name)
+macro(link_example name link_oms)
     target_link_libraries(${name} dl)
+
+    if (${link_oms} STREQUAL "ON")
+        target_link_libraries(${name} oms_rocketmq)
+    endif ()
+
     if(UNIX)
         if(NOT APPLE)
             set_target_properties(${name} PROPERTIES
@@ -19,7 +24,7 @@ macro(link_example name)
     endif()
 endmacro()
 
-link_example(producer)
-link_example(pullConsumer)
-link_example(pushConsumer)
-link_example(c_producer)
+link_example(producer OFF)
+link_example(pullConsumer OFF)
+link_example(pushConsumer OFF)
+link_example(c_producer ON)

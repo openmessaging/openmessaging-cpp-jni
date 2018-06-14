@@ -212,6 +212,13 @@ public:
         return px;
     }
 
+    T* raw() throw() {
+        if ((NULL == px) || (0 != pn.use_count())) {
+            acquire(px);
+        }
+        return px;
+    }
+
 private:
     /// @brief acquire/share the ownership of the px pointer, initializing the reference counter
     inline void acquire(T* p) // may throw std::bad_alloc

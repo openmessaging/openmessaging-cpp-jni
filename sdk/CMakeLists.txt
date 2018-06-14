@@ -19,7 +19,9 @@ add_library(oms_rocketmq SHARED
         consumer/StreamingIteratorImpl.cpp
         consumer/StreamingConsumerImpl.cpp
 
-        MessagingAccessPointImpl.cpp)
+        MessagingAccessPointImpl.cpp
+        OpenMessaging.cpp
+        )
 
 target_link_libraries(oms_rocketmq
         dl
